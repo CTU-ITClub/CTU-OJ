@@ -1,6 +1,5 @@
 @import "vars";
 code {
-    font-family: 'Inconsolata', monospace;
     @if $is_light_theme {
         .hll {
             background-color: #ffffcc

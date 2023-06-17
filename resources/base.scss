@@ -61,6 +61,12 @@ pre {
     white-space: pre-wrap;
 }
 
+pre,
+code {
+    font-family: "Inconsolata", monospace;
+    font-size: 14px;
+}
+
 hr {
     display: block;
     height: 0;
