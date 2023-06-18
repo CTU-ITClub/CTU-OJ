@@ -134,6 +134,11 @@ OJ_PROBLEM_PRESET = [
         'codename': 'CFGYM_%s_%s',
         'judge': 'CodeforcesGym',
     },
+    {
+        'regex': r'^https://dmoj\.ctu\.edu\.vn/problem/(?P<codename>\w+)$',
+        'codename': 'CTUOJ_%s',
+        'judge': 'CTUOJ',
+    },
 ]
 
 OJ_LIST = [
@@ -142,6 +147,7 @@ OJ_LIST = [
     ('CodeforcesGym', 'Codeforces (Gym)'),
     ('Kattis', 'Kattis'),
     ('VNOJ', 'VNOJ'),
+    ('CTUOJ', 'CTUOJ'),
 ]
 
 OJ_REQUESTS_TIMEOUT = 5  # in seconds
