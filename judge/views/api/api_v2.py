@@ -485,6 +485,7 @@ class APIUserList(APIListView):
         return {
             'id': profile.id,
             'username': profile.username,
+            'display_name': profile.display_name,
             'points': profile.points,
             'performance_points': profile.performance_points,
             'problem_count': profile.problem_count,
@@ -539,6 +540,7 @@ class APIUserDetail(APIDetailView):
         return {
             'id': profile.id,
             'username': profile.user.username,
+            'display_name': profile.display_name,
             'points': profile.points,
             'performance_points': profile.performance_points,
             'problem_count': profile.problem_count,
