@@ -744,5 +744,5 @@ if DMOJ_PDF_PDFOID_URL:
 ACE_DEFAULT_LIGHT_THEME = DMOJ_THEME_DEFAULT_ACE_THEME['light']
 ACE_DEFAULT_DARK_THEME = DMOJ_THEME_DEFAULT_ACE_THEME['dark']
 
-## close register when contest.
+# close register when contest.
 REGISTRATION_OPEN = False
