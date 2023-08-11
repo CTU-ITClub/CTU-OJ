@@ -7267,3 +7267,7 @@ msgstr ""
 #: templates/widgets/select_all.html:8
 msgid "Check all"
 msgstr ""
+
+#: templates/registration/login.html:33
+msgid "Log in with the account provided by the Host"
+msgstr ""
