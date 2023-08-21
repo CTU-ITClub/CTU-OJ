@@ -1,30 +1,41 @@
 {% set logged_in = request.user.is_authenticated %}
 {% set profile = request.profile if logged_in else None %}
-<section class="{% if post.sticky %}sticky {% endif %}post" id="post-{{ post.id }}">
+<section class="{% if post.sticky %}sticky {% endif %}post" id="post-{{ post.id }} card is-boxed">
     <div style="display: flex; gap: 0.5em;">
         <div class="vote">
             {% if logged_in %}
-                <a href="javascript:blog_upvote({{ post.id }})"
-                class="upvote-link fa fa-chevron-up fa-fw{% if post.vote_score == 1 %} voted{% endif %}"></a>
+                <a href="javascript:blog_upvote({{ post.id }})" class="button upvote-link is-light">
+                    <i class="fa fa-chevron-up fa-fw{% if post.vote_score == 1 %} voted{% endif %}"></i>
+                </a>
             {% else %}
-                <a href="javascript:alert('{{ _('Please log in to vote')|escapejs }}')" title="{{ _('Please log in to vote') }}"
-                class="upvote-link fa fa-chevron-up fa-fw"></a>
+                <a href="javascript:alert('{{ _('Please log in to vote')|escapejs }}')"
+                   title="{{ _('Please log in to vote') }}"
+                   class="upvote-link button is-light">
+                    <i class="fa fa-chevron-up fa-fw"></i>
+                </a>
             {% endif %}
             <br>
-            <div id="post-score" class="comment-score">{{ post.score }}</div>
+            <div id="post-score" class="comment-score is-fullwidth py-4 has-text-centered">{{ post.score }}</div>
             {% if logged_in %}
-                <a href="javascript:blog_downvote({{ post.id }})"
-                class="downvote-link fa fa-chevron-down fa-fw{% if post.vote_score == -1 %} voted{% endif %}"></a>
+                <a href="javascript:blog_downvote({{ post.id }})" class="downvote-link button is-light">
+                    <i class="fa fa-chevron-down fa-fw{% if post.vote_score == -1 %} voted{% endif %}"></i>
+                </a>
             {% else %}
-                <a href="javascript:alert('{{ _('Please log in to vote')|escapejs }}')" title="{{ _('Please log in to vote') }}"
-                class="downvote-link fa fa-chevron-down fa-fw"></a>
+                <a href="javascript:alert('{{ _('Please log in to vote')|escapejs }}')"
+                   title="{{ _('Please log in to vote') }}"
+                   class="downvote-link button is-light is-disabled">
+                    <i class="fa fa-chevron-down fa-fw"></i>
+                </a>
             {% endif %}
         </div>
-        <div>
-            <h2 class="title">
-                <a href="{{ url('blog_post', post.id, post.slug) }}">{% if not post.visible %}<i class="fa fa-lock" style="color: red"></i> {% endif %}{{ post.title }}</a>
-            </h2>
-            <span class="time">
+        <div class="is-flex-grow-1">
+            <div class="card-header is-fullwidth has-background-dark">
+                <a class="card-header-title is-fullwidth has-text-white" href="{{ url('blog_post', post.id, post.slug) }}">
+                    {% if not post.visible %}
+                        <i class="fa fa-lock" style="color: red"></i> {% endif %}{{ post.title }}
+                </a>
+            </div>
+            <span class="tag is-medium my-2">
                 {%- if post.sticky %}<i title="Sticky" class="fa fa-star fa-fw"></i>{% endif -%}
                 {% with authors=post.authors.all() %}
                     {%- if authors -%}
@@ -37,7 +48,8 @@
             </span>
         </div>
     </div>
-    <div class="summary content-description blog-body">
+
+    <div class="card-content">
         {% cache 86400 'post_summary' post.id %}
             {{ post.summary|default(post.content, true)|markdown('blog', 'svg', lazy_load=True)|reference|str|safe }}
         {% endcache %}
