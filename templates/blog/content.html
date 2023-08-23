@@ -13,46 +13,46 @@
 {% endblock %}
 
 {% block title_row %}
-    <div id="post-{{ post.id }}" style="display: flex; gap: 0.5em; position:sticky; top: 64px; z-index: 1" class="has-background-white">
-        <div class="vote">
+    <div id="post-{{ post.id }}"
+         style="display: flex; gap: 0.5em; position:sticky; top: 0; z-index: 1; background: #fff; padding: 10px 0">
+        <div class="ui vertical mini buttons">
             {% if logged_in %}
-                <a href="javascript:blog_upvote({{ post.id }})" class="button upvote-link is-light">
+                <a href="javascript:blog_upvote({{ post.id }})" class="ui button">
                     <i class="fa fa-chevron-up fa-fw{% if post.vote_score == 1 %} voted{% endif %}"></i>
                 </a>
             {% else %}
-                <a href="javascript:alert('{{ _('Please log in to vote')|escapejs }}')"
+                <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
                    title="{{ _('Please log in to vote') }}"
-                   class="upvote-link button is-light">
+                   class="ui button">
                     <i class="fa fa-chevron-up fa-fw"></i>
                 </a>
             {% endif %}
-            <br>
-            <div id="post-score" class="comment-score is-fullwidth py-4 has-text-centered">{{ post.score }}</div>
+            <div id="post-score" class="ui button disabled">{{ post.score }}</div>
             {% if logged_in %}
-                <a href="javascript:blog_downvote({{ post.id }})" class="downvote-link button is-light">
+                <a href="javascript:blog_downvote({{ post.id }})" class="ui button">
                     <i class="fa fa-chevron-down fa-fw{% if post.vote_score == -1 %} voted{% endif %}"></i>
                 </a>
             {% else %}
-                <a href="javascript:alert('{{ _('Please log in to vote')|escapejs }}')"
+                <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
                    title="{{ _('Please log in to vote') }}"
-                   class="downvote-link button is-light is-disabled">
+                   class="ui button">
                     <i class="fa fa-chevron-down fa-fw"></i>
                 </a>
             {% endif %}
         </div>
-        <div style="width: 100%" class="card is-shadowless">
-            <div class="card-header has-background-dark">
-                <h2 style="display:inline" class="card-header-title has-text-white">
+        <div style="width: 100%;">
+            <div>
+                <h2>
                     {% block content_title %}
                         {% if content_title %}{{ content_title }}{% else %}{{ title }}{% endif %}
                     {% endblock %}
                 </h2>
+
                 {% if post.is_editable_by(request.user) %}
-                    <a class="card-header-icon has-text-white"
+                    <a class="ui button circular green"
                        href="{{ url('blog_post_edit', post.id, post.slug) }}">
-                      <span class="icon">
-                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                      </span>
+                        <i class="icon pencil" aria-hidden="true"></i>
+                        {{ _('Edit') }}
                     </a>
                 {% endif %}
 
@@ -65,13 +65,13 @@
             </span>
             {% endif %}
 
-            <div class="tag my-2 is-medium">
+            <div>
                 {% with authors=post.authors.all() %}
                     {%- if authors -%}
-                        <span class="post-authors">{{ link_users(authors) }}</span>
+                        <span>{{ link_users(authors) }}</span>
                     {%- endif -%}
                 {% endwith %}
-                <span class="post-time">
+                <span>
                 {% trans trimmed time=post.publish_on|date(_("N j, Y, g:i a")) %}
                     posted on {{ time }}
                 {% endtrans %}
@@ -89,10 +89,12 @@
             {% endcache %}
         </div>
     </div>
-    <hr/>
-    <div class="buttons">
-        {{ post_to_facebook(request, post, '<button class="button is-rounded"><span class="icon is-small"><i class="fa fa-facebook"></i></span></button>') }}
-        {{ post_to_twitter(request, SITE_NAME + ':', post, '<button class="button is-rounded ml-2"><span class="icon is-small"><i class="fa-brands fa-x-twitter"></i></span></button>') }}
+
+    <div class="divider"></div>
+
+    <div style="display: flex; gap: 1px; justify-content: end">
+        {{ post_to_facebook(request, post, '<button class="ui blue button circular icon"><i class="icon facebook"></i></button>') }}
+        {{ post_to_twitter(request, SITE_NAME + ':', post, '<button class="ui button circular icon black"><i class="fa-brands fa-x-twitter"></i></button>') }}
     </div>
     {% include "comments/list.html" %}
     <div style="clear: both;"></div>

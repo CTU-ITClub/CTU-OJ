@@ -1,29 +1,49 @@
 {% if not request.official_contest_mode or request.user.is_superuser %}
-    <div id="comments" class="comment-area panel is-light is-shadowless">
+    <div id="comments" class="comment-area">
         <div class="panel-heading">
-            <h2><i style="padding-right: 0.3em" class="fa fa-comments"></i>{{ _('Comments') }}</h2>
+            <h2>
+                <i class="icon comment"></i>
+                {{ _('Comments') }}
+            </h2>
         </div>
-        <div class="panel-block">
+
+        <div>
             {% if not comment_lock %}
-                <div class="alert alert-warning">
-                    {{ (_('Please read the [guidelines][0] before commenting.') + '\n\n  [0]: /about/comment/')|markdown('blog', strip_paragraphs=True) }}
+                <div class="ui message icon">
+                    <i class="icon warning"></i>
+
+                    <div class="content">
+                        <p>
+                            {{ (_('Please read the [guidelines][0] before commenting.') + '\n\n  [0]: /about/comment/')|markdown('blog', strip_paragraphs=True) }}
+                        </p>
+                    </div>
                 </div>
                 <hr><br>
             {% else %}
-                <div class="alert alert-warning comment-lock">
-                    {{ _('Comments are disabled on this page.') }}
+                <div class="ui message icon">
+                    <i class="icon lock"></i>
+
+                    <div class="content">
+                        <p>
+                            {{ _('Comments are disabled on this page.') }}
+                        </p>
+                    </div>
                 </div>
             {% endif %}
         </div>
 
-        <div class="panel-block">
+        <div>
             {% if not comment_lock and not has_comments %}
-                <p class="no-comments-message">{{ _('There are no comments at the moment.') }}</p>
+                <div class="ui message icon">
+                    <i class="icon inbox"></i>
+                    <div class="content">
+                        <p class="no-comments-message">{{ _('There are no comments at the moment.') }}</p>
+                    </div>
+                </div>
             {% else %}
                 <div class="comment-header-space"></div>
             {% endif %}
         </div>
-
 
         {% if has_comments %}
             <div class="panel-block">
@@ -159,11 +179,9 @@
         {% endif %}
 
         {% if request.user.is_authenticated and comment_form and not comment_lock %}
-            <div id="new-comment" class="form-area comment-submit">
+            <div id="new-comment">
                 {% block comment_submit_title %}
-                    <div class="panel-block">
-                        <h3>{{ _('New comment') }}</h3>
-                    </div>
+                    <h3 class="ui header" style="margin-top: 10px">{{ _('New comment') }}</h3>
                 {% endblock %}
                 {% if is_new_user %}
                     <div style="margin-bottom: 0" class="alert alert-info">
@@ -183,7 +201,8 @@
                         <div class="comment-post-wrapper p-2">
                             <div id="comment-form-body">{{ comment_form.body }}</div>
                         </div>
-                        <input type="submit" value="{{ _('Post!') }}" class="button is-dark mx-2">
+
+                        <input type="submit" value="{{ _('Post!') }}" class="ui button" style="margin-top: 10px">
                     </form>
                 {% endif %}
             </div>
