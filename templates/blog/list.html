@@ -24,15 +24,15 @@
             $('.blog-sidebar').hide();
             $('#blog-tab').click(function (e) {
                 e.preventDefault();
-                $('#blog-tab').addClass('is-active');
-                $('#event-tab').removeClass('is-active');
+                $('#blog-tab').addClass('active');
+                $('#event-tab').removeClass('active');
                 $('.blog-content').show();
                 $('.blog-sidebar').hide();
             });
             $('#event-tab').click(function (e) {
                 e.preventDefault();
-                $('#event-tab').addClass('is-active');
-                $('#blog-tab').removeClass('is-active');
+                $('#event-tab').addClass('active');
+                $('#blog-tab').removeClass('active');
                 $('.blog-content').hide();
                 $('.blog-sidebar').show();
             });
@@ -43,31 +43,21 @@
 {% block body %}
     {% block before_posts %}{% endblock %}
 
-    <div class="tabs is-boxed">
-        <ul>
-            <li class="is-active" id="blog-tab">
-                <a href="#">
-                    <span class="icon is-small"><i class="tab-icon fa fa-info-circle"></i></span>
-                    <span>
-                    {{ _('Blog') }}
-                    </span>
-                </a>
-            </li>
-            <li id="event-tab">
-                <a href="#">
-                    <span class="icon is-small"><i class="tab-icon fa fa-rss"></i></span>
-                    <span>
-                     {{ _('Events') }}
-                    </span>
-                </a>
-            </li>
-        </ul>
+    <div class="ui top attached tabular menu">
+        <div class="active item" id="blog-tab">
+            <i class="icon info"></i>
+            {{ _('Blog') }}
+        </div>
+        <div class="item" id="event-tab">
+            <i class="icon rss"></i>
+            {{ _('Events') }}
+        </div>
     </div>
 
-    <div id="blog-container">
+    <div id="blog-container" >
         <div class="blog-content sidebox">
             {% include "blog/blog-list-tabs.html" %}
-            <div class="sidebox-content" style="border: unset;">
+            <div class="sidebox-content ui feed" style="border: unset;">
                 {% for post in posts %}
                     {% include "blog/blog-post.html" %}
                 {% endfor %}

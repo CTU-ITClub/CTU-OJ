@@ -1,21 +1,18 @@
 {% macro make_tab(name, fa, url, text) %}
-    <li class="tab{% if tab == name %} is-active{% endif %}">
+    <div class="item{% if tab == name %} active{% endif %}">
         {%- if url %}<a href="{{ url }}">{% else %}{% endif -%}
-        <span class="icon is-small">
+        <span class="icon">
             <i class="tab-icon fa {{ fa }}"></i>
         </span>
-        <span>
-            {{ text }}
-        </span>
+        {{ text }}
         {%- if url %}</a>{% else %}{% endif -%}
-    </li>
+    </div>
 {% endmacro %}
-<div class="tabs is-toggle">
+<div class="ui top attached tabular menu" style="margin-top: 10px">
     {% if not left_align_tabs %}
-        <h2 class="has-text-weight-bold p-2 is-large is-flex-grow-1">{{ content_title or title }}</h2>
+        <h2>{{ content_title or title }}</h2>
+        <div style="flex: 1"></div>
     {% endif %}
     {% block post_tab_spacer %}{% endblock %}
-    <ul class="is-flex-grow-0">
-        {% block tabs %}{% endblock %}
-    </ul>
+    {% block tabs %}{% endblock %}
 </div>
