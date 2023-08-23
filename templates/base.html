@@ -289,7 +289,7 @@
 
         {% for node in mptt_tree(nav_bar) recursive %}
             {% if not node.is_leaf_node() %}
-                <div class="ui item simple dropdown{% if node.key in nav_tab %} active{% endif %}">
+                <div class="ui item simple dropdown">
                     <a href="{{ node.path }}">
                         {{ user_trans(node.label) }}
                     </a>
@@ -304,7 +304,7 @@
                 </div>
 
             {% else %}
-                <a href="{{ node.path }}" class="item">
+                <a href="{{ node.path }}" class="item{% if node.key in nav_tab %} active{% endif %}">
                     {{ node.label }}
                 </a>
             {% endif %}

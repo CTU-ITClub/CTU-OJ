@@ -1,4 +1,4 @@
-<div id="{{ id|safe }}-wmd-wrapper" class="wmd-wrapper">
+<div id="{{ id|safe }}-wmd-wrapper" class="wmd-wrapper" style="margin: 10px 0">
     <div class="wmd-panel" hidden>
         <div id="{{ id|safe }}_wmd_button_bar"></div>
         <textarea{{ attrs|safe }}>{{ body }}</textarea>
@@ -48,7 +48,7 @@
 
                 $.post('{{ preview_url }}', {
                     content: text,
-                    csrfmiddlewaretoken: $.cookie('csrftoken'),
+                    csrfmiddlewaretoken: $.cookie?.('csrftoken'),
                 }, res => {
                     $content.html(res)
                     $preview.addClass('dmmd-preview-has-content').removeClass('dmmd-preview-stale');

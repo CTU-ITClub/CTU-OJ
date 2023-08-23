@@ -125,10 +125,10 @@
         <div class="top-pagination-bar">{% include "list-pages.html" %}</div>
     {% endif %}
 
-    <div id="common-content" class="columns px-4">
+    <div id="common-content" class="ui grid">
         {% block before_table %}{% endblock %}
-        <div id="content-left" class="problems h-scrollable-table column is-flex-grow-1">
-            <table class="table is-fullwidth is-striped is-hoverable is-bordered">
+        <div id="content-left" class="twelve wide column">
+            <table class="ui table striped">
                 <thead>
                 <tr>
                     {% if request.user.is_authenticated %}
@@ -238,7 +238,7 @@
             </table>
         </div>
 
-        <div id="content-right" class="problems column is-3" style="position: sticky; top: 0">
+        <div id="content-right" class="four wide column">
             <div class="info-float card">
                 {% include "problem/search-form.html" %}
                 {% if hot_problems %}
