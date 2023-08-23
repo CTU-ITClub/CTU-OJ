@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block title_row %}
-    <div id="post-{{ post.id }}" style="display: flex; gap: 0.5em;">
+    <div id="post-{{ post.id }}" style="display: flex; gap: 0.5em; position:sticky; top: 64px; z-index: 1" class="has-background-white">
         <div class="vote">
             {% if logged_in %}
                 <a href="javascript:blog_upvote({{ post.id }})" class="button upvote-link is-light">
@@ -40,7 +40,7 @@
                 </a>
             {% endif %}
         </div>
-        <div style="width: 100%;" class="card">
+        <div style="width: 100%" class="card is-shadowless">
             <div class="card-header has-background-dark">
                 <h2 style="display:inline" class="card-header-title has-text-white">
                     {% block content_title %}
@@ -48,7 +48,8 @@
                     {% endblock %}
                 </h2>
                 {% if post.is_editable_by(request.user) %}
-                    <a class="card-header-icon has-text-white" href="{{ url('blog_post_edit', post.id, post.slug) }}">
+                    <a class="card-header-icon has-text-white"
+                       href="{{ url('blog_post_edit', post.id, post.slug) }}">
                       <span class="icon">
                         <i class="fa fa-pencil" aria-hidden="true"></i>
                       </span>
@@ -64,7 +65,7 @@
             </span>
             {% endif %}
 
-            <div class="tag m-2 is-medium">
+            <div class="tag my-2 is-medium">
                 {% with authors=post.authors.all() %}
                     {%- if authors -%}
                         <span class="post-authors">{{ link_users(authors) }}</span>
@@ -88,7 +89,7 @@
             {% endcache %}
         </div>
     </div>
-    <hr />
+    <hr/>
     <div class="buttons">
         {{ post_to_facebook(request, post, '<button class="button is-rounded"><span class="icon is-small"><i class="fa fa-facebook"></i></span></button>') }}
         {{ post_to_twitter(request, SITE_NAME + ':', post, '<button class="button is-rounded ml-2"><span class="icon is-small"><i class="fa-brands fa-x-twitter"></i></span></button>') }}

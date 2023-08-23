@@ -10,13 +10,12 @@
         {%- if url %}</a>{% else %}{% endif -%}
     </li>
 {% endmacro %}
-
 <div class="tabs is-toggle">
     {% if not left_align_tabs %}
-        <h2>{{ content_title or title }}</h2>
+        <h2 class="has-text-weight-bold p-2 is-large is-flex-grow-1">{{ content_title or title }}</h2>
     {% endif %}
     {% block post_tab_spacer %}{% endblock %}
-    <ul>
+    <ul class="is-flex-grow-0">
         {% block tabs %}{% endblock %}
     </ul>
 </div>
