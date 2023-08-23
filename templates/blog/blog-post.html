@@ -8,7 +8,7 @@
                     <i class="fa fa-chevron-up fa-fw{% if post.vote_score == 1 %} voted{% endif %}"></i>
                 </a>
             {% else %}
-                <a href="javascript:alert('{{ _('Please log in to vote')|escapejs }}')"
+                <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
                    title="{{ _('Please log in to vote') }}"
                    class="upvote-link button is-light">
                     <i class="fa fa-chevron-up fa-fw"></i>
@@ -21,7 +21,7 @@
                     <i class="fa fa-chevron-down fa-fw{% if post.vote_score == -1 %} voted{% endif %}"></i>
                 </a>
             {% else %}
-                <a href="javascript:alert('{{ _('Please log in to vote')|escapejs }}')"
+                <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
                    title="{{ _('Please log in to vote') }}"
                    class="downvote-link button is-light is-disabled">
                     <i class="fa fa-chevron-down fa-fw"></i>
@@ -30,7 +30,8 @@
         </div>
         <div class="is-flex-grow-1">
             <div class="card-header is-fullwidth has-background-dark">
-                <a class="card-header-title is-fullwidth has-text-white" href="{{ url('blog_post', post.id, post.slug) }}">
+                <a class="card-header-title is-fullwidth has-text-white"
+                   href="{{ url('blog_post', post.id, post.slug) }}">
                     {% if not post.visible %}
                         <i class="fa fa-lock" style="color: red"></i> {% endif %}{{ post.title }}
                 </a>
@@ -49,7 +50,7 @@
         </div>
     </div>
 
-    <div class="card-content">
+    <div class="card-content markdown-body">
         {% cache 86400 'post_summary' post.id %}
             {{ post.summary|default(post.content, true)|markdown('blog', 'svg', lazy_load=True)|reference|str|safe }}
         {% endcache %}
@@ -58,13 +59,16 @@
         {%- endif -%}
     </div>
     <div class="meta">
-        <div class="time">
-            <i class="fa fa-user"></i>
+        <div class="tag is-flex">
+            <i class="fa fa-user mr-1"></i>
             {% with authors=post.authors.all() %}
                 {%- if authors -%}
                     {{ link_users(authors) }}
                 {%- endif -%}
             {% endwith %}
+
+            <div class="is-flex-grow-1"></div>
+
             <div style="float: right">
                 <i class="fa fa-clock-o"></i>
                 {{ relative_time(post.publish_on, abs=_('o{time}'), rel=_('{time}')) -}}

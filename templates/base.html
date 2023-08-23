@@ -40,11 +40,13 @@
           content="{{ DMOJ_SCHEME }}://{{ DMOJ_CANONICAL|default(site.domain) }}{{ request.get_full_path() }}">
 
     {% block meta %}{% endblock %}
-    {% if not INLINE_FONTAWESOME %}
-        <link rel="stylesheet" href="{{ FONTAWESOME_CSS }}">
-    {% endif %}
+    <link rel="stylesheet" href="{{ FONTAWESOME_CSS }}">
     {% compress css %}
         <link rel="stylesheet" href="{{ static('bulma/css/bulma.min.css') }}">
+        <link rel="stylesheet" href="{{ static('github-markdown.css') }}">
+        <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/styles/github.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
         {# TODO: once dark mode support is better, enable for all users by deleting the else branch #}
         {% if perms.judge.test_site %}
             {% if PREFERRED_STYLE_CSS is not none %}
@@ -56,8 +58,7 @@
         {% else %}
             <link rel="stylesheet" href="{{ static(LIGHT_STYLE_CSS) }}">
         {% endif %}
-        {% if INLINE_FONTAWESOME %}
-            <link rel="stylesheet" href="{{ static('libs/fontawesome/font-awesome.css') }}">{% endif %}
+        <link rel="stylesheet" href="{{ static('libs/fontawesome/font-awesome.css') }}">
         <link rel="stylesheet" href="{{ static('source_sans_pro.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ static('libs/clipboard/tooltip.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ static('libs/select2/select2.css') }}">
@@ -77,6 +78,10 @@
     {% endif %}
 
     {% compress js %}
+        <script src="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
         <script>{{ inlinei18n(LANGUAGE_CODE)|safe }}</script>
         {% if INLINE_JQUERY %}
             <script src="{{ static('libs/jquery-3.4.1.min.js') }}"></script>
@@ -90,6 +95,17 @@
         <script src="{{ static('common.js') }}"></script>
         <script src="{{ static('event.js') }}"></script>
         <script>
+            window._alert = function (text) {
+                Toastify({
+                    text,
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                }).showToast();
+            }
             moment.locale('{{ LANGUAGE_CODE }}');
             $(function () {
                 $('img.unveil').unveil(200);
@@ -422,16 +438,17 @@
     <footer class="footer mt-4">
         <div id="footer-content" class="has-text-centered">
             <br>
-            {{ _('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #808080" href="https://dmoj.ca"><b>DMOJ</b></a>')) }} |
+            {{ _('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #808080" href="https://dmoj.ca"><b>DMOJ</b></a>')) }}
+            |
             {{ _('follow us on %(github)s and %(facebook)s', github=safe('<a style="color: #808080" href="https://github.com/VNOI-Admin/OJ"><b>Github</b></a>'), facebook=safe('<a style="color: #808080" href="https://www.facebook.com/vnoi.wiki"><b>Facebook</b></a>')) }}
             {% if misc_config.footer %}
                 {{ misc_config.footer|safe }} |
             {% endif %}
             <form id="set_language" action="{{ url('set_language') }}" method="post" style="display: inline">
                 {% csrf_token %}
-            <input name="next" type="hidden" value="{{ request.get_full_path() }}">
-            <input name="language" type="hidden" value="{{ LANGUAGE_CODE }}">
-          </form>
+                <input name="next" type="hidden" value="{{ request.get_full_path() }}">
+                <input name="language" type="hidden" value="{{ LANGUAGE_CODE }}">
+            </form>
         </div>
     </footer>
 </div>

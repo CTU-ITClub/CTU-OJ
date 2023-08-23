@@ -1,12 +1,17 @@
 {% macro make_tab(name, fa, url, text) %}
-    <li class="tab{% if tab == name %} active{% endif %}">
-        {%- if url %}<a href="{{ url }}">{% else %}<span>{% endif -%}
-        <i class="tab-icon fa {{ fa }}"></i> {{ text }}
-        {%- if url %}</a>{% else %}</span>{% endif -%}
+    <li class="tab{% if tab == name %} is-active{% endif %}">
+        {%- if url %}<a href="{{ url }}">{% else %}{% endif -%}
+        <span class="icon is-small">
+            <i class="tab-icon fa {{ fa }}"></i>
+        </span>
+        <span>
+            {{ text }}
+        </span>
+        {%- if url %}</a>{% else %}{% endif -%}
     </li>
 {% endmacro %}
 
-<div class="tabs">
+<div class="tabs is-toggle">
     {% if not left_align_tabs %}
         <h2>{{ content_title or title }}</h2>
     {% endif %}
