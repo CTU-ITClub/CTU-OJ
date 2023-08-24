@@ -281,7 +281,7 @@
     </defs>
 </svg>
 
-<nav class="ui menu main inverted fixed" style="position:sticky; top: 0; z-index: 1000">
+<nav class="ui menu main inverted fixed">
     <div class="ui container">
 
         <a href="{{ url('home') }}" class="header item">{% include "site-logo-fragment.html" %}</a>
@@ -394,24 +394,28 @@
     </div>
 </nav>
 
+<div style="height: 80px"></div>
+
 {% if request.in_contest %}
     {% set current_contest = request.participation.contest %}
-    <div id="contest-info">
-        <a href="{{ url('contest_view', current_contest.key) }}">
-            {{ current_contest.name }} -
-            {% if request.participation.spectate %}
-                {{ _('spectating') }}
-            {% elif request.participation.end_time %}
-                <div id="contest-time-remaining" data-secs="{{ request.participation.time_remaining|seconds }}">
-                    {{ request.participation.time_remaining|timedelta("localized") }}
-                </div>
-            {% else %}
-                {{ _('virtual') }}
-            {% endif %}
-        </a>
+    <div id="contest-info" class="ui card" style="z-index: 100; position: fixed">
+        <div class="content">
+            <a href="{{ url('contest_view', current_contest.key) }}" class="header">
+                {{ current_contest.name }} -
+                {% if request.participation.spectate %}
+                    {{ _('spectating') }}
+                {% elif request.participation.end_time %}
+                    <div id="contest-time-remaining" data-secs="{{ request.participation.time_remaining|seconds }}">
+                        {{ request.participation.time_remaining|timedelta("localized") }}
+                    </div>
+                {% else %}
+                    {{ _('virtual') }}
+                {% endif %}
+            </a>
+
+        </div>
         {% if current_contest.can_see_own_scoreboard(request.user) %}
-            <a href="{{ url('contest_ranking', current_contest.key) }}"
-               style="text-align: center; font-size: 0.7em; color: #DCD427;">
+            <a href="{{ url('contest_ranking', current_contest.key) }}" class="ui button bottom attached green">
                 {{ _('Go to Rankings') }}
             </a>
         {% endif %}
@@ -447,7 +451,7 @@
     {% block bodyend %}{% endblock %}
 
 
-    <footer class="ui footer inverted segment" style="border-radius: 0">
+    <footer class="ui footer segment" style="border-radius: 0">
         <div id="footer-content" class="ui container">
             {{ _('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #808080" href="https://dmoj.ca"><b>DMOJ</b></a>')) }}
             |
