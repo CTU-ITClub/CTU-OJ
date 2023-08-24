@@ -8,11 +8,12 @@
         {%- if url %}</a>{% else %}{% endif -%}
     </div>
 {% endmacro %}
-<div class="ui top attached tabular menu" style="margin: 10px 0">
+<div style="margin: 10px 0">
     {% if not left_align_tabs %}
         <h2>{{ content_title or title }}</h2>
-        <div style="flex: 1"></div>
     {% endif %}
     {% block post_tab_spacer %}{% endblock %}
-    {% block tabs %}{% endblock %}
+    <div class="ui top attached tabular menu">
+        {% block tabs %}{% endblock %}
+    </div>
 </div>
