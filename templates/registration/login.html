@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block body %}
-    <div class="auth-flow-form" style="width: 300px; margin: 0 auto">
+    <div class="ui form" style="width: 300px; margin: 0 auto">
         <form action="" method="post" class="form-area">
             {% csrf_token %}
             {% if form.errors %}
@@ -35,36 +35,23 @@
                     <p class="error">{{ _('Invalid username or password.') }}</p>
                 </div>
             {% endif %}
-            <div class="field">
-                <label class="label" for="username">
-                    {{ _('Username') }}
-                </label>
 
-                <div class="control has-icons-left">
-                    <input class="input" placeholder="{{ _('Username') }}" name="username" id="username">
+            <label style="display: block" for="username">
+                {{ _('Username') }}
+            </label>
 
-                    <span class="icon is-left">
-                        <i class="fa fa-user"></i>
-                    </span>
-                </div>
-            </div>
 
-            <div class="field">
-                <label class="label" for="password">
-                    {{ _('Password') }}
-                </label>
+            <input placeholder="{{ _('Username') }}" name="username" id="username">
 
-                <div class="control has-icons-left">
-                    <input class="input" placeholder="{{ _('Password') }}" type="password" name="password"
-                           id="password">
+            <label for="password">
+                {{ _('Password') }}
+            </label>
 
-                    <span class="icon is-left">
-                        <i class="fa fa-key"></i>
-                    </span>
-                </div>
-            </div>
-            <hr>
-            <button class="button is-success block is-fullwidth" type="submit">{{ _('Login!') }}</button>
+
+            <input placeholder="{{ _('Password') }}" type="password" name="password" id="password">
+            <div class="ui divider"></div>
+            <button class="ui button primary" type="submit">{{ _('Login!') }}</button>
+
             <input type="hidden" name="next" value="{{ next }}">
         </form>
 

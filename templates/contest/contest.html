@@ -41,32 +41,34 @@
 {% block body %}
     <div id="banner">
         <a href="https://www.timeanddate.com/worldclock/fixedtime.html?msg={{ contest.name|urlquote('') }}&amp;iso=
-                {{- contest.start_time|utc|date('Y-m-d\TH:i:s') }}" class="date">
-            {%- if contest.is_in_contest(request.user) and not request.participation.live -%}
-                {% if request.participation.spectate %}
-                    {{- _('Spectating, contest ends in %(countdown)s.', countdown=as_countdown(contest.time_before_end)) -}}
-                {% elif request.participation.end_time %}
-                    {{- _('Participating virtually, %(countdown)s remaining.', countdown=as_countdown(request.participation.time_remaining)) -}}
-                {% else %}
-                    {{- _('Participating virtually.') -}}
-                {% endif %}
-            {%- else -%}
-                {% if contest.start_time > now %}
-                    {{- _('Starting in %(countdown)s.', countdown=as_countdown(contest.time_before_start)) -}}
-                {% elif contest.end_time < now %}
-                    {{- _('Contest is over.') -}}
-                {% else %}
-                    {%- if has_joined -%}
-                        {% if live_participation.ended %}
-                            {{- _('Your time is up! Contest ends in %(countdown)s.', countdown=as_countdown(contest.time_before_end)) -}}
-                        {% else %}
-                            {{- _('You have %(countdown)s remaining.', countdown=as_countdown(live_participation.time_remaining)) -}}
-                        {% endif %}
-                    {%- else -%}
-                        {{ _('Contest ends in %(countdown)s.', countdown=as_countdown(contest.time_before_end)) }}
-                    {%- endif -%}
-                {% endif %}
-            {%- endif -%}
+                {{- contest.start_time|utc|date('Y-m-d\TH:i:s') }}">
+            <h2 style="text-align: center">
+                {%- if contest.is_in_contest(request.user) and not request.participation.live -%}
+                    {% if request.participation.spectate %}
+                        {{- _('Spectating, contest ends in %(countdown)s.', countdown=as_countdown(contest.time_before_end)) -}}
+                    {% elif request.participation.end_time %}
+                        {{- _('Participating virtually, %(countdown)s remaining.', countdown=as_countdown(request.participation.time_remaining)) -}}
+                    {% else %}
+                        {{- _('Participating virtually.') -}}
+                    {% endif %}
+                {%- else -%}
+                    {% if contest.start_time > now %}
+                        {{- _('Starting in %(countdown)s.', countdown=as_countdown(contest.time_before_start)) -}}
+                    {% elif contest.end_time < now %}
+                        {{- _('Contest is over.') -}}
+                    {% else %}
+                        {%- if has_joined -%}
+                            {% if live_participation.ended %}
+                                {{- _('Your time is up! Contest ends in %(countdown)s.', countdown=as_countdown(contest.time_before_end)) -}}
+                            {% else %}
+                                {{- _('You have %(countdown)s remaining.', countdown=as_countdown(live_participation.time_remaining)) -}}
+                            {% endif %}
+                        {%- else -%}
+                            {{ _('Contest ends in %(countdown)s.', countdown=as_countdown(contest.time_before_end)) }}
+                        {%- endif -%}
+                    {% endif %}
+                {%- endif -%}
+            </h2>
         </a>
         <div id="time">
             {% with start_time=contest.start_time|date(_("F j, Y, G:i T")) %}
@@ -81,14 +83,14 @@
             {% endwith %}
         </div>
         {% if contest.show_short_display %}
-            <div id="details">
+            <div id="details" class="markdown-body">
                 <ul>
                     {% with authors=contest.authors.all() %}
                         {% if not contest.hide_problem_authors and authors %}
                             <li>
                                 {% trans trimmed count=authors|length, link_authors=link_users(authors) %}
                                     The author of this contest is {{ link_authors }}.
-                                {% pluralize count %}
+                                    {% pluralize count %}
                                     The authors of this contest are {{ link_authors }}.
                                 {% endtrans %}
                             </li>
@@ -99,7 +101,7 @@
                             <li>
                                 {% trans trimmed count=testers|length, link_testers=link_users(testers) %}
                                     Special thanks to {{ link_testers }} for testing and feedback on the problems.
-                                {% pluralize count %}
+                                    {% pluralize count %}
                                     Special thanks to {{ link_testers }} for testing and feedback on the problems.
                                 {% endtrans %}
                             </li>
@@ -187,11 +189,13 @@
     {% set in_contest = contest.is_in_contest(request.user) %}
     {% if in_contest or contest.ended or request.user.is_superuser or is_editor or is_tester %}
         <div class="contest-problems">
-            <h2 style="margin-bottom: 0.2em; float:left;"><i class="fa fa-fw fa-question-circle"></i>{{ _('Problems') }} </h2>
+            <h2 style="margin-bottom: 0.2em; float:left;"><i class="fa fa-fw fa-question-circle"></i>{{ _('Problems') }}
+            </h2>
             {% if can_edit and can_download_data %}
-                <a class="button" style="float:right" href="{{ url('contest_prepare_data', contest.key) }}">{{ _('Download data') }}</a>
+                <a class="button" style="float:right"
+                   href="{{ url('contest_prepare_data', contest.key) }}">{{ _('Download data') }}</a>
             {% endif %}
-            <table class="table striped">
+            <table class="ui table striped">
                 <thead>
                 <tr>
                     <th>#</th>
@@ -210,7 +214,7 @@
                 <tbody>
                 {% for problem in contest_problems %}
                     <tr>
-                        <td style="width: 1em;">{{loop.index}}</td>
+                        <td style="width: 1em;">{{ loop.index }}</td>
                         {% if request.user.is_authenticated %}
                             {% if problem.id in completed_problem_ids %}
                                 <td style="width: 1em;">
@@ -264,85 +268,97 @@
                 </tbody>
             </table>
 
-            <a class="button" style="width: fit-content" href="{{ url('contest_all_problems', contest.key) }}">{{ _('All problems') }}</a>
+            <a class="ui button success" style="width: fit-content"
+               href="{{ url('contest_all_problems', contest.key) }}">{{ _('All problems') }}</a>
         </div>
+
+        <hr class="divider"/>
+
         {% if has_announcements or can_edit %}
-        <div class="contest-clartifications">
-            <h2 style="margin-bottom: 0.2em"><i class="fa fa-check"></i> {{ _('Announcements') }}</h2>
-            <table id="contest-clartifications" class="table">
-                <thead>
+            <div class="contest-clartifications">
+                <h2 style="margin-bottom: 0.2em"><i class="fa fa-check"></i> {{ _('Announcements') }}</h2>
+                <table id="contest-clartifications" class="ui table striped">
+                    <thead>
                     <tr>
                         <th>{{ _('When') }}</th>
                         <th>{{ _('Title') }}</th>
                         <th>{{ _('Description') }}</th>
                     </tr>
-                </thead>
-                <tbody>
-                {% for announcement in announcements %}
-                    <tr>
-                        <td style="width: 15%;">{{ announcement.date|date(_("F j, Y, G:i")) }}</td>
-                        <td style="width: 20%; text-align: left; padding-left: 2em;">
-                            {{ announcement.title }}
-                        </td>
-                        <td style="text-align: left; padding-left: 2em;">
-                            {{ announcement.description|markdown('announcement', MATH_ENGINE)|reference }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                {% if can_edit %}
-                    <tr>
-                        <td colspan="3">
-                            <a class="button" href="{{ url('contest_announce', contest.key) }}">{{ _('Add an announcement') }}</a>
-                        </td>
-                    </tr>
-                {% endif %}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                    {% for announcement in announcements %}
+                        <tr>
+                            <td style="width: 15%;">{{ announcement.date|date(_("F j, Y, G:i")) }}</td>
+                            <td style="width: 20%; text-align: left; padding-left: 2em;">
+                                {{ announcement.title }}
+                            </td>
+                            <td style="text-align: left; padding-left: 2em;">
+                                {{ announcement.description|markdown('announcement', MATH_ENGINE)|reference }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% if can_edit %}
+                        <tr>
+                            <td colspan="3">
+                                <a class="button"
+                                   href="{{ url('contest_announce', contest.key) }}">{{ _('Add an announcement') }}</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
         {% endif %}
+
+        <hr class="divider"/>
+
         {% if has_clarifications %}
-        <div class="contest-clartifications">
-            <h2 style="margin-bottom: 0.2em"><i class="fa fa-check"></i> {{ _('Clarifications') }}</h2>
-            <table id="contest-clartifications" class="table">
-                <thead>
+            <div class="contest-clartifications">
+                <h2 style="margin-bottom: 0.2em"><i class="fa fa-check"></i> {{ _('Clarifications') }}</h2>
+                <table id="contest-clartifications" class="ui table striped">
+                    <thead>
                     <tr>
                         <th>{{ _('When') }}</th>
                         <th>{{ _('Problem') }}</th>
                         <th>{{ _('Description') }}</th>
                     </tr>
-                </thead>
-                <tbody>
-                {% for clarification in clarifications %}
-                    <tr>
-                        <td style="width: 15%;">{{ clarification.date|date(_("F j, Y, G:i")) }}</td>
-                        <td style="width: 20%; text-align: left; padding-left: 2em;">
-                            <a href="{{ url('problem_detail', clarification.problem.code) }}"
-                                class="problem">
-                                {{ clarification.problem.name }}
-                            </a>
-                        </td>
-                        <td style="text-align: left; padding-left: 2em;">
-                            {{ clarification.description|markdown('problem', MATH_ENGINE)|reference }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                    {% for clarification in clarifications %}
+                        <tr>
+                            <td style="width: 15%;">{{ clarification.date|date(_("F j, Y, G:i")) }}</td>
+                            <td style="width: 20%; text-align: left; padding-left: 2em;">
+                                <a href="{{ url('problem_detail', clarification.problem.code) }}"
+                                   class="problem">
+                                    {{ clarification.problem.name }}
+                                </a>
+                            </td>
+                            <td style="text-align: left; padding-left: 2em;">
+                                {{ clarification.description|markdown('problem', MATH_ENGINE)|reference }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endif %}
     {% endif %}
 
-    <div class="content-description">
+    <hr class="divider"/>
+
+
+    <div class="content-description markdown-body">
         {% cache 3600 'contest_html' contest.id MATH_ENGINE %}
             {{ contest.description|markdown('contest', MATH_ENGINE)|reference|str|safe }}
         {% endcache %}
     </div>
 
-    <hr>
-    <span class="social">
-        {{ post_to_facebook(request, contest, '<i class="fa fa-facebook-official"></i>') }}
-        {{ post_to_twitter(request, SITE_NAME + ':', contest, '<i class="fa fa-twitter"></i>') }}
-    </span>
+    <hr class="divider">
+
+    <div style="display: flex; gap: 5px; justify-content: end">
+        {{ post_to_facebook(request, contest, '<button class="ui button icon blue circular"><i class="icon facebook"></i></button>') }}
+        {{ post_to_twitter(request, SITE_NAME + ':', contest, '<button class="ui button icon black circular"><i class="fa fa-x-twitter"></i></button>') }}
+    </div>
 
 
     {% if not comment_lock %}

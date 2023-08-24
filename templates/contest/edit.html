@@ -100,7 +100,7 @@
             </div>
         {% endif %}
     {% endblock %}
-    <form action="" method="post" class="form-area" style="display: flex; justify-content: center; flex-direction: column;">
+    <form action="" method="post" class="form-area ui form" style="display: flex; justify-content: center; flex-direction: column;">
         {% csrf_token %}
         {{ contest_problem_formset.management_form }}
         <table class="django-as-table">{{ form.as_table() }}</table>
@@ -109,7 +109,7 @@
         {% if contest_problem_formset.non_form_errors() %}
             {{ contest_problem_formset.non_form_errors() }}
         {% endif %}
-        <table class="table">
+        <table class="ui table striped">
             <thead>
                 <tr>
                     <th class="problem-column" style="width: 20em;"> {{ _('Problems') }} </th>
@@ -133,7 +133,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div style="display: flex; justify-content: flex-end;"><button class="submit-bar" type="submit">
+        <div style="display: flex; justify-content: flex-end;"><button class="submit-bar ui button primary" type="submit">
             {% if request.resolver_match.url_name == 'contest_edit' %}
                 {{ _('Update') }}
             {% else %}

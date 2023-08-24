@@ -6,6 +6,6 @@ window.MathJax = {
         ]
     },
     options: {
-        enableMenu: false
+        enableMenu: true
     }
 };

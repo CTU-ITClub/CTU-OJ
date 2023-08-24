@@ -94,6 +94,7 @@
 
             // Draw the statistics graph.
             var chart = null;
+
             function stats_graph(raw_data) {
                 var colors = {{ results_colors_json }};
 
@@ -106,14 +107,14 @@
                     type: 'pie',
                     data: {
                         datasets: [{
-                            data: raw_data.categories.map(function(entry) {
+                            data: raw_data.categories.map(function (entry) {
                                 return entry.count;
                             }),
-                            backgroundColor: raw_data.categories.map(function(entry) {
+                            backgroundColor: raw_data.categories.map(function (entry) {
                                 return colors[entry.code];
                             }),
                         }],
-                        labels: raw_data.categories.map(function(entry) {
+                        labels: raw_data.categories.map(function (entry) {
                             return entry.name;
                         }),
                     },
@@ -307,35 +308,57 @@
         <div class="top-pagination-bar">{% include "list-pages.html" %}</div>
     {% endif %}
 
-    <div id="common-content">
-        <div id="content-right" class="submission">
+    <div id="common-content" class="ui grid">
+        <div id="content-left" class="submission column twelve wide">
+            <div class="ws-closed">
+                <a href="javascript:void(0)">{{ _('You were disconnected. Refresh to show latest updates.') }}</a>
+            </div>
+
+            <div id="submissions-table">
+                {% set profile_id = request.profile.id if request.user.is_authenticated else 0 %}
+                {% for submission in submissions %}
+                    <div class="submission-row" id="{{ submission.id }}">
+                        {% with problem_name=show_problem and (submission.problem.i18n_name or submission.problem.name) %}
+                            {% include "submission/row.html" %}
+                        {% endwith %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="content-right" class="submission column four wide">
             <div class="info-float">
                 <div class="sidebox">
                     <h3>{{ _('Filter submissions') }} <i class="fa fa-search"></i></h3>
                     <div class="sidebox-content">
-                        <form id="filter-form" name="form" action="{{ first_page_href }}" method="get">
-                            <div class="filter-form-group">
+                        <form id="filter-form" name="form" action="{{ first_page_href }}" method="get" class="ui form">
+                            <div class="filter-form-group field">
                                 <label for="status"><i>{{ _('Status') }}</i></label>
-                                <select id="status" name="status" multiple>
+
+                                <select name="status" class="ui search dropdown" multiple>
                                     {% for id, name in all_statuses %}
                                         <option {% if id in selected_statuses %}selected{% endif %}
                                                 value="{{ id }}">{{ name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="filter-form-group">
+
+                            <div class="filter-form-group field">
                                 <label for="language"><i>{{ _('Language') }}</i></label>
-                                <select id="language" name="language" multiple>
+
+                                <select name="language" class="ui search dropdown" multiple>
                                     {% for code, name in all_languages %}
                                         <option {% if code in selected_languages %}selected{% endif %}
                                                 value="{{ code }}">{{ name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
+
                             {% if not organization %}
-                                <div class="filter-form-group">
+                                <div class="filter-form-group field">
                                     <label for="organization"><i>{{ _('Organization') }}</i></label>
-                                    <select id="organization" name="organization">
+
+                                    <select name="organization" class="ui search dropdown">
                                         <option value="">{{ _('All') }}</option>
                                         <option disabled="disabled">---</option>
                                         {% for code, name in all_organizations %}
@@ -346,7 +369,7 @@
                                 </div>
                             {% endif %}
                             <div class="form-submit-group">
-                                <a id="go" onclick="form.submit()" class="button">{{ _('Go') }}</a>
+                                <a id="go" onclick="form.submit()" class="ui button primary">{{ _('Go') }}</a>
                             </div>
                         </form>
                     </div>
@@ -362,23 +385,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div id="content-left" class="submission">
-            <div class="ws-closed">
-                <a href="javascript:void(0)">{{ _('You were disconnected. Refresh to show latest updates.') }}</a>
-            </div>
-
-            <div id="submissions-table">
-                {% set profile_id = request.profile.id if request.user.is_authenticated else 0 %}
-                {% for submission in submissions %}
-                    <div class="submission-row" id="{{ submission.id }}">
-                        {% with problem_name=show_problem and (submission.problem.i18n_name or submission.problem.name) %}
-                            {% include "submission/row.html" %}
-                        {% endwith %}
-                    </div>
-                {% endfor %}
             </div>
         </div>
     </div>

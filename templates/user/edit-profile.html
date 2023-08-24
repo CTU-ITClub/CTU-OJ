@@ -259,7 +259,7 @@
 
 {% block body %}
     <div class="centered-form">
-        <form id="edit-form" action="" method="post" class="form-area">
+        <form id="edit-form" action="" method="post" class="form-area ui form">
             {% if form.errors %}
                 <div class="alert alert-danger alert-dismissable">
                     <a href="#" class="close">x</a>
@@ -294,7 +294,7 @@
             {% endif %}
 
             <div class="settings" style="padding-top:0.7em">
-                <div class="pane" style="vertical-align:top">
+                <div class="pane ui form" style="vertical-align:top">
                     <table style="padding-right:0.8em">
                         <tr title="{{ _('Select your closest major city') }}">
                             <td><label class="inline-header grayed">{{ _('Time zone:') }}</label></td>
@@ -332,7 +332,7 @@
             <hr>
             <div class="settings" style="padding-top:0.7em">
                 <div class="pane">
-                    <table border="0">
+                    <table>
                         {% if form.newsletter %}
                             <tr><td>
                                 {{ form.newsletter }}
@@ -437,7 +437,7 @@
             </div>
             <hr>
 
-            <input type="submit" class="submit-bar" value="{{ _('Update profile') }}">
+            <input type="submit" class="submit-bar ui button primary" value="{{ _('Update profile') }}">
         </form>
     </div>
 {% endblock %}

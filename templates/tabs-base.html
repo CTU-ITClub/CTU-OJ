@@ -1,17 +1,19 @@
 {% macro make_tab(name, fa, url, text) %}
-    <li class="tab{% if tab == name %} active{% endif %}">
-        {%- if url %}<a href="{{ url }}">{% else %}<span>{% endif -%}
-        <i class="tab-icon fa {{ fa }}"></i> {{ text }}
-        {%- if url %}</a>{% else %}</span>{% endif -%}
-    </li>
+    <div class="item{% if tab == name %} active{% endif %}">
+        {%- if url %}<a href="{{ url }}">{% else %}{% endif -%}
+        <span class="icon">
+            <i class="tab-icon fa {{ fa }}"></i>
+        </span>
+        {{ text }}
+        {%- if url %}</a>{% else %}{% endif -%}
+    </div>
 {% endmacro %}
-
-<div class="tabs">
+<div style="margin: 10px 0">
     {% if not left_align_tabs %}
         <h2>{{ content_title or title }}</h2>
     {% endif %}
     {% block post_tab_spacer %}{% endblock %}
-    <ul>
+    <div class="ui top attached tabular menu">
         {% block tabs %}{% endblock %}
-    </ul>
+    </div>
 </div>
