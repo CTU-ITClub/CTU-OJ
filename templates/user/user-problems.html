@@ -48,32 +48,35 @@
     {% endif %}
 
     {% if authored %}
-        <div class="user-problem-group">
-            <h3 class="unselectable toggle closed">
-                <span class="fa fa-chevron-right fa-fw"></span>{{ _('Authored problems') }} ({{ authored|length }})
-            </h3>
-            <table style="display: none" class="table striped toggled">
-                <thead>
-                <tr>
-                    <th>{{ _('Problem') }}</th>
-                    <th>{{ _('Category') }}</th>
-                    <th>{{ _('Points') }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for problem in authored %}
+        <div class="ui styled fluid accordion">
+            <div class="title active">
+                <i class="dropdown icon"></i>
+                {{ _('Authored problems') }} ({{ authored|length }})
+            </div>
+            <div class="content active">
+                <table class="ui table striped">
+                    <thead>
                     <tr>
-                        <td>
-                            <a href="{{ url('problem_detail', problem.code) }}">{{ problem.name }}</a>
-                        </td>
-                        <td>{{ problem.group.full_name }}</td>
-                        <td><a href="{{ url('ranked_submissions', problem.code) }}">
-                            {{ problem.points|floatformat }}{% if problem.partial %}p{% endif %}
-                        </a></td>
+                        <th>{{ _('Problem') }}</th>
+                        <th>{{ _('Category') }}</th>
+                        <th>{{ _('Points') }}</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for problem in authored %}
+                        <tr>
+                            <td>
+                                <a href="{{ url('problem_detail', problem.code) }}">{{ problem.name }}</a>
+                            </td>
+                            <td>{{ problem.group.full_name }}</td>
+                            <td><a href="{{ url('ranked_submissions', problem.code) }}">
+                                {{ problem.points|floatformat }}{% if problem.partial %}p{% endif %}
+                            </a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     {% endif %}
 
@@ -86,7 +89,6 @@
             </form>
         </span></div>
     {% else %}
-        <hr>
     {% endif %}
 
     {% for group in best_submissions %}
@@ -122,4 +124,9 @@
             </table>
         </div>
     {% endfor %}
+    <script>
+        $('.ui.accordion')
+            .accordion();
+    </script>
 {% endblock %}
+

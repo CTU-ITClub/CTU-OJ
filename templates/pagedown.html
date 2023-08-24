@@ -48,7 +48,7 @@
 
                 $.post('{{ preview_url }}', {
                     content: text,
-                    csrfmiddlewaretoken: $.cookie?.('csrftoken'),
+                    csrfmiddlewaretoken: $.cookie('csrftoken'),
                 }, res => {
                     $content.html(res)
                     $preview.addClass('dmmd-preview-has-content').removeClass('dmmd-preview-stale');

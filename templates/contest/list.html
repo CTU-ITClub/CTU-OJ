@@ -157,7 +157,7 @@
             {% else %}
                 <form action="{{ url('contest_join', contest.key) }}" method="post">
                     {% csrf_token %}
-                    <input type="submit" class="unselectable button full participate-button join-warning"
+                    <input type="submit" class="ui unselectable button full participate-button join-warning"
                         value="{{ _('Join') }}">
                 </form>
             {% endif %}
@@ -319,7 +319,7 @@
             <div class="top-pagination-bar">
                 {% include "list-pages.html" %}
                 <div style="display: flex; align-items: center;">
-                    <form id="search-form" name="form" action="" method="get">
+                    <form id="search-form" name="form" action="" method="get" class="ui form">
                         <input id="search" type="text" name="search" value="{{ search_query or '' }}"
                             placeholder="{{ _('Search contest...') }}">
                     </form>
@@ -357,7 +357,7 @@
                             {% if not contest.disallow_virtual %}
                                 <td><form action="{{ url('contest_join', contest.key) }}" method="post">
                                     {% csrf_token %}
-                                    <input type="submit" class="unselectable button full participate-button"
+                                    <input type="submit" class="ui button full participate-button"
                                            value="{{ _('Virtual join') }}">
                                 </form></td>
                             {% else %}

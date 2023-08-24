@@ -123,7 +123,7 @@
 {% block info_float %}
     {% if request.user.is_authenticated and request.in_contest and submission_limit %}
         {% if submissions_left > 0 %}
-            <a href="{{ url('problem_submit', problem.code) }}" class="unselectable ui button">
+            <a href="{{ url('problem_submit', problem.code) }}" class="unselectable ui button primary" style="width: 100%;margin-bottom: 5px">
                 {{ _('Submit solution') }}
             </a>
             <div class="submissions-left">
@@ -371,8 +371,10 @@
 {% block description %}
     <iframe name="raw_problem" id="raw_problem"></iframe>
     {% if problem.is_suggesting %}
-        <div class="ui message">
-            <a class="close">x</a>
+        <div class="ui message yellow">
+            <a class="close">
+                <i class="icon close"></i>
+            </a>
             <b>{{ _('This problem is only a suggestion!') }}</b>
             <br>
             {{ _('This problem cannot be accessed by normal users until it is approved by an admin or staff. Please make sure that all the data for this problem is correct.') }}

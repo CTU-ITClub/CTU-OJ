@@ -171,61 +171,11 @@
             // https://stackoverflow.com/questions/55045146/select2-do-not-scroll-on-selection
             // scrollAfterSelect is only available after v4.0.6
             $(function () {
-                $('#org-check-list').select2({
-                    theme: '{{ DMOJ_SELECT2_THEME }}',
-                    multiple: true,
-                    closeOnSelect: false,
-                    placeholder: '{{ _('Search organizations') }}',
-                });
-
-                var selection = $('#org-check-list').data().select2.selection;
-                var results = $('#org-check-list').data().select2.results;
-
-                $('#org-check-list').on('select2:selecting', function (e) {
-                    let id = e.params.args.data.id;
-                    let val = $(e.target).val().concat([id]);
-                    $(e.target).val(val).trigger('change');
-
-                    if (selection.$search.val() != '') {
-                        selection.$search.val('');
-                        selection.trigger('query', {});
-                    } else {
-                        results.setClasses();
-                    }
-
-                    return false;
-                });
-
-                $('#org-check-list').on('select2:unselecting', function (e) {
-                    let id = e.params.args.data.id;
-                    let val = $(e.target).val().filter(function (v) {
-                        return v != id;
-                    });
-                    $(e.target).val(val).trigger('change');
-
-                    if (selection.$search.val() != '') {
-                        selection.$search.val('');
-                        selection.trigger('query', {});
-                    } else {
-                        results.setClasses();
-                    }
-
-                    return false;
-                });
-
-                $('#org-check-list').data().select2.toggleDropdown = function () {
-                    selection.$search.trigger('focus');
-
-                    if (!this.isOpen()) {
-                        this.open();
-                    }
-                }
-
                 $('#filter-by-organization-button').click(function () {
                     $('#org-check-list-wrapper').toggle();
                     $('#org-check-list').select2('open');
                 });
-            });
+            })
 
             if (localStorage.getItem(`filter-cleared-${contest_key}`) === null) {
                 localStorage.setItem(`filter-cleared-${contest_key}`, 'true');
@@ -477,22 +427,18 @@
             {% endif %}
         {% endif %}
         {% if tab == 'ranking' %}
-            <div id="org-dropdown-check-list">
+            <div id="org-dropdown-check-list" style="margin: 10px 0">
                 <button id="filter-by-organization-button" class="inline-button ui button">
                     <i class="tab-icon fa fa-filter"></i>
                     <b>{{ _('Filter') }}</b>
                 </button>
 
-                <div id="org-check-list-wrapper">
-                    <div style="margin-bottom: 10px">
-                        <button id="apply-organization-filter"
-                                class="inline-button filter-checklist-button ui button primary">{{ _('Apply') }}</button>
-                        <button id="clear-organization-filter"
-                                class="inline-button filter-checklist-button ui button">{{ _('Clear') }}</button>
+                <div id="org-check-list-wrapper" style="display: flex; margin: 10px 0">
+                    <select id="org-check-list" class="ui search dropdown" name="orgs[]" multiple="multiple"></select>
+                    <div style="display: flex; margin-left: 10px">
+                        <button id="apply-organization-filter" class="ui button primary">{{ _('Apply') }}</button>
+                        <button id="clear-organization-filter" class="ui button">{{ _('Clear') }}</button>
                     </div>
-
-                    <select style="width: 100%; margin: 10px 0" id="org-check-list" name="orgs[]" multiple="multiple"></select>
-
                 </div>
             </div>
         {% endif %}
