@@ -270,19 +270,31 @@
     </script>
 
     <style>
+        pre.line {
+            margin: 0;
+        }
+
         .codehilite {
             position: relative;
         }
 
         .copy-clipboard {
-            position: absolute;
-            right: 5px;
-            top: 5px;
             padding: 5px 10px;
             width: fit-content;
             border: 1px solid #ddd;
             border-radius: 5px;
             cursor: pointer;
+            margin-bottom: -45px;
+            margin-left: calc(100% - 70px);
+            position: relative;
+            background: #fff;
+        }
+
+        .codehilite .copy-clipboard {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            margin: 0;
         }
 
         .AB {

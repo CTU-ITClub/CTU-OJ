@@ -12,7 +12,10 @@
                 <br>
                 <span>{{ submission.language }}</span>
                 {% if can_edit %}
-                    [<a href="{{ url('admin:judge_submission_change', submission.id) }}">{{ _('Admin') }}</a>]
+                    <a href="{{ url('admin:judge_submission_change', submission.id) }}" class="ui button black circular mini icon">
+                        <i class="icon cog"></i>
+                        {{ _('Admin') }}
+                    </a>
                 {% endif %}
             {% endwith %}
         </span>
