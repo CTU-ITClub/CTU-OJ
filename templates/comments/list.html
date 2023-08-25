@@ -47,7 +47,7 @@
 
         {% if has_comments %}
             <div class="panel-block">
-                <div class="ui comments">
+                <div class="ui threaded comments">
                     {% set logged_in = request.user.is_authenticated %}
                     {% set profile = request.profile if logged_in else None %}
                     {% for node in mptt_tree(comment_list) recursive %}
@@ -186,13 +186,13 @@
                                     </a>
                                 {% endif %}
                             </div>
+                            <div id="comment-{{ node.id }}-reply" class="reply-comment comments" hidden></div>
+                            {% with children=node.get_children() %}
+                                {% if children %}
+                                    <div id="comment-{{ node.id }}-children" class="comments">{{ loop(children) }}</div>
+                                {% endif %}
+                            {% endwith %}
                         </div>
-                        <ul id="comment-{{ node.id }}-reply" class="reply-comment" hidden></ul>
-                        {% with children=node.get_children() %}
-                            {% if children %}
-                                <ul id="comment-{{ node.id }}-children" class="comments">{{ loop(children) }}</ul>
-                            {% endif %}
-                        {% endwith %}
                     {% endfor %}
                 </div>
             </div>
