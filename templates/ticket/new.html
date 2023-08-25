@@ -5,7 +5,7 @@
 {% block js_media %}{{ form.media.js }}{% endblock %}
 
 {% block body %}
-    <form id="ticket-form" action="" method="POST" class="form-area ui form" style="overflow:hidden;">
+    <form id="ticket-form" action="" method="POST" class="form-area ui form container" style="overflow:hidden;">
         {% block guideline_message %}{% endblock %}
         {% csrf_token %}
         {% if form.non_field_errors() or form.title.errors %}

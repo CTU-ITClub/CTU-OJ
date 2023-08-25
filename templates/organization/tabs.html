@@ -5,8 +5,8 @@
     </a>
 {% endmacro %}
 
-<h2>{{ content_title or title }}</h2>
-<div class="ui attached top segment tabular menu stackable">
+<h2 class="ui header">{{ content_title or title }}</h2>
+<div class="ui attached top segment tabular menu stackable" style="margin-bottom: 10px">
     {{ make_tab('home', 'info', url('organization_home', organization.pk, organization.slug), _('Home')) }}
     {{ make_tab('users', 'university', organization.get_users_url(), _('Users')) }}
     {{ make_tab('problem-list', 'puzzle', url('problem_list_organization', organization.pk, organization.slug), _('Problems list')) }}

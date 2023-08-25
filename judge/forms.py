@@ -13,7 +13,7 @@ from django.core.validators import FileExtensionValidator, RegexValidator
 from django.db.models import Q
 from django.forms import BooleanField, CharField, ChoiceField, DateInput, Form, ModelForm, MultipleChoiceField, \
     inlineformset_factory
-from django.forms.widgets import DateTimeInput
+from django.forms.widgets import DateTimeInput, Textarea
 from django.template.defaultfilters import filesizeformat
 from django.urls import reverse, reverse_lazy
 from django.utils.text import format_lazy
@@ -322,7 +322,7 @@ class ContestDownloadDataForm(Form):
 
 
 class ProblemSubmitForm(ModelForm):
-    source = CharField(max_length=65536, required=False, widget=AceWidget(theme='twilight', no_ace_media=True))
+    source = CharField(max_length=65536, required=False, widget=Textarea(attrs={'style': 'display:none;'}))
     submission_file = forms.FileField(
         label=_('Source file'),
         required=False,

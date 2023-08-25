@@ -1,11 +1,49 @@
 {% extends "base.html" %}
 
 {% block js_media %}
-    <script type="text/javascript" src="{{ ACE_URL }}/ace.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
+    <script>
+        require.config({paths: {'vs': 'https://unpkg.com/monaco-editor@latest/min/vs'}});
+
+        window.MonacoEnvironment = {
+            getWorkerUrl: function (workerId, label) {
+                return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+                    self.MonacoEnvironment = {
+                        baseUrl: 'https://unpkg.com/monaco-editor@latest/min/'
+                    };
+                    importScripts('https://unpkg.com/monaco-editor@latest/min/vs/base/worker/workerMain.js');`
+                )}`;
+            }
+        };
+
+        require(["vs/editor/editor.main"], function () {
+            window.$_editor = monaco.editor.create(document.querySelector('.monaco-editor-container'), {
+                language: 'cpp',
+                value: '',
+                theme: 'vs-dark',
+                automaticLayout: true,
+            });
+
+            window.$_editor.onDidChangeModelContent(() => {
+                $('#id_source').val(window.$_editor.getValue())
+
+            })
+
+            window.$update_language_template()
+        });
+    </script>
     {{ form.media.js }}
     {% compress js %}
         <script type="text/javascript">
             $(function () {
+                const languageMap = {
+                    'c_cpp': 'cpp',
+                };
+
+                function mapLanguage(lang) {
+                    return languageMap[lang] || lang;
+                }
+
                 function format(state) {
                     if (!state.id) return state.text; // optgroup
                     return state.text;
@@ -15,27 +53,28 @@
 
                 function update_language_template() {
                     var source = $('textarea#id_source');
-                    if (source.val() == window.previous_template.replace(/\r/g, '') || source.val() == '') {
-                        var lang_id = $('#id_language').val();
-                        var code = localStorage.getItem('submit:' + $('#id_language').val());
+                    var lang_id = $('#id_language').val();
+                    var code = localStorage.getItem('submit:' + $('#id_language').val());
 
-                        function update_submit_area(code) {
-                            window.previous_template = code;
-                            source.val(code);
-                            window.ace_source.getSession().setValue(code);
-                        }
+                    function update_submit_area(code) {
+                        window.previous_template = code;
+                        source.val(code);
+                        window.$_editor.setValue(code)
+                    }
 
-                        if (code != null) {
-                            update_submit_area(code);
-                        } else {
-                            $.get('{{ url('language_template_ajax') }}', {
-                                id: lang_id
-                            }).done(function (template) {
-                                update_submit_area(template);
-                            });
-                        }
+
+                    if (code != null) {
+                        update_submit_area(code);
+                    } else {
+                        $.get('{{ url('language_template_ajax') }}', {
+                            id: lang_id
+                        }).done(function (template) {
+                            update_submit_area(template);
+                        });
                     }
                 }
+
+                window.$update_language_template = update_language_template;
 
                 function makeDisplayData(data) {
                     var site_data = data.attr('data-info');
@@ -50,7 +89,6 @@
                     return $('<span>').append($('<b>').text(state.text), ' (', data, ')');
                 }
 
-                // Terrible hack, adapted from https://github.com/select2/select2/issues/4436
                 $.fn.select2.amd.define('select2/data/customAdapter', ['select2/results', 'select2/utils'], function (Result, Utils) {
                     RefPresenter = function ($element, options, dataAdapter) {
                         RefPresenter.__super__.constructor.call(this, $element, options, dataAdapter);
@@ -66,8 +104,6 @@
                     return RefPresenter;
                 });
 
-                var customAdapter = $.fn.select2.amd.require('select2/data/customAdapter');
-
 
                 $('#id_judge').on('select2:open', function (evt) {
                     var dropdown = $('.select2-dropdown');
@@ -77,44 +113,8 @@
 
                 $('#id_language').change(function () {
                     var lang = $("#id_language").find("option:selected").attr('data-ace');
-                    window.ace_source.getSession().setMode("ace/mode/" + lang);
+                    window.$_editor.getModel().setLanguage(mapLanguage(lang));
                     update_language_template();
-                });
-
-                $('#ace_source').on('ace_load', function (e, editor) {
-                    update_language_template();
-                    editor.commands.addCommand({
-                        name: 'save',
-                        bindKey: {win: 'Ctrl-S', mac: 'Command-S'},
-                        exec: function () {
-                            localStorage.setItem('submit:' + $('#id_language').val(), editor.getSession().getValue());
-                        }
-                    });
-                    editor.commands.addCommand({
-                        name: 'open',
-                        bindKey: {win: 'Ctrl-O', mac: 'Command-O'},
-                        exec: function () {
-                            $('#file_select').click();
-                        }
-                    });
-                    editor.getSession().setUseWrapMode(true);
-                    editor.setFontSize(14);
-                    editor.setPrintMarginColumn(100);
-                    editor.focus();
-
-                    $(editor.container).on('dragover', function (e) {
-                        var types = e.originalEvent.dataTransfer.types;
-                        if (types && Array.prototype.indexOf.call(types, 'Files') !== -1) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                        }
-                    });
-
-                    $(editor.container).on('drop', function (e) {
-                        e.preventDefault();
-                        $('#file_select').prop('files', e.originalEvent.dataTransfer.files);
-                        handleFileSelect();
-                    });
                 });
 
                 $(window).resize(function () {
@@ -191,7 +191,7 @@
                 if (file && window.FileReader) {
                     var reader = new FileReader();
                     reader.onload = function () {
-                        ace_source.session.setValue(reader.result);
+                        window.$_editor.setValue(reader.result);
 
                         if (file.name.search('.') != -1) {
                             var ext = file.name.split('.').pop();
@@ -231,7 +231,6 @@
 {% endblock %}
 
 {% block body %}
-    <br>
     {% if not no_judges %}
         {% if default_lang not in form.fields.language.queryset %}
             <div class="ui message warning icon">
@@ -285,38 +284,62 @@
         {% endif %}
     {% endif %}
 
-    <form id="problem_submit" action="" method="post" class="form-area ui form" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.non_field_errors() }}
-        <div id="submit-wrapper">
-            <div id="editor" class="hidden">
-                <div>
-                    <label for="file_select"><i>{{ _('Paste your source code here or load it from a file:') }}</i></label>
-                    <input id="file_select" type="file" onchange="handleFileSelect()">
+    <form id="problem_submit" action="" method="post" class="form-area ui form grid stackable"
+          enctype="multipart/form-data">
+        <div class="column eleven wide">
+            <div id="submit-wrapper">
+                <div id="editor">
+                    {{ form.source.errors }}
+                    {{ form.source }}
+
+                    <div class="monaco-editor-container" style="height: 70vh"></div>
                 </div>
-                {{ form.source.errors }}
-                {{ form.source }}
+                <div id="file-submit" class="hidden">
+                    <div class="ui message error icon">
+                        <i class="icon warning"></i>
+                        <a class="icon close">
+                            <i class="icon close"></i>
+                        </a>
+                        <div class="content">
+                            {{ _('You can only submit file for this language.') }}
+                        </div>
+                    </div>
+                    {{ form.submission_file.errors }}
+                    <input id="file_upload" type="file" name="submission_file" style="display: none;"
+                           onchange="handleFileChange()">
+                    <label for="file_upload" id="file_drag"></label>
+                </div>
             </div>
-            <div id="file-submit" class="hidden">
-                <div class="ui message error icon">
+        </div>
+
+        <div class="column five wide">
+            {% if no_judges %}
+                <div class="ui message yellow icon">
                     <i class="icon warning"></i>
-                    <a class="icon close">
-                        <i class="icon close"></i>
-                    </a>
                     <div class="content">
-                        {{ _('You can only submit file for this language.') }}
+                        {{ _('No judge is available for this problem.') }}
                     </div>
                 </div>
-                {{ form.submission_file.errors }}
-                <input id="file_upload" type="file" name="submission_file" style="display: none;"
-                       onchange="handleFileChange()">
-                <label for="file_upload" id="file_drag"></label>
-            </div>
-            <hr>
+                <hr class="ui divider"/>
+            {% else %}
+                <button type="submit" class="ui button green"
+                        {% if request.in_contest and submission_limit and not submissions_left %}disabled{% endif %}
+                        style="width: 100%">
+                    <i class="icon play"></i>
+                    {{ _('Submit!') }}
+                </button>
+                <hr class="ui divider"/>
+
+                {{ form.judge }}
+
+                <hr class="ui divider"/>
+            {% endif %}
+
             {% if not no_judges %}
                 <div id="language">
                     {{ form.language.errors }}
-                    <div id="language-select">
+                    <div id="language-select" class="field">
+                        <label>{{ _('Language') }}</label>
                         <select id="id_language" name="language" class="ui search dropdown">
                             {% for lang in form.fields.language.queryset %}
                                 <option value="{{ lang.id }}" data-id="{{ lang.id }}" data-name="{{ lang.name }}"
@@ -329,21 +352,23 @@
                         </select>
                     </div>
                 </div>
+                <hr class="ui divider"/>
             {% endif %}
+
+            <div>
+                <label for="file_select" class="ui placeholder segment primary">
+                    <div class="ui icon header">
+                        <i class="icon file code"></i>
+                        {{ _('Paste your source code here or load it from a file:') }}
+                    </div>
+
+                    <label for="file_select" class="ui button primary">{{ _('Select file') }}</label>
+                </label>
+                <input id="file_select" type="file" onchange="handleFileSelect()" hidden>
+            </div>
+
+            {% csrf_token %}
+            {{ form.non_field_errors() }}
         </div>
-
-        <hr class="ui divider">
-
-        {% if no_judges %}
-            <div class="ui message error">
-                {{ _('No judge is available for this problem.') }}
-            </div>
-        {% else %}
-            <div class="submit-bar">
-                {{ form.judge }}
-                <input type="submit" value="{{ _('Submit!') }}" class="ui button primary"
-                       {% if request.in_contest and submission_limit and not submissions_left %}disabled{% endif %}>
-            </div>
-        {% endif %}
     </form>
 {% endblock %}

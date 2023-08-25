@@ -14,33 +14,36 @@
 
 {% block title_row %}
     <div id="post-{{ post.id }}"
-         style="display: flex; gap: 0.5em; position:sticky; top: 50px; z-index: 1; background: #fff; padding: 10px 0">
-        <div class="ui vertical mini buttons">
+         class="ui container header"
+         style="display: flex; gap: 0.5em; position:sticky; top: 50px; z-index: 1; background: #fff; padding: 10px 0; align-items: start">
+        <div class="ui vertical icon buttons">
             {% if logged_in %}
-                <a href="javascript:blog_upvote({{ post.id }})" class="ui button">
-                    <i class="fa fa-chevron-up fa-fw{% if post.vote_score == 1 %} voted{% endif %}"></i>
+                <a href="javascript:blog_upvote({{ post.id }})"
+                   class="ui button{% if post.vote_score == 1 %} active{% endif %}">
+                    <i class="icon thumbs up"></i>
                 </a>
             {% else %}
                 <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
                    title="{{ _('Please log in to vote') }}"
                    class="ui button">
-                    <i class="fa fa-chevron-up fa-fw"></i>
+                    <i class="icon thumbs up"></i>
                 </a>
             {% endif %}
             <div id="post-score" class="ui button disabled">{{ post.score }}</div>
             {% if logged_in %}
-                <a href="javascript:blog_downvote({{ post.id }})" class="ui button">
-                    <i class="fa fa-chevron-down fa-fw{% if post.vote_score == -1 %} voted{% endif %}"></i>
+                <a href="javascript:blog_downvote({{ post.id }})"
+                   class="ui button {% if post.vote_score == -1 %} active{% endif %}">
+                    <i class="icon thumbs down"></i>
                 </a>
             {% else %}
                 <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
                    title="{{ _('Please log in to vote') }}"
                    class="ui button">
-                    <i class="fa fa-chevron-down fa-fw"></i>
+                    <i class="icon thumbs down"></i>
                 </a>
             {% endif %}
         </div>
-        <div style="width: 100%;">
+        <div style="flex: 1;">
             <h2 class="ui header">
                 <div class="content">
                     {% block content_title %}
@@ -75,28 +78,28 @@
             </span>
             {% endif %}
 
-
+            <hr class="ui divider"/>
         </div>
     </div>
 {% endblock %}
 
 {% block body %}
-    <div class="post-full p-2">
+    <div class="ui container">
         <div class="markdown-body">
             {% cache 86400 'post_content' post.id MATH_ENGINE %}
                 {{ post.content|markdown('blog', MATH_ENGINE)|reference|str|safe }}
             {% endcache %}
         </div>
-    </div>
 
-    <div class="ui divider"></div>
+        <div class="ui divider"></div>
 
-    <div style="display: flex; gap: 1px; justify-content: end">
-        {{ post_to_facebook(request, post, '<button class="ui blue button circular icon"><i class="icon facebook"></i></button>') }}
-        {{ post_to_twitter(request, SITE_NAME + ':', post, '<button class="ui button circular icon black"><i class="fa-brands fa-x-twitter"></i></button>') }}
+        <div style="display: flex; gap: 1px; justify-content: end">
+            {{ post_to_facebook(request, post, '<button class="ui blue button circular icon"><i class="icon facebook"></i></button>') }}
+            {{ post_to_twitter(request, SITE_NAME + ':', post, '<button class="ui button circular icon black"><i class="fa-brands fa-x-twitter"></i></button>') }}
+        </div>
+        {% include "comments/list.html" %}
+        <div style="clear: both;"></div>
     </div>
-    {% include "comments/list.html" %}
-    <div style="clear: both;"></div>
 {% endblock %}
 
 {% block bodyend %}

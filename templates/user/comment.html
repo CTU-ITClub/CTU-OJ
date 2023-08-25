@@ -13,39 +13,44 @@
 
 {% block body %}
     {% block before_comments %}{% endblock %}
-    <form action="{{ url('user_comment', user.username) }}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="ui button red">Delete all comments</button>
-    </form>
 
-    <hr class="ui divider"/>
+    <div class="ui grid">
+        <form action="{{ url('user_comment', user.username) }}" method="post" class="column four wide">
+            {% csrf_token %}
+            <button type="submit" class="ui button red" style="width: 100%; position: sticky; top: 80px">
+                <i class="icon trash"></i>
+                Delete all comments
+            </button>
+        </form>
 
-    <div class="ui comments top-level-comments new-comments">
-        {% set logged_in = request.user.is_authenticated %}
-        {% for comment in comments %}
-            <div id="comment-{{ comment.id }}" data-revision="{{ comment.revisions - 1 }}"
-                 data-max-revision="{{ comment.revisions - 1 }}"
-                 data-revision-ajax="{{ url('comment_revision_ajax', comment.id) }}"
-                 class="comment {% if comment.score <= vote_hide_threshold %}negative{% endif %}">
-                {% with author=comment.author, user=comment.author.user %}
-                    <a href="{{ url('user_page', user.username) }}" class="avatar">
-                        <img src="{{ gravatar(author, 135) }}">
-                    </a>
-                {% endwith %}
-                <div class="content">
-                    <div class="author">
+        <div class="ui comments container column twelve wide">
+            {% set logged_in = request.user.is_authenticated %}
+            {% for comment in comments %}
+                <div id="comment-{{ comment.id }}" data-revision="{{ comment.revisions - 1 }}"
+                     data-max-revision="{{ comment.revisions - 1 }}"
+                     data-revision-ajax="{{ url('comment_revision_ajax', comment.id) }}"
+                     class="comment {% if comment.score <= vote_hide_threshold %}negative{% endif %}">
+                    {% with author=comment.author, user=comment.author.user %}
+                        <a href="{{ url('user_page', user.username) }}" class="avatar"
+                           style="position: sticky; top: 60px">
+                            <img src="{{ gravatar(author, 135) }}">
+                        </a>
+                    {% endwith %}
+                    <div class="content">
+                        <div class="author"
+                             style="position: sticky; top: 50px; background: #fff; z-index: 1; padding: 20px 0">
                                 <span>
                                     {{ link_user(comment.author) }}&nbsp;
                                 </span>
-                        {% with abs=_('commented on {time}'), rel=_('commented {time}') %}
-                            {{ relative_time(comment.time, abs=abs, rel=rel) }}
-                            →
-                            <a href="{{ comment.link }}#comment-{{ comment.id }}">
-                                {{ comment.page_title }}
-                            </a>
-                        {% endwith %}
-                        <span class="comment-spacer"></span>
-                        <span class="comment-operation">
+                            {% with abs=_('commented on {time}'), rel=_('commented {time}') %}
+                                {{ relative_time(comment.time, abs=abs, rel=rel) }}
+                                →
+                                <a href="{{ comment.link }}#comment-{{ comment.id }}">
+                                    {{ comment.page_title }}
+                                </a>
+                            {% endwith %}
+                            <span class="comment-spacer"></span>
+                            <span class="comment-operation">
                                 {% if comment.revisions > 1 %}
                                     <span class="comment-edits">
                                         <a href="javascript:show_revision({{ comment.id }}, -1)"
@@ -64,57 +69,57 @@
                                 {% else %}
                                     <span class="comment-edits"></span>
                                 {% endif %}
-                            <a href="{{ comment.link }}#comment-{{ comment.id }}" title="{{ _('Link') }}"
-                               class="comment-link">
+                                <a href="{{ comment.link }}#comment-{{ comment.id }}" title="{{ _('Link') }}"
+                                   class="comment-link">
                                     <i class="fa fa-link fa-fw"></i>
                                 </a>
                             </span>
-                    </div>
-                    <div class="markdown-body">
-                        <div class="comment-body"{% if comment.score <= vote_hide_threshold %}
-                             style="display:none"{% endif %}>
-                            {{ comment.body|markdown('comment', MATH_ENGINE, True)|reference|str|safe }}
                         </div>
-                        {% if comment.score <= vote_hide_threshold %}
-                            <div class="comment-body bad-comment-body">
-                                <p>
-                                    {{ _('This comment is hidden due to too much negative feedback.') }}
-                                    <a href="javascript:comment_show_content({{ comment.id }})">{{ _('Show it anyway.') }}</a>
-                                </p>
+                        <div class="markdown-body">
+                            <div class="comment-body"{% if comment.score <= vote_hide_threshold %}
+                                 style="display:none"{% endif %}>
+                                {{ comment.body|markdown('comment', MATH_ENGINE, True)|reference|str|safe }}
                             </div>
-                        {% endif %}
+                            {% if comment.score <= vote_hide_threshold %}
+                                <div class="comment-body bad-comment-body">
+                                    <p>
+                                        {{ _('This comment is hidden due to too much negative feedback.') }}
+                                        <a href="javascript:comment_show_content({{ comment.id }})">{{ _('Show it anyway.') }}</a>
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="ui buttons icon mini">
+                            {% if logged_in %}
+                                <a href="javascript:comment_upvote({{ comment.id }})"
+                                   class="ui button{% if comment.vote_score == 1 %} active{% endif %}">
+                                    <i class="icon thumbs up"></i>
+                                </a>
+                            {% else %}
+                                <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
+                                   title="{{ _('Please log in to vote') }}"
+                                   class="ui button">
+                                    <i class="icon thumbs up"></i>
+                                </a>
+                            {% endif %}
+                            <div class="ui button disabled">{{ comment.score }}</div>
+                            {% if logged_in %}
+                                <a href="javascript:comment_downvote({{ comment.id }})"
+                                   class="ui button{% if comment.vote_score == -1 %} active{% endif %}">
+                                    <i class="icon thumbs down"></i>
+                                </a>
+                            {% else %}
+                                <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
+                                   title="{{ _('Please log in to vote') }}" class="ui button">
+                                    <i class="icon thumbs down"></i>
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
 
-                <div class="ui buttons icon mini">
-                    {% if logged_in %}
-                        <a href="javascript:comment_upvote({{ comment.id }})"
-                           class="ui button{% if comment.vote_score == 1 %} active{% endif %}">
-                            <i class="icon thumbs up"></i>
-                        </a>
-                    {% else %}
-                        <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
-                           title="{{ _('Please log in to vote') }}"
-                           class="ui button">
-                            <i class="icon thumbs up"></i>
-                        </a>
-                    {% endif %}
-                    <div class="ui button disabled">{{ comment.score }}</div>
-                    {% if logged_in %}
-                        <a href="javascript:comment_downvote({{ comment.id }})"
-                           class="ui button{% if comment.vote_score == -1 %} active{% endif %}">
-                            <i class="icon thumbs down"></i>
-                        </a>
-                    {% else %}
-                        <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
-                           title="{{ _('Please log in to vote') }}" class="ui button">
-                            <i class="icon thumbs down"></i>
-                        </a>
-                    {% endif %}
                 </div>
-
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 
     {% if page_obj.has_other_pages() %}

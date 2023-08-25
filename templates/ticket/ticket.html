@@ -182,13 +182,13 @@
 {% endblock %}
 
 {% block body %}
-    <div class="ticket-container">
+    <div class="ticket-container ui container">
         <div class="ticket-messages">
             <main id="messages" class="ui comments">
                 {% for message in ticket_messages %}
                     {% include "ticket/message.html" %}
 
-                    <hr class="ui divider" />
+                    <hr class="ui divider"/>
                 {% endfor %}
             </main>
 
@@ -285,8 +285,7 @@
                     {% if ticket.is_open %}style="display: none"{% endif %}>
                 {{ _('Reopen ticket') }}
             </button>
-    </div>
-    </aside>
+        </aside>
     </div>
 {% endblock %}
 

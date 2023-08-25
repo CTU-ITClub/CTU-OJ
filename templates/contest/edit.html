@@ -21,7 +21,7 @@
 
     <script src="{{ static('vnoj/jquery.formset.js') }}"></script>
     <script type="text/javascript">
-        $(function() {
+        $(function () {
             $('#form_set tr').formset({
                 prefix: '{{ contest_problem_formset.prefix }}'
             });
@@ -72,45 +72,53 @@
 
 {% block body %}
 
-{% macro form_as_row(form) -%}
-    {% if form.non_field_errors() %}
-    <tr>
-        <td colspan="6">{{ form.non_field_errors() }}</td>
-    </tr>
-    {% endif %}
-    <tr>
-        <td>{{ form.id }} {{ form.problem.errors }}{{ form.problem }}</td>
-        <td class="points-column">{{ form.points.errors }}{{ form.points }}</td>
-        <td>{{ form.order.errors }}{{ form.order }}</td>
-        <td>{{ form.max_submissions.errors }}{{ form.max_submissions }}</td>
-        <td>
-        {% if contest_problem_formset.can_delete and form.instance.pk %}
-            {{ form.DELETE }}
+    {% macro form_as_row(form) -%}
+        {% if form.non_field_errors() %}
+            <tr>
+                <td colspan="6">{{ form.non_field_errors() }}</td>
+            </tr>
         {% endif %}
-        </td>
-    <tr>
-{%- endmacro %}
+        <tr>
+            <td>{{ form.id }} {{ form.problem.errors }}{{ form.problem }}</td>
+            <td class="points-column">{{ form.points.errors }}{{ form.points }}</td>
+            <td>{{ form.order.errors }}{{ form.order }}</td>
+            <td>{{ form.max_submissions.errors }}{{ form.max_submissions }}</td>
+            <td>
+                {% if contest_problem_formset.can_delete and form.instance.pk %}
+                    {{ form.DELETE }}
+                {% endif %}
+            </td>
+        <tr>
+    {%- endmacro %}
 
-<div>
-    {% block edit_contest %}
-        {% if request.user.is_staff %}
-            <div class="alert alert-warning alert-dismissable">
-                <a class="close">x</a>
-                <a href="{{ url('admin:judge_contest_change', contest.id) }}">{{ _('Edit contest in admin panel for more options') }}</a>
-            </div>
-        {% endif %}
-    {% endblock %}
-    <form action="" method="post" class="form-area ui form" style="display: flex; justify-content: center; flex-direction: column;">
-        {% csrf_token %}
-        {{ contest_problem_formset.management_form }}
-        <table class="django-as-table">{{ form.as_table() }}</table>
-        <hr>
-        <center><h3> {{ _('Problems') }} </h3></center>
-        {% if contest_problem_formset.non_form_errors() %}
-            {{ contest_problem_formset.non_form_errors() }}
-        {% endif %}
-        <table class="ui table striped">
-            <thead>
+    <div>
+        {% block edit_contest %}
+            {% if request.user.is_staff %}
+                <div class="ui message info icon">
+                    <i class="icon info circle"></i>
+                    <a class="icon close">
+                        <i class="icon close"></i>
+                    </a>
+                    <div class="content">
+                        <a href="{{ url('admin:judge_contest_change', contest.id) }}">
+                            {{ _('Edit contest in admin panel for more options') }}
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock %}
+        <form action="" method="post" class="form-area ui form"
+              style="display: flex; justify-content: center; flex-direction: column;">
+            {% csrf_token %}
+            {{ contest_problem_formset.management_form }}
+            <table class="django-as-table">{{ form.as_table() }}</table>
+            <hr>
+            <center><h3> {{ _('Problems') }} </h3></center>
+            {% if contest_problem_formset.non_form_errors() %}
+                {{ contest_problem_formset.non_form_errors() }}
+            {% endif %}
+            <table class="ui table striped">
+                <thead>
                 <tr>
                     <th class="problem-column" style="width: 20em;"> {{ _('Problems') }} </th>
                     <th class="points-column"> {{ _('Points') }} </th>
@@ -121,25 +129,27 @@
                         <span class="helptext">
                             {{ _('Maximum number of submissions') }}
                             <br>
-                            {{_('or leave blank for no limit.') }}
+                            {{ _('or leave blank for no limit.') }}
                         </span>
                     </th>
                     <th> {{ _('Delete') }} </th>
                 </tr>
-            </thead>
-            <tbody id="form_set">
+                </thead>
+                <tbody id="form_set">
                 {% for form in contest_problem_formset %}
                     {{ form_as_row(form) }}
                 {% endfor %}
-            </tbody>
-        </table>
-        <div style="display: flex; justify-content: flex-end;"><button class="submit-bar ui button primary" type="submit">
-            {% if request.resolver_match.url_name == 'contest_edit' %}
-                {{ _('Update') }}
-            {% else %}
-                {{ _('Create') }}
-            {% endif %}
-        </button></div>
-    </form>
-</div>
+                </tbody>
+            </table>
+            <div style="display: flex; justify-content: flex-end;">
+                <button class="submit-bar ui button primary" type="submit">
+                    {% if request.resolver_match.url_name == 'contest_edit' %}
+                        {{ _('Update') }}
+                    {% else %}
+                        {{ _('Create') }}
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
 {% endblock %}

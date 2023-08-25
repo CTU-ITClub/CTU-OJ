@@ -1,49 +1,39 @@
 {% set logged_in = request.user.is_authenticated %}
 {% set profile = request.profile if logged_in else None %}
-<section class="{% if post.sticky %}sticky {% endif %} ui event" id="post-{{ post.id }}" style="display: flex; gap: 10px">
-    <div class="label">
-        <div class="ui vertical buttons mini inverted circular" style="position: sticky; top: 80px">
+<section class="{% if post.sticky %}sticky {% endif %} ui event" id="post-{{ post.id }}"
+         style="display: flex; gap: 10px">
+    <div class="vote">
+        <div class="ui vertical buttons icon" style="position: sticky; top: 80px">
             {% if logged_in %}
-                <a href="javascript:blog_upvote({{ post.id }})" class="ui button">
-                    <i class="fa fa-chevron-up fa-fw{% if post.vote_score == 1 %} voted{% endif %}"></i>
+                <a href="javascript:blog_upvote({{ post.id }})"
+                   class="ui button {% if post.vote_score == 1 %} active{% endif %}">
+                    <i class="icon thumbs up"></i>
                 </a>
             {% else %}
                 <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
                    title="{{ _('Please log in to vote') }}"
                    class="ui button">
-                    <i class="fa fa-chevron-up fa-fw"></i>
+                    <i class="icon thumbs up"></i>
                 </a>
             {% endif %}
             <div id="post-score" class="ui button disabled">{{ post.score }}</div>
             {% if logged_in %}
-                <a href="javascript:blog_downvote({{ post.id }})" class="ui button">
-                    <i class="fa fa-chevron-down fa-fw{% if post.vote_score == -1 %} voted{% endif %}"></i>
+                <a href="javascript:blog_downvote({{ post.id }})"
+                   class="ui button {% if post.vote_score == -1 %} active{% endif %}">
+                    <i class="icon thumbs down"></i>
                 </a>
             {% else %}
                 <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
                    title="{{ _('Please log in to vote') }}"
                    class="ui button">
-                    <i class="fa fa-chevron-down fa-fw"></i>
+                    <i class="icon thumbs down"></i>
                 </a>
             {% endif %}
         </div>
     </div>
 
-    <div class="content">
-        <div class="summary">
-            {%- if post.sticky %}<i title="Sticky" class="icon star"></i>{% endif -%}
-            {% with authors=post.authors.all() %}
-                {%- if authors -%}
-                    <span class="user">{{ link_users(authors) }}</span>
-                {%- endif -%}
-            {% endwith %}
-
-            <span class="date">
-                {% with abs=_('posted on {time}'), rel=_('posted {time}') %}
-                    {{ relative_time(post.publish_on, abs=abs, rel=rel) }}
-                {% endwith %}
-            </span>
-
+    <div class="content" style="flex: 1">
+        <div class="summary" style="position:sticky; top: 50px; background: #fff; z-index: 1; padding: 20px 0;">
             <h2 class="ui header">
                 {% if not post.visible %}
                     <i class="icon lock"></i>
@@ -53,6 +43,24 @@
                     {{ post.title }}
                 </a>
             </h2>
+            <div>
+                <div class="ui label icon">
+                    {%- if post.sticky %}<i title="Sticky" class="icon star"></i>{% endif -%}
+                    {% with authors=post.authors.all() %}
+                        {%- if authors -%}
+                            <span class="user">{{ link_users(authors) }}</span>
+                        {%- endif -%}
+                    {% endwith %}
+                </div>
+
+                <span class="date">
+                        {% with abs=_('posted on {time}'), rel=_('posted {time}') %}
+                            {{ relative_time(post.publish_on, abs=abs, rel=rel) }}
+                        {% endwith %}
+                    </span>
+            </div>
+
+            <hr class="ui divider"/>
         </div>
 
 

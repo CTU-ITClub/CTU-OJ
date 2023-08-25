@@ -495,11 +495,11 @@
 
 <div id="page-container" class="ui pusher">
     <nav class="ui menu main fixed borderless top">
-        <div class="ui container">
+        <div class="ui container fluid">
 
             <a href="{{ url('home') }}" class="header item">{% include "site-logo-fragment.html" %}</a>
 
-            <div class="ui menu container" style="border: none; border-radius: 0" id="hide-on-mobile">
+            <div class="ui menu container fluid" style="border: none; border-radius: 0" id="hide-on-mobile">
                 <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
 
                 {% for node in mptt_tree(nav_bar) recursive %}
@@ -619,20 +619,22 @@
         <div id="noscript">{{ _('This site works best with JavaScript enabled.') }}</div>
     </noscript>
 
-    <main id="content" class="ui container">
+    <main id="content" class="ui container fluid" style="padding: 0 20px">
         {% if misc_config.top_notification %}
             {{ render_django(misc_config.top_notification) }}
         {% endif %}
         {% block title_row %}
-            <h2 style="display:inline">
+            <h2 class="ui header">
                 {% block content_title %}
                     {% if content_title %}{{ content_title }}{% else %}{{ title }}{% endif %}
                 {% endblock %}
             </h2>
+
+            <div class="ui divider"></div>
         {% endblock %}
         {% block header %}{% endblock %}
         {% block title_ruler %}
-            <div class="ui divider"></div>
+            {#            <div class="ui divider"></div>#}
         {% endblock %}
         <div id="content-body">{% block body %}{% endblock %}</div>
         {% block bodyend %}{% endblock %}
@@ -641,8 +643,6 @@
     {% if misc_config.announcement %}
         <div id="announcement">{{ misc_config.announcement|safe }}</div>
     {% endif %}
-
-
 
     <footer class="ui footer segment" style="border-radius: 0">
         <div id="footer-content" class="ui container">

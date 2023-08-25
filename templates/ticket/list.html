@@ -147,10 +147,9 @@
     {% if page_obj.has_other_pages() %}
         <div class="top-pagination-bar">{% include "list-pages.html" %}</div>
     {% endif %}
-    <div id="ticket-list-container">
+    <div id="ticket-list-container" class="ui container">
         <aside>
             <div>
-
                 <form id="filter-form" name="form" action="" method="get" class="ui form">
                     <div class="field">
                         <div id="notification-box" class="ui checkbox">
@@ -183,19 +182,21 @@
                         </select>
                     </div>
 
-                    <div id="assignee-box" class="filter-select2">
+                    <div id="assignee-box" class="field">
                         <label for="filter-user">{{ _('Assignee') }}</label>
-                        <select id="filter-assignee" style="width: 100%" multiple name="assignee">
+                        <select id="filter-assignee" style="width: 100%" multiple class="ui search" name="assignee">
                             {% for username in filter_status.assignee %}
                                 <option value="{{ username }}" selected>{{ username }}</option>
                             {% endfor %}
                         </select>
                     </div>
 
-                    <button type="submit" style="margin: 10px 0" class="ui button primary">{{ _('Go') }}</button>
+                    <button type="submit" class="ui button primary">{{ _('Go') }}</button>
                 </form>
             </div>
         </aside>
+
+        <hr class="ui divider"/>
 
         <main>
             <div class="h-scrollable-table">

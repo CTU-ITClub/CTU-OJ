@@ -93,13 +93,13 @@
 
     {% for group in best_submissions %}
         <div class="ui styled fluid accordion">
-            <div class="title active">
+            <div class="title">
                 <i class="dropdown icon"></i>
                 {%- with points_str=group.points|floatformat(-3) -%}
                     {{ _('%(group)s (%(val)s points)', group=group.name, val=points_str) }}
                 {%- endwith -%}
             </div>
-            <div class="content active">
+            <div class="content">
                 <table style="display: none" class="ui table striped toggled">
                     <thead>
                     <tr>

@@ -61,15 +61,16 @@
 
 {% block body %}
     {% block before_posts %}{% endblock %}
-    <div id="blog-container" class="bottom attached segment ui grid stackable">
+    <div id="blog-container" class="ui grid stackable">
         <div class="column eleven wide">
-            <h3 class="ui header">
+            <h3 class="ui header" style="padding: 20px 0">
                 <i class="icon info circle"></i>
                 <div class="content">
                     {{ _('About') }} {{ organization.name }}
                 </div>
+                <hr class="ui divider">
             </h3>
-            <div class="sidebox-content">
+            <div class="sidebox-content ui">
                 <div style="margin: 1.4em;" class="markdown-body">
                     {% cache 3600 'organization_html' organization.id MATH_ENGINE %}
                         {{ organization.about|markdown('organization-about', MATH_ENGINE)|reference|str|safe }}
@@ -85,7 +86,7 @@
                     </div>
                 </h3>
 
-                <div class="sidebox-content feed">
+                <div class="sidebox-content ui feed">
                     {% for post in posts %}
                         {% include "blog/blog-post.html" %}
                     {% endfor %}
@@ -211,10 +212,14 @@
                                     <div class="item">
                                         <div class="content">
                                             <a class="header"
-                                               href="{{ url('problem_detail', problem.code) }}">{{ problem.name }}</a>
-                                            <p>
-                                                {{ problem.date|date(_("M j, Y, G:i")) }}
-                                            </p>
+                                               href="{{ url('problem_detail', problem.code) }}">
+                                                <div class="content">
+                                                    {{ problem.name }}
+                                                    <p class="sub header">
+                                                        {{ problem.date|date(_("M j, Y, G:i")) }}
+                                                    </p>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 {% endfor %}
