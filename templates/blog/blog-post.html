@@ -1,8 +1,8 @@
 {% set logged_in = request.user.is_authenticated %}
 {% set profile = request.profile if logged_in else None %}
-<section class="{% if post.sticky %}sticky {% endif %} ui event" id="post-{{ post.id }}">
+<section class="{% if post.sticky %}sticky {% endif %} ui event" id="post-{{ post.id }}" style="display: flex; gap: 10px">
     <div class="label">
-        <div class="ui vertical buttons mini inverted circular">
+        <div class="ui vertical buttons mini inverted circular" style="position: sticky; top: 80px">
             {% if logged_in %}
                 <a href="javascript:blog_upvote({{ post.id }})" class="ui button">
                     <i class="fa fa-chevron-up fa-fw{% if post.vote_score == 1 %} voted{% endif %}"></i>
@@ -43,13 +43,14 @@
                     {{ relative_time(post.publish_on, abs=abs, rel=rel) }}
                 {% endwith %}
             </span>
-        </div>
 
-        <div class="ui header">
-            <h2>
-                <a href="{{ url('blog_post', post.id, post.slug) }}">
-                    {% if not post.visible %}
-                        <i class="fa fa-lock" style="color: red"></i> {% endif %}{{ post.title }}
+            <h2 class="ui header">
+                {% if not post.visible %}
+                    <i class="icon lock"></i>
+                {% endif %}
+
+                <a href="{{ url('blog_post', post.id, post.slug) }}" class="content">
+                    {{ post.title }}
                 </a>
             </h2>
         </div>

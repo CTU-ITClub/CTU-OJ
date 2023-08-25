@@ -268,6 +268,27 @@
 
     <script defer>
     </script>
+
+    <style>
+        .codehilite {
+            position: relative;
+        }
+
+        .copy-clipboard {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            padding: 5px 10px;
+            width: fit-content;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .source-wrap {
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body class="has-background-light">
 <script>
@@ -442,13 +463,13 @@
             <div class="ui divider"></div>
         {% endblock %}
         <div id="content-body">{% block body %}{% endblock %}</div>
+        {% block bodyend %}{% endblock %}
     </main>
 
     {% if misc_config.announcement %}
         <div id="announcement">{{ misc_config.announcement|safe }}</div>
     {% endif %}
 
-    {% block bodyend %}{% endblock %}
 
 
     <footer class="ui footer segment" style="border-radius: 0">

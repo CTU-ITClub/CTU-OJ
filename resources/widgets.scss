@@ -155,9 +155,18 @@ textarea:focus {
     padding: 5px 8px;
 }
 
-.copy-clipboard {
+.codehilite {
     position: relative;
-    margin-top: 1.5em;
+}
+
+.copy-clipboard {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    padding: 10px;
+    width: fit-content;
+    border: 1px solid #ddd;
+    border-radius: 2px;
 }
 
 // Bootstrap-y tabs

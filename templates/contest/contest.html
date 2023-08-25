@@ -272,7 +272,7 @@
                href="{{ url('contest_all_problems', contest.key) }}">{{ _('All problems') }}</a>
         </div>
 
-        <hr class="divider"/>
+        <hr class="ui divider"/>
 
         {% if has_announcements or can_edit %}
             <div class="contest-clartifications">
@@ -293,7 +293,9 @@
                                 {{ announcement.title }}
                             </td>
                             <td style="text-align: left; padding-left: 2em;">
-                                {{ announcement.description|markdown('announcement', MATH_ENGINE)|reference }}
+                                <div class="markdown-body">
+                                    {{ announcement.description|markdown('announcement', MATH_ENGINE)|reference }}
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
@@ -310,7 +312,7 @@
             </div>
         {% endif %}
 
-        <hr class="divider"/>
+        <hr class="ui divider"/>
 
         {% if has_clarifications %}
             <div class="contest-clartifications">
@@ -334,7 +336,9 @@
                                 </a>
                             </td>
                             <td style="text-align: left; padding-left: 2em;">
-                                {{ clarification.description|markdown('problem', MATH_ENGINE)|reference }}
+                                <div class="markdown-body">
+                                    {{ clarification.description|markdown('problem', MATH_ENGINE)|reference }}
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
@@ -344,7 +348,7 @@
         {% endif %}
     {% endif %}
 
-    <hr class="divider"/>
+    <hr class="ui divider"/>
 
 
     <div class="content-description markdown-body">
@@ -353,7 +357,7 @@
         {% endcache %}
     </div>
 
-    <hr class="divider">
+    <hr class="ui divider">
 
     <div style="display: flex; gap: 5px; justify-content: end">
         {{ post_to_facebook(request, contest, '<button class="ui button icon blue circular"><i class="icon facebook"></i></button>') }}
