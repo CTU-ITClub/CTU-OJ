@@ -1,6 +1,6 @@
 {% set can_view, can_edit = submission_layout(submission, profile_id, request.user, completed_problem_ids, editable_problem_ids, tester_problem_ids) %}
 <td class="sub-result {{ submission.result_class }}">
-    <div class="score" style="text-align: center">
+    <div class="score" style="text-align: center;">
         {%- if submission.is_graded -%}
             {%- if submission.status in ('IE', 'CE', 'AB') -%}
                 ---
@@ -12,7 +12,7 @@
         {%- endif -%}
     </div>
 
-    <div class="state">
+    <div class="state" style="display: flex; justify-content: center">
         <span title="{{ submission.long_status }}" class="status ui label basic">{{ submission.short_status }}</span> |
         <span class="language ui label basic">{{ submission.language.short_display_name }}</span>
     </div>

@@ -285,12 +285,67 @@
             cursor: pointer;
         }
 
-        .source-wrap {
-            overflow-x: auto;
+        .AB {
+            background-color: #cccccc50 !important;
+            color: black !important;
+        }
+
+        .AC {
+            background-color: #53f23f90 !important;
+            color: green !important;
+        }
+
+        ._AC {
+            background-color: #DFFF0090 !important;
+            color: green !important;
+        }
+
+        .WA {
+            background-color: #ef1b5320 !important;
+            color: #ef1b53 !important;
+        }
+
+        .TLE, .MLE {
+            background-color: #cccccc50 !important;
+            color: black !important;
+        }
+
+        .OLE, .IR, .RTE, .OTH {
+            background-color: #FAB623 !important;
+            color: black !important;
+        }
+
+        .CE {
+            background-color: #cccccc50 !important;
+            color: black !important;
+        }
+
+        .IE {
+            background-color: red !important;
+            color: black !important;
+        }
+
+        .QU, .G {
+            background: white !important;
+            color: black !important;
+        }
+
+        /*** Responsive header ***/
+
+        @media screen and (max-width: 1127px) {
+            #hide-on-mobile {
+                display: none;
+            }
+        }
+
+        @media screen and (min-width: 1128px) {
+            #show-on-mobile {
+                display: none;
+            }
         }
     </style>
 </head>
-<body class="has-background-light">
+<body>
 <script>
     fbq('track', 'ViewContent');
 </script>
@@ -302,120 +357,6 @@
     </defs>
 </svg>
 
-<nav class="ui menu main inverted fixed">
-    <div class="ui container">
-
-        <a href="{{ url('home') }}" class="header item">{% include "site-logo-fragment.html" %}</a>
-
-        <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
-
-        {% for node in mptt_tree(nav_bar) recursive %}
-            {% if not node.is_leaf_node() %}
-                <div class="ui item simple dropdown">
-                    <a href="{{ node.path }}">
-                        {{ user_trans(node.label) }}
-                    </a>
-
-                    <i class="dropdown icon"></i>
-
-                    {% with children=node.get_children() %}
-                        {% if children %}
-                            <div class="menu">{{ loop(children) }}</div>
-                        {% endif %}
-                    {% endwith %}
-                </div>
-
-            {% else %}
-                <a href="{{ node.path }}" class="item{% if node.key in nav_tab %} active{% endif %}">
-                    {{ node.label }}
-                </a>
-            {% endif %}
-        {% endfor %}
-
-        <a class="item right" href="{% if request.resolver_match.view_name == "problem_detail" and problem %}
-                {{ url('new_problem_ticket', problem.code) }}
-                {% else %}
-                /tickets/new?issue_url={{ request.build_absolute_uri()|urlencode }}
-                {% endif %}"
-           style="margin-right: 5px;">
-
-            <i class="bug icon"></i>
-            <span>
-                {{ _('Report issue') }}
-                </span>
-        </a>
-
-        <div class="ui item dropdown simple">
-            <i class="icon translate"></i>
-
-            {{ _('Language') }}
-
-            <div class="menu">
-                <a id="flag_vi" class="item" href="#" onclick="submmit_language('vi')"
-                   style="margin-right: 5px; margin-top: 4px;">
-                    <i class="flag vn"></i>
-                    Tiếng Việt
-                </a>
-
-                <a id="flag_en" class="item" href="#" onclick="submmit_language('en')"
-                   style="margin-right: 5px; margin-top: 4px;">
-                    <i class="flag us"></i>
-
-                    English
-                </a>
-            </div>
-        </div>
-
-        {% if request.user.is_authenticated %}
-
-            <div class="ui item dropdown simple">
-                <a href="{{ url('user_page') }}">
-                    <img class="ui image circular inline" src="{{ gravatar(request.user, 24) }}">
-
-                    <span class="ml-2">
-                        {{ _('Hello, %(username)s.', username=bold(request.profile.display_name)) }}
-                    </span>
-                </a>
-
-                <div class="menu">
-                    {% if request.user.is_staff or request.user.is_superuser %}
-                        <a class="item has-icons-right" target="_blank" href="{{ url('admin:index') }}">
-                            {{ _('Admin') }}
-                        </a>
-                    {% endif %}
-                    <a class="item" href="{{ url('user_edit_profile') }}">{{ _('Edit profile') }}</a>
-                    {% if request.user.is_impersonate %}
-                        <a class="item"
-                           href="{{ url('impersonate-stop') }}">{{ _('Stop impersonating') }}</a>
-                    {% else %}
-                        <form action="{{ url('auth_logout') }}" method="POST" class="item">
-                            {% csrf_token %}
-                            <button type="submit"
-                                    style="border: none; background: none; display: block">{{ _('Log out') }}</button>
-                        </form>
-                    {% endif %}
-                </div>
-            </div>
-
-        {% else %}
-            <div class="item">
-
-                <a class="ui button " href="{{ url('auth_login') }}">
-                    {{ _('Login') }}
-                </a>
-
-                {% if misc_config.registration %}
-                    <a class="item button primary" href="{{ url('registration_register') }}">
-                        {{ _('Register') }}
-                    </a>
-                {% endif %}
-            </div>
-        {% endif %}
-
-    </div>
-</nav>
-
-<div style="height: 80px"></div>
 
 {% if request.in_contest %}
     {% set current_contest = request.participation.contest %}
@@ -442,11 +383,242 @@
         {% endif %}
     </div>
 {% endif %}
-<div id="page-container" class="has-background-light">
+
+<div class="ui sidebar bottom vertical menu" id="mobile-nav">
+    <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
+
+    {% for node in mptt_tree(nav_bar) recursive %}
+        {% if not node.is_leaf_node() %}
+            <div class="ui item accordion">
+                <div class="title">
+                    {{ user_trans(node.label) }}
+                    <i class="dropdown icon"></i>
+                </div>
+
+                {% with children=node.get_children() %}
+                    {% if children %}
+                        <div class="content">
+                            <a class="item" href="{{ node.path }}">
+                                {{ node.label }}
+                            </a>
+                            {{ loop(children) }}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+        {% else %}
+            <a href="{{ node.path }}" class="item{% if node.key in nav_tab %} active{% endif %}">
+                {{ node.label }}
+            </a>
+        {% endif %}
+    {% endfor %}
+
+    <a class="item right" href="{% if request.resolver_match.view_name == "problem_detail" and problem %}
+                {{ url('new_problem_ticket', problem.code) }}
+                {% else %}
+                /tickets/new?issue_url={{ request.build_absolute_uri()|urlencode }}
+                {% endif %}"
+       style="margin-right: 5px;">
+
+        <i class="bug icon"></i>
+        <span>
+                {{ _('Report issue') }}
+                </span>
+    </a>
+
+    <div class="ui item accordion">
+        <div class="title">
+            <i class="icon translate"></i>
+            {{ _('Language') }}
+        </div>
+
+        <div class="content">
+            <a id="flag_vi" class="item" href="#" onclick="submmit_language('vi')"
+               style="margin-right: 5px; margin-top: 4px;">
+                <i class="flag vn"></i>
+                Tiếng Việt
+            </a>
+
+            <a id="flag_en" class="item" href="#" onclick="submmit_language('en')"
+               style="margin-right: 5px; margin-top: 4px;">
+                <i class="flag us"></i>
+
+                English
+            </a>
+        </div>
+    </div>
+
+    {% if request.user.is_authenticated %}
+
+        <div class="ui item accordion">
+            <div class="title">
+                <img class="ui image circular inline" src="{{ gravatar(request.user, 24) }}">
+                {{ _('Hello, %(username)s.', username=bold(request.profile.display_name)) }}
+            </div>
+
+            <div class="content">
+                {% if request.user.is_staff or request.user.is_superuser %}
+                    <a class="item has-icons-right" target="_blank" href="{{ url('admin:index') }}">
+                        {{ _('Admin') }}
+                    </a>
+                {% endif %}
+                <a class="item" href="{{ url('user_edit_profile') }}">{{ _('Edit profile') }}</a>
+                {% if request.user.is_impersonate %}
+                    <a class="item"
+                       href="{{ url('impersonate-stop') }}">{{ _('Stop impersonating') }}</a>
+                {% else %}
+                    <form action="{{ url('auth_logout') }}" method="POST" hidden>
+                        {% csrf_token %}
+                        <button id="logout-btn" type="submit" hidden>{{ _('Log out') }}</button>
+                    </form>
+                    <label for="logout-btn" class="item">{{ _('Log out') }}</label>
+                {% endif %}
+            </div>
+        </div>
+
+    {% else %}
+        <div class="item">
+
+            <a class="ui button " href="{{ url('auth_login') }}">
+                {{ _('Login') }}
+            </a>
+
+            {% if misc_config.registration %}
+                <a class="item button primary" href="{{ url('registration_register') }}">
+                    {{ _('Register') }}
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<div id="page-container" class="ui pusher">
+    <nav class="ui menu main fixed top">
+        <div class="ui container">
+
+            <a href="{{ url('home') }}" class="header item">{% include "site-logo-fragment.html" %}</a>
+
+            <div class="ui menu container" style="border: none; border-radius: 0" id="hide-on-mobile">
+                <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
+
+                {% for node in mptt_tree(nav_bar) recursive %}
+                    {% if not node.is_leaf_node() %}
+                        <div class="ui item simple dropdown">
+                            <a href="{{ node.path }}">
+                                {{ user_trans(node.label) }}
+                            </a>
+
+                            <i class="dropdown icon"></i>
+
+                            {% with children=node.get_children() %}
+                                {% if children %}
+                                    <div class="menu">{{ loop(children) }}</div>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+
+                    {% else %}
+                        <a href="{{ node.path }}" class="item{% if node.key in nav_tab %} active{% endif %}">
+                            {{ node.label }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+                <a class="item right" href="{% if request.resolver_match.view_name == "problem_detail" and problem %}
+                {{ url('new_problem_ticket', problem.code) }}
+                {% else %}
+                /tickets/new?issue_url={{ request.build_absolute_uri()|urlencode }}
+                {% endif %}"
+                   style="margin-right: 5px;">
+
+                    <i class="bug icon"></i>
+                    <span>
+                {{ _('Report issue') }}
+                </span>
+                </a>
+
+                <div class="ui item dropdown simple">
+                    <i class="icon translate"></i>
+
+                    {{ _('Language') }}
+
+                    <div class="menu">
+                        <a id="flag_vi" class="item" href="#" onclick="submmit_language('vi')"
+                           style="margin-right: 5px; margin-top: 4px;">
+                            <i class="flag vn"></i>
+                            Tiếng Việt
+                        </a>
+
+                        <a id="flag_en" class="item" href="#" onclick="submmit_language('en')"
+                           style="margin-right: 5px; margin-top: 4px;">
+                            <i class="flag us"></i>
+
+                            English
+                        </a>
+                    </div>
+                </div>
+
+                {% if request.user.is_authenticated %}
+
+                    <div class="ui item dropdown simple">
+                        <a href="{{ url('user_page') }}">
+                            <img class="ui image circular inline" src="{{ gravatar(request.user, 24) }}">
+
+                            <span class="ml-2">
+                        {{ _('Hello, %(username)s.', username=bold(request.profile.display_name)) }}
+                    </span>
+                        </a>
+
+                        <div class="menu">
+                            {% if request.user.is_staff or request.user.is_superuser %}
+                                <a class="item has-icons-right" target="_blank" href="{{ url('admin:index') }}">
+                                    {{ _('Admin') }}
+                                </a>
+                            {% endif %}
+                            <a class="item" href="{{ url('user_edit_profile') }}">{{ _('Edit profile') }}</a>
+                            {% if request.user.is_impersonate %}
+                                <a class="item"
+                                   href="{{ url('impersonate-stop') }}">{{ _('Stop impersonating') }}</a>
+                            {% else %}
+                                <form action="{{ url('auth_logout') }}" method="POST" class="item">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            style="border: none; background: none; display: block">{{ _('Log out') }}</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                {% else %}
+                    <div class="item">
+
+                        <a class="ui button " href="{{ url('auth_login') }}">
+                            {{ _('Login') }}
+                        </a>
+
+                        {% if misc_config.registration %}
+                            <a class="item button primary" href="{{ url('registration_register') }}">
+                                {{ _('Register') }}
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="item right" id="show-on-mobile">
+                <button class="ui button icon circular">
+                    <i class="icon bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div style="height: 80px"></div>
     <noscript>
         <div id="noscript">{{ _('This site works best with JavaScript enabled.') }}</div>
     </noscript>
-    <br>
+
     <main id="content" class="ui container">
         {% if misc_config.top_notification %}
             {{ render_django(misc_config.top_notification) }}
@@ -491,6 +663,12 @@
     <script>
         $('select.dropdown')
             .dropdown();
+        $('.ui.accordion')
+            .accordion();
+
+        $('#show-on-mobile').click(() => {
+            $('#mobile-nav').sidebar('toggle');
+        })
     </script>
 </div>
 </body>

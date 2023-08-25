@@ -42,14 +42,6 @@
                     $form.submit();
                 }
 
-                $category.select2({
-                    theme: '{{ DMOJ_SELECT2_THEME }}'
-                }).css({'visibility': 'visible'}).change(clean_submit);
-                $('#types').select2({
-                    theme: '{{ DMOJ_SELECT2_THEME }}',
-                    multiple: 1, placeholder: '{{ _('Filter by type...') }}'
-                }).css({'visibility': 'visible'});
-
                 // This is incredibly nasty to do but it's needed because otherwise the select2 steals the focus
                 $search.keypress(function (e) {
                     if (e.keyCode == 13)
@@ -239,7 +231,7 @@
         </div>
 
         <div id="content-right" class="four wide column">
-            <div class="info-float card">
+            <div class="info-float card" style="position: sticky; top: 80px">
                 {% include "problem/search-form.html" %}
                 {% if hot_problems %}
                     <div class="sidebox">

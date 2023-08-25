@@ -340,14 +340,17 @@
         {% if not contest_problem or not contest_problem.contest.hide_problem_tags %}
             <div id="problem-types item">
                 {% with types=problem.types_list %}
-                    <div class="toggle closed unselectable">
-                        <i class="icon angle right"></i>{% trans trimmed count=problem.types_list|length %}
-                        Problem type
-                        {% pluralize count %}
-                        Problem types
-                    {% endtrans %}
+                    <div class="ui accordion">
+                        <div class="title">
+                            <i class="icon dropdown"></i>
+                            {% trans trimmed count=problem.types_list|length %}
+                            Problem type
+                            {% pluralize count %}
+                            Problem types
+                        {% endtrans %}
+                        </div>
+                        <div class="content">{{ problem.types_list|join(", ") }}</div>
                     </div>
-                    <div style="display:none" class="toggled">{{ problem.types_list|join(", ") }}</div>
                 {% endwith %}
             </div>
         {% endif %}
@@ -403,7 +406,7 @@
     <iframe name="raw_problem" id="raw_problem"></iframe>
     {% if problem.is_suggesting %}
         <div class="ui message yellow">
-            <a class="close">
+            <a class="icon close">
                 <i class="icon close"></i>
             </a>
             <b>{{ _('This problem is only a suggestion!') }}</b>

@@ -40,9 +40,9 @@
 
 {% block body %}
     <div id="banner">
-        <a href="https://www.timeanddate.com/worldclock/fixedtime.html?msg={{ contest.name|urlquote('') }}&amp;iso=
+        <a hrief="https://www.timeanddate.com/worldclock/fixedtime.html?msg={{ contest.name|urlquote('') }}&amp;iso=
                 {{- contest.start_time|utc|date('Y-m-d\TH:i:s') }}">
-            <h2 style="text-align: center">
+            <h2 style="text-align: center" class="ui header large">
                 {%- if contest.is_in_contest(request.user) and not request.participation.live -%}
                     {% if request.participation.spectate %}
                         {{- _('Spectating, contest ends in %(countdown)s.', countdown=as_countdown(contest.time_before_end)) -}}

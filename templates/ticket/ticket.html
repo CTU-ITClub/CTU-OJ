@@ -11,18 +11,18 @@
 
             function update_ticket_state(open) {
                 if (open)
-                    $status.removeClass('fa-check-circle-o').addClass('fa-exclamation-circle');
+                    $status.removeClass('check').removeClass('green').addClass('warning').addClass('red');
                 else
-                    $status.removeClass('fa-exclamation-circle').addClass('fa-check-circle-o');
+                    $status.removeClass('warning').removeClass('red').addClass('check').addClass('green');
                 $('.close-ticket').toggle(open);
                 $('.open-ticket').toggle(!open);
             }
 
             function update_ticket_vote(contributive) {
                 if (contributive)
-                    $vote_status.removeClass('fa-minus').addClass('fa-arrow-up');
+                    $vote_status.removeClass('minus').addClass('angle').addClass('up').addClass('green');
                 else
-                    $vote_status.removeClass('fa-arrow-up').addClass('fa-minus');
+                    $vote_status.removeClass('up').removeClass('angle').removeClass('green').addClass('minus');
                 $('.vote-norm').toggle(contributive);
                 $('.vote-good').toggle(!contributive);
             }
@@ -167,99 +167,126 @@
 
 {% block content_title %}
     <div class="ticket-title">
-        <div class="vote-status">
-            <i class="fa {% if ticket.is_contributive %}fa-arrow-up{% else %}fa-minus{% endif %}"></i>
+        <div class="vote-status ui button circular icon basic">
+            <i class="icon {% if ticket.is_contributive %}arrow up green{% else %}minus{% endif %}"></i>
         </div>
-        <div class="status">
-            <i class="fa {% if ticket.is_open %}fa-exclamation-circle{% else %}fa-check-circle-o{% endif %}"></i>
+        <div class="status ui button circular icon basic">
+            <i class="icon circle {% if ticket.is_open %}warning red{% else %}check red{% endif %}"></i>
         </div>
-        <div class="title">{{ ticket.title }}</div>
-        <small>#{{ ticket.id }}</small>
+        <div class="ui header">
+            <div class="content">
+                {{ ticket.title }} <small class="sub header">#{{ ticket.id }}</small>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block body %}
     <div class="ticket-container">
         <div class="ticket-messages">
-            <main id="messages">
+            <main id="messages" class="ui comments">
                 {% for message in ticket_messages %}
                     {% include "ticket/message.html" %}
+
+                    <hr class="ui divider" />
                 {% endfor %}
             </main>
-            <hr>
-            <section class="ticket-message new-message">
-                <div class="info">
-                    <a href="{{ url('user_page', request.user.username) }}" class="user">
-                        <img src="{{ gravatar(request.user, 80) }}" class="user-gravatar">
+
+            <div class="ui comments">
+                <section class="ticket-message new-message comment">
+                    <a href="{{ url('user_page', request.user.username) }}" class="avatar">
+                        <img src="{{ gravatar(request.user, 80) }}">
                     </a>
-                </div>
-                <div class="detail">
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        {% if form.non_field_errors() or form.body.errors %}
-                            <div class="form-errors">
-                                {{ form.non_field_errors() }}
-                                {{ form.body.errors }}
-                            </div>
-                        {% endif %}
-                        <div class="body-block">{{ form.body }}</div>
-                        <input style="float:right" type="submit" value="{{ _('Post!') }}" class="button">
-                    </form>
-                </div>
-            </section>
+                    <div class="content">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {% if form.non_field_errors() or form.body.errors %}
+                                <div class="form-errors">
+                                    {{ form.non_field_errors() }}
+                                    {{ form.body.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="body-block">{{ form.body }}</div>
+                            <input style="float:right" type="submit" value="{{ _('Post!') }}" class="ui button primary">
+                        </form>
+                    </div>
+                </section>
+            </div>
         </div>
         <aside class="ticket-sidebar">
-            <div class="ticket-info">
-                <div class="info-box">
-                    <div class="info-title">{{ _('Associated object') }}</div>
-                    <div class="info-data">
+            <div class="ui list relaxed divided">
+                <div class="item">
+                    <div class="content">
+                        <div class="header">
+                            {{ _('Associated object') }}
+                        </div>
                         <a href="{{ ticket.linked_item.get_absolute_url() }}">{{ ticket.linked_item }}</a>
                     </div>
                 </div>
-                <div class="info-box">
-                    <div class="info-title">
-                        {% trans trimmed count=assignees|length %}
-                            Assignee
-                        {% pluralize %}
-                            Assignees
-                        {% endtrans %}
+                <div class="item">
+                    <div class="content">
+                        <div class="header">
+                            {% trans trimmed count=assignees|length %}
+                                Assignee
+                                {% pluralize %}
+                                Assignees
+                            {% endtrans %}
+                        </div>
+                        <p>
+                            {% if assignees %}
+                                {{ link_users(assignees) }}
+                            {% else %}
+                                <div class="info-empty">{{ _('No one is assigned.') }}</div>
+                            {% endif %}
+                        </p>
                     </div>
-                    <div class="info-data">
-                        {% if assignees %}
-                            {{ link_users(assignees) }}
-                        {% else %}
-                            <div class="info-empty">{{ _('No one is assigned.') }}</div>
-                        {% endif %}
+                </div>
+            </div>
+
+            {% if perms.judge.change_ticket or request.profile in assignees %}
+                <div class="info-box">
+                    <h3 class="ui header">
+                        <a href="#" data-featherlight="{{ url('ticket_notes', ticket.id) }}"
+                           class="edit-notes ui button yellow">
+                            <i class="icon pencil"></i>
+                            {{ _('Assignee notes') }}
+                        </a>
+                    </h3>
+
+                    <div id="ticket-notes" class="info-data">
+                        <div{% if ticket.notes %} style="display: none"{% endif %} class="info-empty">
+                            {{ _('Nothing here.') }}
+                        </div>
+                        <div class="info-real">{{ ticket.notes|linebreaks }}</div>
                     </div>
                 </div>
 
-                {% if perms.judge.change_ticket or request.profile in assignees %}
-                    <div class="info-box">
-                        <div class="info-title">{{ _('Assignee notes') }}
-                            <a href="#" data-featherlight="{{ url('ticket_notes', ticket.id) }}" class="edit-notes">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                        </div>
-                        <div id="ticket-notes" class="info-data">
-                            <div{% if ticket.notes %} style="display: none"{% endif %} class="info-empty">
-                                {{ _('Nothing here.') }}
-                            </div>
-                            <div class="info-real">{{ ticket.notes|linebreaks }}</div>
-                        </div>
-                    </div>
+                <button data-ajax="{{ url('ticket_good', ticket.id) }}" data-contributive="1"
+                        class="vote-good ui button blue"
+                        {% if ticket.is_contributive %}style="display: none"{% endif %}>
+                    <i class="icon angle up"></i>
+                    {{ _('Upvote') }}
+                </button>
+                <button data-ajax="{{ url('ticket_norm', ticket.id) }}" data-contributive="0"
+                        class="vote-norm ui button blue basic"
+                        {% if not ticket.is_contributive %}style="display: none"{% endif %}>
+                    <i class="icon angle down"></i>
+                    {{ _('Undo vote') }}
+                </button>
+            {% endif %}
 
-                    <button data-ajax="{{ url('ticket_good', ticket.id) }}" data-contributive="1" class="vote-good"
-                        {% if ticket.is_contributive %}style="display: none"{% endif %}>{{ _('Upvote') }}</button>
-                    <button data-ajax="{{ url('ticket_norm', ticket.id) }}" data-contributive="0" class="vote-norm"
-                        {% if not ticket.is_contributive %}style="display: none"{% endif %}>{{ _('Undo vote') }}</button>
-                {% endif %}
-
-                <button data-ajax="{{ url('ticket_close', ticket.id) }}" data-open="0" class="close-ticket"
-                        {% if not ticket.is_open %}style="display: none"{% endif %}>{{ _('Close ticket') }}</button>
-                <button data-ajax="{{ url('ticket_open', ticket.id) }}" data-open="1" class="open-ticket"
-                        {% if ticket.is_open %}style="display: none"{% endif %}>{{ _('Reopen ticket') }}</button>
-            </div>
-        </aside>
+            <button data-ajax="{{ url('ticket_close', ticket.id) }}" data-open="0"
+                    class="close-ticket ui button green"
+                    {% if not ticket.is_open %}style="display: none"{% endif %}>
+                {{ _('Close ticket') }}
+            </button>
+            <button data-ajax="{{ url('ticket_open', ticket.id) }}" data-open="1"
+                    class="open-ticket ui button violet basic"
+                    {% if ticket.is_open %}style="display: none"{% endif %}>
+                {{ _('Reopen ticket') }}
+            </button>
+    </div>
+    </aside>
     </div>
 {% endblock %}
 
