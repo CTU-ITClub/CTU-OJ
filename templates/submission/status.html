@@ -53,7 +53,7 @@
     {% if not submission.is_graded %}
         <script type="text/javascript">
             $(function () {
-                $(document).keydown(function(e) {
+                $(document).keydown(function (e) {
                     // Ctrl-Enter or Command-Enter
                     if ((e.metaKey || e.ctrlKey) && e.which == 13) {
                         $('#abort-button form').submit();
@@ -65,15 +65,24 @@
 {% endblock %}
 
 {% block body %}
-    <br>
+    <hr class="ui divider">
     {% if not submission.language.file_only or request.user.is_superuser %}
-        <div><a href="{{ url('submission_source', submission.id) }}">{{ _('View source') }}</a></div>
+        <a class="ui button icon basic primary" href="{{ url('submission_source', submission.id) }}">
+            <i class="icon file code outline"></i>
+            {{ _('View source') }}
+        </a>
     {% endif %}
     {% if submission.language.file_only %}
-        <div><a href="{{ url('submission_source_download', submission.id) }}">{{ _('Download') }}</a></div>
+        <a class="ui button icon basic primary" href="{{ url('submission_source_download', submission.id) }}">
+            <i class="icon download"></i>
+            {{ _('Download') }}
+        </a>
     {% endif %}
     {% if (request.user == submission.user.user or perms.judge.resubmit_other) and not submission.language.file_only %}
-        <div><a href="{{ url('problem_submit', submission.problem.code, submission.id) }}">{{ _('Resubmit') }}</a></div>
+        <a class="ui button icon red basic" href="{{ url('problem_submit', submission.problem.code, submission.id) }}">
+            <i class="icon upload"></i>
+            {{ _('Resubmit') }}
+        </a>
     {% endif %}
     {% set can_edit = submission.problem.is_editable_by(request.user) %}
     {% if perms.judge.rejudge_submission and can_edit and not submission.is_locked %}
@@ -86,21 +95,26 @@
                 };
             </script>
         {% endcompress %}
-        <div>
-            <form action="{{ url('submission_rejudge') }}" method="post">
-                {% csrf_token %}
-                <a href="#" onclick="confirm_and_rejudge(parentNode)">{{ _('Rejudge') }}</a>
-                <input type="hidden" name="id" value="{{ submission.id }}">
-                <input type="hidden" name="path" value="{{ url('submission_status', submission.id) }}">
-            </form>
-        </div>
+        <form action="{{ url('submission_rejudge') }}" method="post" style="display: inline">
+            {% csrf_token %}
+            <a class="ui button green icon" href="#" onclick="confirm_and_rejudge(parentNode)">
+                <i class="icon refresh"></i>
+                {{ _('Rejudge') }}
+            </a>
+            <input type="hidden" name="id" value="{{ submission.id }}">
+            <input type="hidden" name="path" value="{{ url('submission_status', submission.id) }}">
+        </form>
     {% endif %}
     {% if can_edit and not submission.language.file_only %}
-        <div><a href="{{ url('problem_submission_diff', submission.problem.code) }}?username={{ submission.user.user.username }}&highlight={{ submission.id }}">{{ _('Diff this submission') }}</a></div>
+        <a class="ui button violet icon basic"
+           href="{{ url('problem_submission_diff', submission.problem.code) }}?username={{ submission.user.user.username }}&highlight={{ submission.id }}">
+            <i class="icon copy outline"></i>
+            {{ _('Diff this submission') }}
+        </a>
     {% endif %}
 
     <br>
-    <hr class="half-hr">
+    <hr class="ui divider">
     <br>
 
     <div id="test-cases">{% include "submission/status-testcases.html" %}</div>
@@ -108,13 +122,13 @@
     {% if not submission.is_graded %}
         {% if request.user == submission.user.user or perms.judge.abort_any_submission %}
             <div id="abort-button">
-                <br>
-                <hr class="half-hr">
+                <br class="ui divider">
+                <hr class="ui divider">
                 <br>
                 <form action="{{ url('submission_abort', submission.id) }}" method="post"
                       title="{{ _('Press Ctrl-Enter or Command-Enter to abort.') }}">
                     {% csrf_token %}
-                    <input style="float:left" type="submit" value="{{ _('Abort') }}" class="button">
+                    <input type="submit" value="{{ _('Abort') }}" class="ui button">
                     <br><br>
                 </form>
             </div>

@@ -57,12 +57,12 @@
 {% endblock %}
 
 {% block body %}
-    <div id="common-content" class="ui grid">
+    <div id="common-content" class="ui grid stackable">
         <div id="content-left" class="column twelve wide">
             <div class="markdown-body screen">
                 {% block description %}{% endblock %}
                 {% block description_end %}
-                    <hr>
+                    <hr class="ui divider">
                 {% endblock %}
                 {% block post_description_end %}{% endblock %}
             </div>

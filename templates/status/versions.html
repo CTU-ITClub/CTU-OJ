@@ -8,16 +8,20 @@
 {% endblock %}
 
 {% block body %}
-    <table id="judge-versions" class="table">
+    <table class="ui table definition striped">
+        <thead>
         <tr>
             <th></th>
             {% for judge in judges %}
                 <th>{{ judge }}</th>
             {% endfor %}
         </tr>
+        </thead>
+        <tbody>
+
         {% for language in languages %}
-            <tr>
-                <th>{{ language.name }}</th>
+            <tr class="positive">
+                <td>{{ language.name }}</td>
                 {% for judge in judges %}
                     {% set versions = matrix[judge][language.id] %}
                     <td class="version version-
@@ -38,5 +42,6 @@
                 {% endfor %}
             </tr>
         {% endfor %}
+        </tbody>
     </table>
 {% endblock %}

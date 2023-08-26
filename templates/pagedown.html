@@ -1,7 +1,7 @@
 <div id="{{ id|safe }}-wmd-wrapper" class="wmd-wrapper" style="margin: 10px 0">
-    <div class="wmd-panel" hidden>
+    <div class="wmd-panel" style="visibility: hidden; height: 0; overflow: hidden">
         <div id="{{ id|safe }}_wmd_button_bar"></div>
-        <textarea{{ attrs|safe }}>{{ body }}</textarea>
+        <textarea{{ attrs|safe }} class="input">{{ body }}</textarea>
     </div>
 
     <div class="markdown-body">
@@ -10,82 +10,85 @@
 
     {% if show_preview %}
         <div id="{{ id|safe }}-preview" data-preview-url="{{ preview_url }}" data-textarea-id="{{ id }}"
-             data-timeout="{{ preview_timeout or '' }}" class="wmd-panel p-2 wmd-preview dmmd-preview {{ extra_classes }}">
+             data-timeout="{{ preview_timeout or '' }}"
+             class="wmd-panel p-2 wmd-preview dmmd-preview {{ extra_classes }}">
             <div class="dmmd-preview-update"><i class="fa fa-refresh"></i> {{ _('Update preview') }}</div>
             <div class="dmmd-preview-content content-description markdown-body"></div>
         </div>
     {% endif %}
+
+    <script type="module">
+        import markdownEditor from 'https://cdn.jsdelivr.net/npm/@liyachun01/ckeditor5-build-markdown@1.0.0/+esm'
+
+        markdownEditor.create(document.getElementById('{{ id|safe }}-ck')).then(editor => {
+            let lastText;
+            let timeout;
+
+            const $preview = $('#{{ id|safe }}-preview');
+            const $content = $preview.find('.dmmd-preview-content');
+
+            editor.model.document.on('change:data', async () => {
+                document.querySelector('#{{ id|safe }}').value = editor.getData()
+
+                timeout = setTimeout(async () => {
+                    if (timeout) {
+                        clearTimeout(timeout)
+                        timeout = null
+                    }
+
+                    const text = editor.getData()
+
+                    if (text === lastText) {
+                        return
+                    }
+
+                    lastText = text;
+
+                    $preview.addClass('dmmd-preview-stale');
+
+
+                    $.post('{{ preview_url }}', {
+                        content: text,
+                        csrfmiddlewaretoken: $.cookie('csrftoken'),
+                    }, res => {
+                        $content.html(res)
+                        $preview.addClass('dmmd-preview-has-content').removeClass('dmmd-preview-stale');
+
+                        var $jax = $content.find('.require-mathjax-support');
+                        if ($jax.length) {
+                            if (!('MathJax' in window)) {
+                                $.ajax({
+                                    type: 'GET',
+                                    url: $jax.attr('data-config'),
+                                    dataType: 'script',
+                                    cache: true,
+                                    success: function () {
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-chtml.min.js',
+                                            dataType: 'script',
+                                            cache: true,
+                                            success: function () {
+                                                MathJax.typesetPromise([$content[0]]).then(function () {
+                                                    $content.find('.tex-image').hide();
+                                                    $content.find('.tex-text').show();
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                MathJax.typesetPromise([$content[0]]).then(function () {
+                                    $content.find('.tex-image').hide();
+                                    $content.find('.tex-text').show();
+                                });
+                            }
+                        }
+                    })
+                }, 500)
+            })
+        })
+
+    </script>
 </div>
 
-<script type="module">
-    import markdownEditor from 'https://cdn.jsdelivr.net/npm/@liyachun01/ckeditor5-build-markdown@1.0.0/+esm'
-
-    markdownEditor.create(document.getElementById('{{ id|safe }}-ck')).then(editor => {
-        let lastText;
-        let timeout;
-        const $preview = $('#{{ id|safe }}-preview');
-        const $content = $preview.find('.dmmd-preview-content');
-
-        editor.model.document.on('change:data', async () => {
-            document.querySelector('#{{ id|safe }}').value = editor.getData()
-
-            timeout = setTimeout(async () => {
-                if (timeout) {
-                    clearTimeout(timeout)
-                    timeout = null
-                }
-
-                const text = editor.getData()
-
-                if (text === lastText) {
-                    return
-                }
-
-                lastText = text;
-
-                $preview.addClass('dmmd-preview-stale');
-
-
-                $.post('{{ preview_url }}', {
-                    content: text,
-                    csrfmiddlewaretoken: $.cookie('csrftoken'),
-                }, res => {
-                    $content.html(res)
-                    $preview.addClass('dmmd-preview-has-content').removeClass('dmmd-preview-stale');
-
-                    var $jax = $content.find('.require-mathjax-support');
-                    if ($jax.length) {
-                        if (!('MathJax' in window)) {
-                            $.ajax({
-                                type: 'GET',
-                                url: $jax.attr('data-config'),
-                                dataType: 'script',
-                                cache: true,
-                                success: function () {
-                                    $.ajax({
-                                        type: 'GET',
-                                        url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-chtml.min.js',
-                                        dataType: 'script',
-                                        cache: true,
-                                        success: function () {
-                                            MathJax.typesetPromise([$content[0]]).then(function () {
-                                                $content.find('.tex-image').hide();
-                                                $content.find('.tex-text').show();
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                        } else {
-                            MathJax.typesetPromise([$content[0]]).then(function () {
-                                $content.find('.tex-image').hide();
-                                $content.find('.tex-text').show();
-                            });
-                        }
-                    }
-                })
-            }, 500)
-        })
-    })
-
-</script>

@@ -308,32 +308,45 @@
         <div class="top-pagination-bar">{% include "list-pages.html" %}</div>
     {% endif %}
 
-    <div id="common-content" class="ui grid">
+    <div id="common-content" class="ui grid stackable">
         <div id="content-left" class="submission column twelve wide">
-            <div class="ws-closed">
-                <a href="javascript:void(0)">{{ _('You were disconnected. Refresh to show latest updates.') }}</a>
+            <div class="ws-closed ui message warning icon">
+                <i class="icon refresh"></i>
+
+                <a href="javascript:void(0)" class="content">
+                    {{ _('You were disconnected. Refresh to show latest updates.') }}
+                </a>
             </div>
 
-            <div id="submissions-table">
+            <table id="submissions-table" class="ui table striped definition">
+                <tbody>
                 {% set profile_id = request.profile.id if request.user.is_authenticated else 0 %}
                 {% for submission in submissions %}
-                    <div class="submission-row" id="{{ submission.id }}">
+                    <tr class="submission-row" id="{{ submission.id }}">
                         {% with problem_name=show_problem and (submission.problem.i18n_name or submission.problem.name) %}
                             {% include "submission/row.html" %}
                         {% endwith %}
-                    </div>
+                    </tr>
                 {% endfor %}
-            </div>
+                </tbody>
+            </table>
         </div>
 
         <div id="content-right" class="submission column four wide">
-            <div class="info-float">
+            <div class="info-float" style="position: sticky; top: 80px">
                 <div class="sidebox">
-                    <h3>{{ _('Filter submissions') }} <i class="fa fa-search"></i></h3>
+                    <h3 class="ui header">
+                        <i class="icon search"></i>
+                        <div class="content">
+                            {{ _('Filter submissions') }}
+                        </div>
+                    </h3>
                     <div class="sidebox-content">
                         <form id="filter-form" name="form" action="{{ first_page_href }}" method="get" class="ui form">
                             <div class="filter-form-group field">
-                                <label for="status"><i>{{ _('Status') }}</i></label>
+                                <label for="status">
+                                    {{ _('Status') }}
+                                </label>
 
                                 <select name="status" class="ui search dropdown" multiple>
                                     {% for id, name in all_statuses %}
@@ -344,7 +357,9 @@
                             </div>
 
                             <div class="filter-form-group field">
-                                <label for="language"><i>{{ _('Language') }}</i></label>
+                                <label for="language">
+                                    {{ _('Language') }}
+                                </label>
 
                                 <select name="language" class="ui search dropdown" multiple>
                                     {% for code, name in all_languages %}
@@ -356,7 +371,9 @@
 
                             {% if not organization %}
                                 <div class="filter-form-group field">
-                                    <label for="organization"><i>{{ _('Organization') }}</i></label>
+                                    <label for="organization">
+                                        {{ _('Organization') }}
+                                    </label>
 
                                     <select name="organization" class="ui search dropdown">
                                         <option value="">{{ _('All') }}</option>
@@ -373,8 +390,16 @@
                             </div>
                         </form>
                     </div>
+
+                    <hr class="ui divider">
+
                     <div id="statistics-table">
-                        <h3>{{ _('Statistics') }} <i class="fa fa-pie-chart"></i></h3>
+                        <h3 class="ui header">
+                            <i class="icon pie chart"></i>
+                            <span class="content">
+                            {{ _('Statistics') }}
+                            </span>
+                        </h3>
                         <div class="sidebox-content">
                             <div id="status-graph">
                                 <canvas width="230" height="170"></canvas>

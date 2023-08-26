@@ -22,28 +22,33 @@
     {% set in_contest = contest.is_in_contest(request.user) %}
     {% if in_contest or contest.ended or request.user.is_superuser or is_editor or is_tester %}
         {% block description %}
-                {% for problem in contest_problems %}
-                    <div style="display: flex; flex-direction: column; align-items: center;">
-                        <div class="content-description markdown-body" style="width: 70%;">
-                            <div class="problem_container" style="position: sticky; top: 0; background: #fff; z-index: 1">
-                                <div style="display: flex;">
-                                    <h2 style="margin-top: 0.5em; margin-right: 0.5em; flex: 1">{{ problem.i18n_name }}</h2>
-                                    <a href="{{ url('problem_submit', problem.code) }}" class="ui button green" style="display: inline; margin: auto 0;">
-                                        {{ _('Submit') }}
-                                    </a>
-                                </div>
-
-                                <div>
-                                    <span><strong>Time limit:</strong> {{ problem.time_limit }} /</span>
-                                    <span><strong>Memory limit:</strong> {{ problem.memory_limit|kbsimpleformat }}</span>
-                                    <p><strong>Point:</strong> {{ problem.points }}</p>
-                                </div>
+            {% for problem in contest_problems %}
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="content-description markdown-body" style="width: 70%;">
+                        <div class="problem_container"
+                             style="position: sticky; top: 50px; background: #fff; z-index: 1">
+                            <div style="display: flex;">
+                                <h2 style="margin-top: 0.5em; margin-right: 0.5em; flex: 1">{{ problem.i18n_name }}</h2>
+                                <a href="{{ url('problem_submit', problem.code) }}" class="ui button green"
+                                   style="display: inline; margin: auto 0;">
+                                    {{ _('Submit') }}
+                                </a>
                             </div>
-                            {% include "problem/problem-detail.html" %}
-                            <hr>
+
+                            <div>
+                                <span><strong>Time limit:</strong> {{ problem.time_limit }} /</span>
+                                <span><strong>Memory limit:</strong> {{ problem.memory_limit|kbsimpleformat }}</span>
+                                <p><strong>Point:</strong> {{ problem.points }}</p>
+                            </div>
+
+                            <hr class="ui divider"/>
+
                         </div>
+                        {% include "problem/problem-detail.html" %}
+                        <hr>
                     </div>
-                {% endfor %}
+                </div>
+            {% endfor %}
         {% endblock %}
     {% endif %}
 

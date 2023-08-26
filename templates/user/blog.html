@@ -38,16 +38,15 @@
 {% block body %}
     {% block before_posts %}{% endblock %}
     <div id="blog-container">
-        <div class="blog-content sidebox">
-            <div class="sidebox-content ui feed" style="border: unset;">
-                {% for post in posts %}
-                    {% include "blog/blog-post.html" %}
-                {% endfor %}
-            </div>
-            {% if page_obj.has_other_pages() %}
-                <div class="bottom-pagination-bar">{% include "list-pages.html" %}</div>
-            {% endif %}
+        <div class="ui feed" style="border: unset;">
+            {% for post in posts %}
+                {% include "blog/blog-post.html" %}
+            {% endfor %}
         </div>
+        {% if page_obj.has_other_pages() %}
+            <div class="bottom-pagination-bar">{% include "list-pages.html" %}</div>
+        {% endif %}
+    </div>
     {% block after_posts %}{% endblock %}
 {% endblock %}
 

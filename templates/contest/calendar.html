@@ -21,24 +21,38 @@
             <tr>{% for day in week %}
                 <td class="{% if day.is_today %}today{% endif %}{% if day.is_pad %} noday{% endif %}">
                     <span class="num">{{ day.date.day }}</span>
-                    <ul class="fa-ul">
+                    <div class="ui list relaxed divided">
                         {% for contest in day.starts %}
-                            <li class="start"><i class="fa fa-li fa-lg fa-step-forward"></i>
-                                <a href="{{ url('contest_view', contest.key) }}">{{ contest.name }}</a>
-                            </li>
+                            <a class="item" href="{{ url('contest_view', contest.key) }}">
+                                <i class="icon forward"></i>
+                                <div class="content">
+                                    <div class="header">
+                                        {{ contest.name }}
+                                    </div>
+                                </div>
+                            </a>
                         {% endfor %}
                         {% for contest in day.oneday %}
-                            <li class="oneday">
-                                <i class="fa fa-li fa-lg fa-play"></i>
-                                <a href="{{ url('contest_view', contest.key) }}">{{ contest.name }}</a>
-                            </li>
+                            <a class="item" href="{{ url('contest_view', contest.key) }}">
+                                <i class="icon play"></i>
+                                <div class="content">
+                                    <div class="header">
+                                        {{ contest.name }}
+                                    </div>
+                                </div>
+                            </a>
                         {% endfor %}
                         {% for contest in day.ends %}
-                            <li class="end"><i class="fa fa-li fa-lg fa-step-backward"></i>
-                                <a href="{{ url('contest_view', contest.key) }}">{{ contest.name }}</a>
-                            </li>
+                            <a class="item" href="{{ url('contest_view', contest.key) }}">
+                                <i class="icon backward"></i>
+                                <div class="content">
+                                    <div class="header">
+                                        {{ contest.name }}
+                                    </div>
+                                </div>
+                            </a>
                         {% endfor %}
-                    </ul>
+                    </div>
                 </td>
             {% endfor %}</tr>
         {% endfor %}
