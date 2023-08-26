@@ -64,4 +64,4 @@ else:
             }
 
         class Media:
-            js = ['dmmd-preview.js']
+            js = []

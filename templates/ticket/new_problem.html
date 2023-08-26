@@ -2,11 +2,15 @@
 
 {% block guideline_message %}
     {% if not request.in_contest %}
-        <div class="alert alert-warning alert-dismissable">
-            <a class="close">x</a>
-            <b>{{ _('Thanks for opening a ticket!') }}</b>
-            <br><br>
-            {{ _('Please keep in mind that this form is for reporting issues with a problem statement, and not for asking for help. If you require assistance on solving a problem, ask in the comments instead.') }}
+        <div class="ui message warning">
+            <a class="icon close">
+                <i class="icon close"></i>
+            </a>
+            <div class="content">
+                <div class="header">{{ _('Thanks for opening a ticket!') }}</div>
+                {{ _('Please keep in mind that this form is for reporting issues with a problem statement, and not for asking for help. If you require assistance on solving a problem, ask in the comments instead.') }}
+
+            </div>
         </div>
     {% endif %}
 {% endblock %}

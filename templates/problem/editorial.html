@@ -9,36 +9,42 @@
 {% endblock %}
 
 {% block header %}
-    <div style="float:right">
-        {% if problem.is_editable_by(request.user) %}
-            [<a href="{{ url('admin:judge_problem_change', problem.id) }}">{{ _('Edit') }}</a>]
-        {% endif %}
-    </div>
+    {% if problem.is_editable_by(request.user) %}
+        <a class="ui button mini green" style="margin: 10px 0;" href="{{ url('admin:judge_problem_change', problem.id) }}">
+            <i class="icon pencil"></i>
+            {{ _('Edit') }}
+        </a>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
     <div class="content-description">
         {% if not has_solved_problem %}
-            <div class="alert alert-danger">
-                {{ _('Remember to use this editorial **only** when stuck, and **not to copy-paste code from it**. Please be respectful to the problem author and editorialist.')|markdown('default', strip_paragraphs=True) }}<br>
-                <b>{{ _('Submitting an official solution before solving the problem yourself is a bannable offence.') }}</b>
+            <div class="ui message warning">
+                <div class="content">
+                    {{ _('Remember to use this editorial **only** when stuck, and **not to copy-paste code from it**. Please be respectful to the problem author and editorialist.')|markdown('default', strip_paragraphs=True) }}<br>
+                    <b>{{ _('Submitting an official solution before solving the problem yourself is a bannable offence.') }}</b>
+                </div>
             </div>
         {% endif %}
         {% with authors=solution.authors.all() %}
             {% if authors %}
                 <p>
                     {% trans trimmed count=authors|length %}
-                        Author: 
-                    {% pluralize %}
-                        Authors: 
+                        Author:
+                        {% pluralize %}
+                        Authors:
                     {% endtrans %}
                     {{ link_users(authors) }}
                 </p>
             {% endif %}
         {% endwith %}
-        {{ solution.content|markdown('solution', MATH_ENGINE)|reference|str|safe }}
+
+        <div class="markdown-body">
+            {{ solution.content|markdown('solution', MATH_ENGINE)|reference|str|safe }}
+        </div>
     </div>
-    <hr>
+    <hr class="ui divider">
     {% include "comments/list.html" %}
 {% endblock %}
 

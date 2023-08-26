@@ -62,6 +62,7 @@
         <link rel="stylesheet" href="{{ static('source_sans_pro.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ static('libs/clipboard/tooltip.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ static('libs/select2/select2.css') }}">
+
     {% endcompress %}
     <link rel="canonical"
           href="{{ DMOJ_SCHEME }}://{{ DMOJ_CANONICAL|default(site.domain) }}{{ request.get_full_path() }}">
@@ -89,6 +90,8 @@
         <script src="{{ static('libs/jquery-cookie.js') }}"></script>
 
         <script src="{{ static('semantic.min.js') }}"></script>
+
+        <script src="{{ static('dmmd-preview.js') }}" type="module"></script>
 
         <script src="{{ static('libs/jquery-taphold.js') }}"></script>
         <script src="{{ static('libs/jquery.unveil.js') }}"></script>
@@ -190,7 +193,7 @@
                 $(function () {
                     event_dispatcher.auto_reconnect = true;
                     event_dispatcher.on('contest_{{ request.participation.contest.id_secret }}', function (data) {
-                        alert(data.title + '\n\n' + data.message);
+                        _alert(data.title + '\n\n' + data.message);
                     });
                 })
             {% endif %}
@@ -340,6 +343,11 @@
         .QU, .G {
             background: white !important;
             color: black !important;
+        }
+
+        .points.header, .points.header * {
+            color: #000 !important;
+            text-align: center;
         }
 
         /*** Responsive header ***/
@@ -652,7 +660,7 @@
         <div id="announcement">{{ misc_config.announcement|safe }}</div>
     {% endif %}
 
-    <footer class="ui footer segment" style="border-radius: 0">
+    <footer class="ui footer segment" style="border-radius: 0; padding: 50px 0; margin-top: 50px;">
         <div id="footer-content" class="ui container">
             {{ _('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #808080" href="https://dmoj.ca"><b>DMOJ</b></a>')) }}
             |

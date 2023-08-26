@@ -99,7 +99,7 @@
             });
 
             $('#disable-2fa-button').click(function () {
-                alert("{{ _('The administrators for this site require all the staff to have Two-factor Authentication enabled, so it may not be disabled at this time.') }}");
+                _alert("{{ _('The administrators for this site require all the staff to have Two-factor Authentication enabled, so it may not be disabled at this time.') }}");
             });
 
             $('#generate-api-token-button').click(function (event) {
@@ -156,7 +156,7 @@
                 event.preventDefault();
 
                 if (typeof window.PublicKeyCredential === 'undefined') {
-                    alert('{{ _('WebAuthn is not supported by your browser.') }}');
+                    _alert('{{ _('WebAuthn is not supported by your browser.') }}');
                     return;
                 }
 
@@ -177,10 +177,10 @@
                                     name: $('#new-webauthn-name').val(),
                                 })
                                     .then(() => window.location.reload())
-                                    .fail((jqXHR) => alert(jqXHR.responseText));
+                                    .fail((jqXHR) => _alert(jqXHR.responseText));
                             });
                     })
-                    .fail(() => alert('{{ _('Failed to contact server.') }}'));
+                    .fail(() => _alert('{{ _('Failed to contact server.') }}'));
             });
 
             $('.webauthn-delete').click(function (event) {
@@ -188,7 +188,7 @@
                 if (confirm("{{ _('Are you sure you want to delete this security key?') }}")) {
                     $.post($(this).attr('data-delete-url'))
                         .then(() => window.location.reload())
-                        .fail((jqXHR) => alert(jqXHR.responseText));
+                        .fail((jqXHR) => _alert(jqXHR.responseText));
                 }
             });
         });

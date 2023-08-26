@@ -1,6 +1,6 @@
 <script src="{{ static('libs/featherlight/featherlight.min.js') }}" type="text/javascript"></script>
 
-<script type="text/javascript">
+<script type="module">
     $(document).ready(function () {
         window.reply_comment = function (parent) {
             var $comment_reply = $('#comment-' + parent + '-reply');
@@ -9,26 +9,22 @@
             if ($comment_reply.find('#' + reply_id).length == 0) {
                 var $reply_form = $('#new-comment').clone(true).prop('id', reply_id);
                 $reply_form.find('h3').html('{{ _('Replying to comment') }}');
-                $reply_form.prepend(`<a class="ui button icon close" style="margin-top: 10px"><i class="icon close"></i></a>`);
+                $reply_form.prepend(`<a class="ui button icon close very basic mini" style="float: right"><i class="icon close"></i></a>`);
                 $reply_form.find('form.comment-submit-form input#id_parent').val(parent);
                 $reply_form.find('div#id_body-wmd-wrapper').prop('id', new_id + '-wmd-wrapper');
                 $reply_form.find('div#id_body_wmd_button_bar').empty().prop('id', new_id + '_wmd_button_bar');
+                $reply_form.find('.ck').empty();
                 $reply_form.find('textarea.wmd-input').val('').prop('id', new_id);
                 $reply_form.find('div#id_body-preview').attr('data-textarea-id', new_id).prop('id', new_id + '-preview');
                 $reply_form.appendTo($comment_reply);
                 register_dmmd_preview($reply_form.find('div#' + new_id + '-preview'));
-                if ('DjangoPagedown' in window) {
-                    window.DjangoPagedown.createEditor($reply_form.find('textarea.wmd-input').get(0));
-                }
             }
             $comment_reply.fadeIn();
 
-            $('html, body').animate({
-                scrollTop: $comment_reply.offset().top - $('#navigation').height() - 4
-            }, 500);
+            window.location.hash = '#' + reply_id;
         };
 
-        $(document).on('click', '.close', function() {
+        $(document).on('click', '.close', function () {
             $(this).closest('.reply-comment').fadeOut();
         });
 
@@ -141,7 +137,7 @@
                 $('#comment-' + id).remove();
                 $('#comment-' + id + '-children').remove();
             }).catch(function () {
-                alert('{{ _('Could not hide comment.') }}');
+                _alert('{{ _('Could not hide comment.') }}');
             });
         });
 
@@ -178,10 +174,10 @@
                             var $edits = $comment.find('.comment-edits').first();
                             $edits.text('{{ _('updated') }}');
                         }).fail(function () {
-                            alert('{{ _('Failed to update comment body.') }}');
+                            _alert('{{ _('Failed to update comment body.') }}');
                         });
                     }).fail(function (data) {
-                            alert('{{ _('Could not edit comment: {error}') }}'.replace('{error}', data.responseText));
+                        _alert('{{ _('Could not edit comment: {error}') }}'.replace('{error}', data.responseText));
                     });
                 });
             },

@@ -73,7 +73,7 @@ class Select2Mixin(object):
 
         attrs.setdefault('data-minimum-input-length', 0)
         if 'class' in attrs:
-            attrs['class'] += ' ui search dropdown'
+            attrs['class'] += 'ui search dropdown'
         else:
             attrs['class'] = 'ui search dropdown'
         return attrs

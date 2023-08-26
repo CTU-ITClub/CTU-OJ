@@ -115,7 +115,7 @@
                             $file_name = $file_name.split('/').pop()
                             $file_ext = $file_name.split('.').pop()
                             if (!(['cpp', 'pas', 'java'].includes($file_ext))) {
-                                alert("{{ _('Expected checker\'s extension must be in [cpp, pas, java], found ') }}'" + $file_ext + "'");
+                                _alert("{{ _('Expected checker\'s extension must be in [cpp, pas, java], found ') }}'" + $file_ext + "'");
                             } else {
                                 $lang = $file_ext.toUpperCase();
                                 if ($lang == "CPP") $lang = "CPP17";
@@ -443,7 +443,7 @@
                     }
                 }
                 if (inFiles.length == 0) {
-                    alert("{{_('No input/output files. Make sure your files are following themis/cms test format')}}");
+                    _alert("{{_('No input/output files. Make sure your files are following themis/cms test format')}}");
                     return false;
                 }
                 if (inFiles.length != outFiles.length) {
@@ -527,7 +527,7 @@
                     }).catch(function (err) {
                         console.log(err);
                         console.error("Failed to open as ZIP file");
-                        alert("{{ _('Test file must be a ZIP file') }}");
+                        _alert("{{ _('Test file must be a ZIP file') }}");
                         event.target.value = "";
                     })
                 };
