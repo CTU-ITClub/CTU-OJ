@@ -31,31 +31,32 @@
         <form action="" method="post" class="form-area">
             {% csrf_token %}
             {% if form.errors %}
-                <div id="form-errors">
-                    <p class="error">{{ _('Invalid username or password.') }}</p>
+                <div id="form-errors" class="ui message red">
+                    <p class="content">{{ _('Invalid username or password.') }}</p>
                 </div>
             {% endif %}
 
-            <label style="display: block" for="username">
-                {{ _('Username') }}
-            </label>
+            <div class="field {% if form.errors %} error {% endif %}">
+                <label style="display: block" for="username">
+                    {{ _('Username') }}
+                </label>
+                <input placeholder="{{ _('Username') }}" name="username" id="username">
+            </div>
 
+            <div class="field {% if form.errors %} error {% endif %}">
+                <label for="password">
+                    {{ _('Password') }}
+                </label>
+                <input placeholder="{{ _('Password') }}" type="password" name="password" id="password">
+            </div>
 
-            <input placeholder="{{ _('Username') }}" name="username" id="username">
-
-            <label for="password">
-                {{ _('Password') }}
-            </label>
-
-
-            <input placeholder="{{ _('Password') }}" type="password" name="password" id="password">
-            <div class="ui divider"></div>
-            <button class="ui button primary" type="submit">{{ _('Login!') }}</button>
+            <button class="ui button primary" type="submit" style="width: 100%">{{ _('Login!') }}</button>
 
             <input type="hidden" name="next" value="{{ next }}">
         </form>
 
-        <a class="is-link" href="{{ url('password_reset') }}">{{ _('Forgot your password?') }}</a>
+        <a class="ui link" style="padding-top: 10px; display:block;"
+           href="{{ url('password_reset') }}">{{ _('Forgot your password?') }}</a>
 
         {% if form.has_google_auth or form.has_facebook_auth or form.has_github_auth %}
             <h4>{{ _('Or log in with...') }}</h4>

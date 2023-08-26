@@ -21,7 +21,7 @@
                 <div class="ui checkbox">
                     <input id="full_text" type="checkbox" name="full_text" value="1"
                            {% if full_text %}checked{% endif %}>
-                    <label>
+                    <label for="full_text">
                         {{ _('Full text search') }}
                     </label>
                 </div>
@@ -32,7 +32,7 @@
                 <div class="ui checkbox">
                     <input id="hide_solved" type="checkbox" name="hide_solved" value="1"
                            {% if hide_solved %}checked{% endif %}>
-                    <label>
+                    <label for="hide_solved">
                         {{ _('Hide solved problems') }}
                     </label>
                 </div>
@@ -42,7 +42,7 @@
             <div class="ui checkbox">
                 <input id="has_public_editorial" type="checkbox" name="has_public_editorial" value="1"
                         {% if has_public_editorial %} checked{% endif %}>
-                <label>
+                <label for="has_public_editorial">
                     {{ _('Has editorial') }}
                 </label>
             </div>
@@ -51,7 +51,7 @@
             <div class="ui checkbox">
                 <input id="show_types" type="checkbox" name="show_types" value="1"
                         {% if show_types %} checked{% endif %}>
-                <label>
+                <label for="show_types">
                     {{ _('Show problem types') }}
                 </label>
             </div>
@@ -87,15 +87,15 @@
             </select>
         </div>
 
-        {#        {% if point_values %}#}
-        {#            <div class="form-label">{{ _('Point range') }}</div>#}
-        {#            <div id="point-slider" class="my-4"></div>#}
-        {#        {% endif %}#}
-        {#        <input id="point-start" type="hidden" name="point_start"#}
-        {#               {% if point_start and point_start != point_values.min %}value="{{ point_start }}"#}
-        {#               {% else %}disabled{% endif %}>#}
-        {#        <input id="point-end" type="hidden" name="point_end"#}
-        {#               {% if point_end and point_end != point_values.max %}value="{{ point_end }}"{% else %}disabled{% endif %}>#}
+{#                {% if point_values %}#}
+{#                    <div class="form-label">{{ _('Point range') }}</div>#}
+{#                    <div id="point-slider" class="my-4"></div>#}
+{#                {% endif %}#}
+{#                <input id="point-start" type="hidden" name="point_start"#}
+{#                       {% if point_start and point_start != point_values.min %}value="{{ point_start }}"#}
+{#                       {% else %}disabled{% endif %}>#}
+{#                <input id="point-end" type="hidden" name="point_end"#}
+{#                       {% if point_end and point_end != point_values.max %}value="{{ point_end }}"{% else %}disabled{% endif %}>#}
         <div class="form-submit-group" style="display: flex; gap: 5px; flex-wrap: wrap">
             <a id="go" class="ui button primary">{{ _('Go') }}</a>
             <a id="random" class="ui basic button">{{ _('Random') }}</a>

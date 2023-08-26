@@ -329,9 +329,10 @@
                     {{ _('Submit!') }}
                 </button>
                 <hr class="ui divider"/>
-
-                {{ form.judge }}
-
+                <div class="field">
+                    <label>{{ _('Judge') }}</label>
+                    {{ form.judge }}
+                </div>
                 <hr class="ui divider"/>
             {% endif %}
 

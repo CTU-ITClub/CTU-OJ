@@ -73,9 +73,9 @@ class Select2Mixin(object):
 
         attrs.setdefault('data-minimum-input-length', 0)
         if 'class' in attrs:
-            attrs['class'] += ' django-select2'
+            attrs['class'] += ' ui search dropdown'
         else:
-            attrs['class'] = 'django-select2'
+            attrs['class'] = 'ui search dropdown'
         return attrs
 
     def optgroups(self, name, value, attrs=None):

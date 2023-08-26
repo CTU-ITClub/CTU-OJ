@@ -593,11 +593,7 @@
                                 <a class="item"
                                    href="{{ url('impersonate-stop') }}">{{ _('Stop impersonating') }}</a>
                             {% else %}
-                                <form action="{{ url('auth_logout') }}" method="POST" class="item">
-                                    {% csrf_token %}
-                                    <button type="submit"
-                                            style="border: none; background: none; display: block">{{ _('Log out') }}</button>
-                                </form>
+                                <label class="item" for="logout-btn">{{ _('Logout') }}</label>
                             {% endif %}
                         </div>
                     </div>
