@@ -349,6 +349,7 @@
                                 </label>
 
                                 <select name="status" class="ui search dropdown" multiple>
+                                    <option value="">{{ _('All') }}</option>
                                     {% for id, name in all_statuses %}
                                         <option {% if id in selected_statuses %}selected{% endif %}
                                                 value="{{ id }}">{{ name }}</option>
@@ -362,6 +363,7 @@
                                 </label>
 
                                 <select name="language" class="ui search dropdown" multiple>
+                                    <option value="">{{ _('All') }}</option>
                                     {% for code, name in all_languages %}
                                         <option {% if code in selected_languages %}selected{% endif %}
                                                 value="{{ code }}">{{ name }}</option>
