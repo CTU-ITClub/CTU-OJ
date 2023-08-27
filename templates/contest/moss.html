@@ -14,6 +14,7 @@
             flex-wrap: wrap;
             justify-content: center;
         }
+
         .pane {
             padding: 20px;
         }
@@ -34,7 +35,7 @@
 {% endblock %}
 {% block body %}
     {% if has_results %}
-        <table class="table striped">
+        <table class="ui table striped">
             <thead>
             <tr>
                 <th class="header">{{ _('Problem') }}</th>
@@ -44,26 +45,26 @@
             </tr>
             </thead>
             <tbody>
-                {% for problem, results in moss_results %}
-                    <tr id="problem-{{ problem.code }}">
+            {% for problem, results in moss_results %}
+                <tr id="problem-{{ problem.code }}">
+                    <td>
+                        <a href="{{ url('problem_detail', problem.code) }}">{{ problem.name }}</a>
+                    </td>
+                    {% for result in results %}
                         <td>
-                            <a href="{{ url('problem_detail', problem.code) }}">{{ problem.name }}</a>
-                        </td>
-                        {% for result in results %}
-                            <td>
-                                {% if result.submission_count %}
-                                    <a href="{{ result.url }}">{% trans trimmed count=result.submission_count %}
-                                        {{ count }} submission
+                            {% if result.submission_count %}
+                                <a href="{{ result.url }}">{% trans trimmed count=result.submission_count %}
+                                    {{ count }} submission
                                     {% pluralize %}
-                                        {{ count }} submissions
-                                    {% endtrans %}</a>
-                                {% else %}
-                                    {{ _('No submissions') }}
-                                {% endif %}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
+                                    {{ count }} submissions
+                                {% endtrans %}</a>
+                            {% else %}
+                                {{ _('No submissions') }}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     {% endif %}
@@ -71,7 +72,7 @@
         <div class="pane">
             <form method="post" action="{{ url('contest_moss', contest.key) }}">
                 {% csrf_token %}
-                <input type="submit" class="unselectable button full contest-moss" style="padding: 10px;"
+                <input type="submit" class="ui button black"
                        value="{% if has_results %} {{ _('Re-MOSS contest') }} {% else %} {{ _('MOSS contest') }} {% endif %}">
             </form>
         </div>

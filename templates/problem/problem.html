@@ -92,16 +92,24 @@
                style="width: 100%;margin-bottom: 5px">
                 {{ _('Submit solution') }}
             </a>
-            <div class="submissions-left">
-                {% trans trimmed counter=submissions_left %}
-                    {{ counter }} submission left
-                    {% pluralize %}
-                    {{ counter }} submissions left
-                {% endtrans %}
+            <div class="ui message info icon">
+                <i class="icon info circle"></i>
+                <div class="content">
+                    {% trans trimmed counter=submissions_left %}
+                        {{ counter }} submission left
+                        {% pluralize %}
+                        {{ counter }} submissions left
+                    {% endtrans %}
+                </div>
             </div>
         {% else %}
             <a class="ui button disabled" style="width: 100%">{{ _('Submit solution') }}</a>
-            <div class="no-submissions-left submissions-left">{{ _('0 submissions left') }}</div>
+            <div class="ui message icon">
+                <i class="icon info circle"></i>
+                <div class="content">
+                    {{ _('0 submissions left') }}
+                </div>
+            </div>
         {% endif %}
     {% else %}
         <a href="{{ url('problem_submit', problem.code) }}" class="unselectable ui button primary" style="width: 100%">
@@ -109,68 +117,59 @@
         </a>
     {% endif %}
 
-    <hr class="ui divider">
+    <div class="ui list relaxed divided segment">
 
-    {% if request.in_contest and contest_problem %}
-        {% set contest = contest_problem.contest %}
-        <div>
-            <a href="{{ url('contest_user_submissions', contest.key, request.user.username, problem.code) }}">{{ _('My submissions') }}</a>
-        </div>
-        {% if contest.can_see_full_submission_list(request.user) %}
-            <div><a href="{{ url('chronological_submissions', problem.code) }}">{{ _('All submissions') }}</a></div>
-            <div>
-                <a href="{{ url('contest_ranked_submissions', contest.key, problem.code) }}">{{ _('Best submissions') }}</a>
-            </div>
+        {% if request.in_contest and contest_problem %}
+            {% set contest = contest_problem.contest %}
+            <a class="item"
+               href="{{ url('contest_user_submissions', contest.key, request.user.username, problem.code) }}">
+                {{ _('My submissions') }}
+            </a>
+            {% if contest.can_see_full_submission_list(request.user) %}
+                <a class="item" href="{{ url('chronological_submissions', problem.code) }}">
+                    {{ _('All submissions') }}
+                </a>
+                <a class="item" href="{{ url('contest_ranked_submissions', contest.key, problem.code) }}">
+                    {{ _('Best submissions') }}
+                </a>
+            {% endif %}
+        {% else %}
+            {% if request.user.is_authenticated and has_submissions %}
+                <a class="item"
+                   href="{{ url('user_submissions', problem.code, request.user.username) }}">{{ _('My submissions') }}</a>
+            {% endif %}
+            <a class="item" href="{{ url('chronological_submissions', problem.code) }}">{{ _('All submissions') }}</a>
+            <a class="item" href="{{ url('ranked_submissions', problem.code) }}">{{ _('Best submissions') }}</a>
         {% endif %}
-    {% else %}
-        {% if request.user.is_authenticated and has_submissions %}
-            <div>
-                <a href="{{ url('user_submissions', problem.code, request.user.username) }}">{{ _('My submissions') }}</a>
-            </div>
+        {% if (editorial and editorial.is_accessible_by(request.user)) and not request.in_contest %}
+            <a class="item" href="{{ url('problem_editorial', problem.code) }}">{{ _('Read editorial') }}</a>
         {% endif %}
-        <div><a href="{{ url('chronological_submissions', problem.code) }}">{{ _('All submissions') }}</a></div>
-        <div><a href="{{ url('ranked_submissions', problem.code) }}">{{ _('Best submissions') }}</a></div>
-    {% endif %}
-    {% if (editorial and editorial.is_accessible_by(request.user)) and not request.in_contest %}
-        <hr class="ui divider">
-        <div><a href="{{ url('problem_editorial', problem.code) }}">{{ _('Read editorial') }}</a></div>
-    {% endif %}
-    {% if can_edit_problem %}
-        <hr class="ui divider">
-        <div>
-            <a href="{{ url('problem_ticket_list', problem.code) }}">{{ _('Manage tickets') }}
+        {% if can_edit_problem %}
+            <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">{{ _('Manage tickets') }}
                 {% if num_open_tickets %}
                     <span class="ui label red circular mini">{{ num_open_tickets }}</span>{% endif %}
             </a>
-        </div>
-        <div><a href="{{ url('problem_edit', problem.code) }}">{{ _('Edit problem') }}</a></div>
-        {% if not problem.is_manually_managed %}
-            <div><a href="{{ url('problem_data', problem.code) }}">{{ _('Edit test data') }}</a></div>
-        {% endif %}
-    {% elif request.user.is_authenticated and has_tickets %}
-        <hr class="ui divider">
-        <div>
-            <a href="{{ url('problem_ticket_list', problem.code) }}">{{ _('My tickets') }}
+            <a class="item" href="{{ url('problem_edit', problem.code) }}">{{ _('Edit problem') }}</a>
+            {% if not problem.is_manually_managed %}
+                <a class="item" href="{{ url('problem_data', problem.code) }}">{{ _('Edit test data') }}</a>
+            {% endif %}
+        {% elif request.user.is_authenticated and has_tickets %}
+            <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">{{ _('My tickets') }}
                 {% if num_open_tickets %}<span class="badge">{{ num_open_tickets }}</span>{% endif %}
             </a>
-        </div>
-    {% endif %}
+        {% endif %}
 
-    {% if problem.is_subs_manageable_by(request.user) %}
-        <div>
-            <a href="{{ url('problem_manage_submissions', problem.code) }}">{{ _('Manage submissions') }}</a>
-        </div>
-    {% endif %}
+        {% if problem.is_subs_manageable_by(request.user) %}
+            <a class="item"
+               href="{{ url('problem_manage_submissions', problem.code) }}">{{ _('Manage submissions') }}</a>
+        {% endif %}
 
-    {% if perms.judge.clone_problem and can_edit_problem %}
-        <div>
-            <a href="{{ url('problem_clone', problem.code) }}">{{ _('Clone problem') }}</a>
-        </div>
-    {% endif %}
+        {% if perms.judge.clone_problem and can_edit_problem %}
+            <a class="item" href="{{ url('problem_clone', problem.code) }}">{{ _('Clone problem') }}</a>
+        {% endif %}
+    </div>
 
-    <hr class="ui divider">
-
-    <div class="ui list divided relaxed">
+    <div class="ui list divided relaxed segment">
 
         <div class="problem-info-entry item">
             <i class="icon check"></i><span class="content">{{ _('Points:') }} <strong>
@@ -255,9 +254,7 @@
 
     </div>
 
-    <hr class="ui divider">
-
-    <div class="ui list relaxed divided">
+    <div class="ui list relaxed divided segment">
         {% if not contest_problem or not contest_problem.contest.hide_problem_authors %}
             {% cache 86400 'problem_authors' problem.id LANGUAGE_CODE %}
                 {% with authors=problem.authors.all() %}
@@ -272,7 +269,7 @@
                                         Authors:
                                     {% endtrans %}
                                 </div>
-                                <div class="pi-value ui label">{{ link_users(authors) }}</div>
+                                <div class="pi-value ui label" style="margin-top: 5px;">{{ link_users(authors) }}</div>
                             </div>
                         </div>
                     {% endif %}
@@ -284,7 +281,7 @@
                                     {{ _("Suggester:") }}
                                 </div>
 
-                                <div class="pi-value authors-value">{{ link_user(problem.suggester) }}</div>
+                                <p>{{ link_user(problem.suggester) }}</p>
                             </div>
                         </div>
                     {% endif %}
@@ -315,7 +312,7 @@
                                 Problem types
                             {% endtrans %}
                         </div>
-                        <div class="content" style="margin: -5px">
+                        <div class="content">
                             {% for type in problem.types_list %}
                                 <div class="ui label" style="margin: 5px">
                                     {{ type }}
@@ -333,7 +330,7 @@
                         <i class="icon dropdown"></i>
                         <span class="content">{{ _('Allowed languages') }}</span>
                     </div>
-                    <div class="content" style="margin: -5px;">
+                    <div class="content">
                         {% with usable=problem.usable_common_names, langs=problem.languages_list() %}
                             {% for lang in langs %}
                                 {%- if lang in usable -%}
@@ -366,14 +363,14 @@
                         {% endtrans %}
                     </div>
 
-                    <div class="content" style="margin: -5px">
+                    <div class="content">
                         {% if available_judges %}
                             {% if perms.judge.change_judge %}
                                 {% for judge in available_judges %}
                                     <a class="ui label green" style="margin: 5px"
                                        href="{{ url('admin:judge_judge_change', judge.id) }}">{{ judge.name }}</a>
                                 {% endfor %}
-                            {% else %}
+                            {% else %}f
                                 {% for judge in available_judges %}
                                     <div class="ui label" style="margin: 5px">{{ judge.name }}</div>
                                 {% endfor %}
@@ -408,7 +405,6 @@
 {% block post_description_end %}
     {% if request.user.is_authenticated and not request.profile.mute %}
         <a href="{{ url('new_problem_ticket', problem.code) }}" class="ui button basic red">
-
             {%- if comment_lock and request.profile.current_contest.live -%}
                 {{ _('Request clarification') }}
             {%- else -%}
