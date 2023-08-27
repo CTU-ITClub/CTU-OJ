@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
-from django.forms import BaseModelFormSet, CharField, ChoiceField, HiddenInput, ModelForm, NumberInput, Select, \
+from django.forms import BaseModelFormSet, CharField, ChoiceField, HiddenInput, ModelForm, NumberInput, \
     formset_factory
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -25,7 +25,6 @@ from judge.utils.problem_data import ProblemDataCompiler
 from judge.utils.unicode import utf8text
 from judge.utils.views import TitleMixin, add_file_response, generic_message
 from judge.views.problem import ProblemMixin
-from judge.widgets import Select2Widget
 from judge.widgets.dropdown import DropdownWidget
 
 mimetypes.init()
@@ -238,7 +237,7 @@ class ProblemDataView(TitleMixin, ProblemManagerMixin):
             return False
         number_of_cases = cases_formset.total_form_count() - len(cases_formset.deleted_forms)
         if number_of_cases > settings.VNOJ_TESTCASE_HARD_LIMIT and \
-           not self.request.user.has_perm('judge.create_mass_testcases'):
+                not self.request.user.has_perm('judge.create_mass_testcases'):
             error = ValidationError(
                 _('Too many testcases, number of testcases must not exceed %s') % settings.VNOJ_TESTCASE_HARD_LIMIT,
                 code='too_many_testcases',
