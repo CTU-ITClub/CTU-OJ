@@ -76,6 +76,7 @@
                         <i class="icon question circle"></i>
                         <div class="content">
                             <div class="header">{{ _('My open tickets') }}</div>
+                            disco
                             <div class="own-open-tickets ui list relaxed divided">
                                 {% for ticket in own_open_tickets %}
                                     <div class="item">
@@ -187,7 +188,7 @@
                 <div class="item">
                     <i class="icon comment"></i>
                     <div class="content">
-                        <div class="header">
+                        <div class="header" style="display: flex; align-items: center">
                             {{ _('Comment stream') }}
                             {% if misc_config.discord_invite_link and misc_config.discord_invite_shieldio %}
                                 <span style="margin: 0.1em 0.3em -6px;">
