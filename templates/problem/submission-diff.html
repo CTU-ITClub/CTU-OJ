@@ -29,14 +29,14 @@
                 var first = $('#case-table tr td:nth-child(1) input.sub-check:checked')[0];
                 var second = $('#case-table tr td:nth-child(2) input.sub-check:checked')[0];
                 if (!first || !second) {
-                    alert('Please select two submissions.');
+                    _alert('Please select two submissions.');
                     return;
                 }
 
                 var first_id = $(first).parent().parent().attr('sub-id');
                 var second_id = $(second).parent().parent().attr('sub-id');
                 if (first_id === second_id) {
-                    alert('Please select two different submissions.');
+                    _alert('Please select two different submissions.');
                     return;
                 }
 

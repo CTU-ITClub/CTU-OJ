@@ -63,20 +63,32 @@
                     </span>
                 </div>
             </h2>
+
+            {% if post.organization %}
+                <a class="ui label large black" href="{{ post.organization.get_absolute_url() }}">
+                    <i class="icon lock"></i>
+                    <div class="content">
+                        {{ post.organization.name }}
+                    </div>
+                </a>
+            {% endif %}
+
             {% if post.is_editable_by(request.user) %}
-                <a class="ui button circular green mini"
+                <a class="ui button circular green"
                    href="{{ url('blog_post_edit', post.id, post.slug) }}">
-                    <i class="icon pencil" aria-hidden="true"></i>
+                    <i class="icon pencil"></i>
                     {{ _('Edit') }}
                 </a>
             {% endif %}
-            {% if post.organization %}
-                <span class="organization-tag" style="display: inline;">
-                <a href="{{ post.organization.get_absolute_url() }}">
-                    <i class="fa fa-lock"></i> {{ post.organization.name }}
-                </a>
-            </span>
-            {% endif %}
+
+            <div class="ui dropdown simple circular icon button primary">
+                <i class="icon share"></i>
+
+                <div class="menu" style="padding: 20px; display: flex; flex-direction: column; gap: 5px;">
+                    {{ post_to_facebook(request, post, '<div class="ui button blue"><i class="icon facebook"></i>Facebook</div>') }}
+                    {{ post_to_twitter(request, SITE_NAME + ':', post, '<div class="ui button black" style="width: 100%"><i class="fa-brands fa-x-twitter"></i>Twitter</div>') }}
+                </div>
+            </div>
 
             <hr class="ui divider"/>
         </div>
@@ -93,10 +105,7 @@
 
         <div class="ui divider"></div>
 
-        <div style="display: flex; gap: 1px; justify-content: end">
-            {{ post_to_facebook(request, post, '<button class="ui blue button circular icon"><i class="icon facebook"></i></button>') }}
-            {{ post_to_twitter(request, SITE_NAME + ':', post, '<button class="ui button circular icon black"><i class="fa-brands fa-x-twitter"></i></button>') }}
-        </div>
+
         {% include "comments/list.html" %}
         <div style="clear: both;"></div>
     </div>

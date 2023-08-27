@@ -1,7 +1,7 @@
 {% if not request.official_contest_mode or request.user.is_superuser %}
     <div id="comments">
         <h2 class="ui header">
-            <i class="icon comment"></i>
+            <i class="icon conversation outline"></i>
             <div class="content">
                 {{ _('Comments') }}
             </div>
@@ -18,7 +18,8 @@
                         </p>
                     </div>
                 </div>
-                <hr><br>
+
+                <hr class="ui divider">
             {% else %}
                 <div class="ui message icon">
                     <i class="icon lock"></i>
@@ -37,7 +38,7 @@
                 <div class="ui message icon">
                     <i class="icon inbox"></i>
                     <div class="content">
-                        <p class="no-comments-message">{{ _('There are no comments at the moment.') }}</p>
+                        <p>{{ _('There are no comments at the moment.') }}</p>
                     </div>
                 </div>
             {% else %}
@@ -56,7 +57,8 @@
                              data-revision-ajax="{{ url('comment_revision_ajax', node.id) }}" class="comment">
 
                             {% with author=node.author, user=node.author.user %}
-                                <a href="{{ url('user_page', user.username) }}" class="avatar">
+                                <a href="{{ url('user_page', user.username) }}" class="avatar"
+                                   style="position: sticky; top: 80px">
                                     <img src="{{ gravatar(author, 75) }}">
                                 </a>
                             {% endwith %}
@@ -90,7 +92,7 @@
                                             <span class="comment-edits"></span>
                                         {% endif %}
 
-                                        <div class="ui buttons mini very basic icon primary">
+                                        <div class="ui buttons mini very basic icon">
                                             <a href="#comment-{{ node.id }}" title="{{ _('Link') }}"
                                                class="ui button">
                                                 <i class="icon linkify"></i>
@@ -142,7 +144,7 @@
                                     </div>
                                 </div>
 
-                                <div>
+                                <div class="ui segment">
                                     <div class="markdown-body"{% if node.score <= vote_hide_threshold %}
                                          style="display:none"{% endif %}>
                                         {{ node.body|markdown('comment', MATH_ENGINE, True)|reference|str|safe }}
@@ -156,37 +158,39 @@
                                         </div>
                                     {% endif %}
                                 </div>
+                                <div class="ui buttons icon very mini basic">
+                                    {% if logged_in %}
+                                        <a href="javascript:comment_upvote({{ node.id }})"
+                                           class="ui button {% if node.vote_score == 1 %} active{% endif %}">
+                                            <i class="icon thumbs up"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
+                                           title="{{ _('Please log in to vote') }}"
+                                           class="ui button">
+                                            <i class="icon thumbs up"></i>
+                                        </a>
+                                    {% endif %}
+                                    <br>
+                                    <div class="ui button disabled">{{ node.score }}</div>
+                                    {% if logged_in %}
+                                        <a href="javascript:comment_downvote({{ node.id }})"
+                                           class="ui button{% if node.vote_score == -1 %} active{% endif %}">
+                                            <i class="icon thumbs down"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
+                                           title="{{ _('Please log in to vote') }}"
+                                           class="ui button">
+                                            <i class="icon thumbs down"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
 
-                            <div class="ui buttons icon very basic">
-                                {% if logged_in %}
-                                    <a href="javascript:comment_upvote({{ node.id }})"
-                                       class="ui button {% if node.vote_score == 1 %} active{% endif %}">
-                                        <i class="icon thumbs up"></i>
-                                    </a>
-                                {% else %}
-                                    <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
-                                       title="{{ _('Please log in to vote') }}"
-                                       class="ui button">
-                                        <i class="icon thumbs up"></i>
-                                    </a>
-                                {% endif %}
-                                <br>
-                                <div class="ui button disabled">{{ node.score }}</div>
-                                {% if logged_in %}
-                                    <a href="javascript:comment_downvote({{ node.id }})"
-                                       class="ui button{% if node.vote_score == -1 %} active{% endif %}">
-                                        <i class="icon thumbs down"></i>
-                                    </a>
-                                {% else %}
-                                    <a href="javascript:_alert('{{ _('Please log in to vote')|escapejs }}')"
-                                       title="{{ _('Please log in to vote') }}"
-                                       class="ui button">
-                                        <i class="icon thumbs down"></i>
-                                    </a>
-                                {% endif %}
-                            </div>
+
                             <div id="comment-{{ node.id }}-reply" class="reply-comment comments" hidden></div>
+
                             {% with children=node.get_children() %}
                                 {% if children %}
                                     <div id="comment-{{ node.id }}-children" class="comments">{{ loop(children) }}</div>

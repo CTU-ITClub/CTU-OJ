@@ -19,17 +19,17 @@
 {% endblock %}
 
 {% block body %}
-    <form id="access-code-form" action="" method="post" class="form-area">
+    <form id="access-code-form" action="" method="post" class="ui form">
         {% csrf_token %}
         {% if form.errors or wrong_code %}
-            <div id="form-errors">
-                <p class="error">{{ _('Invalid access code.') }}</p>
+            <div id="form-errors" class="ui message red">
+                <p class="content">{{ _('Invalid access code.') }}</p>
             </div>
         {% endif %}
-        <p>{{ _('Please enter your access code:') }}</p>
-        <p>{{ form.access_code }}</p>
-        <p class="button-line">
-            <button type="submit">{{ _('Join Contest') }}</button>
-        </p>
+        <div class="field">
+            <label>{{ _('Please enter your access code:') }}</label>
+            {{ form.access_code }}
+        </div>
+        <button type="submit" class="ui button primary">{{ _('Join Contest') }}</button>
     </form>
 {% endblock %}

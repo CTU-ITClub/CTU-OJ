@@ -9,15 +9,18 @@
 {% endblock %}
 
 {% block user_content %}
-    <div class="content-description">
+    <div class="ui segment">
         {% with orgs=user.organizations.filter(is_unlisted=False) %}
             {% if orgs %}
-                <p style="margin-top: 0"><b>{{ _('From') }}</b>
-                    {% for org in orgs -%}
-                        <a href="{{ org.get_absolute_url() }}">{{ org.name }}</a>
-                        {%- if not loop.last %}, {% endif %}
-                    {% endfor %}
-                </p>
+                <h4 class="ui header">{{ _('From') }}</h4>
+                {% for org in orgs -%}
+                    <a href="{{ org.get_absolute_url() }}" class="ui label image black">
+                        {% if org.logo_override_image %}
+                            <img src="{{ org.logo_override_image }}" alt="{{ org.name }}"/>
+                        {% endif %}
+                        {{ org.name }}
+                    </a>
+                {% endfor %}
             {% endif %}
         {% endwith %}
         {% if perms.judge.change_profile %}
@@ -30,10 +33,12 @@
         {% endif %}
 
         {% if user.about %}
-            <h4>{{ _('About') }}</h4>
-            {% cache 86400 'user_about' user.id MATH_ENGINE %}
-                {{ user.about|markdown('self-description', MATH_ENGINE)|reference|str|safe }}
-            {% endcache %}
+            <h4 class="ui header">{{ _('About') }}</h4>
+            <div class="markdown-body">
+                {% cache 86400 'user_about' user.id MATH_ENGINE %}
+                    {{ user.about|markdown('self-description', MATH_ENGINE)|reference|str|safe }}
+                {% endcache %}
+            </div>
         {% else %}
             <i>
                 {% if user.user == request.user %}
@@ -45,24 +50,39 @@
             <br>
         {% endif %}
 
-        <h4>{{ _('Badges & Awards') }}</h4>
-        {% for badge in user.badges.all() %}
-            <div style="display: inline-block; margin-left: 1em; margin-right: 1em;">
-                <img src="{{ badge.full_size or badge.mini or '' }}" title="{{ badge.name }}" style="height: 10em; width: auto; display: block; margin: 0 auto;" />
-                <p style="text-align: center; font-weight: bold; text-transform: uppercase;">{{ badge.name }}</p>
-            </div>
-        {% else %}
-            <i>{{ _('This user has not earned any badges or awards.') }}</i>
-        {% endfor %}
+        <h4 class="ui header">
+            <i class="icon trophy"></i>
+            {{ _('Badges & Awards') }}
+        </h4>
+        <div class="ui cards">
+            {% for badge in user.badges.all() %}
+                <div class="ui card">
+                    <div class="image">
+                        <img src="{{ badge.full_size or badge.mini or '' }}" title="{{ badge.name }}"/>
+                    </div>
+                    <div class="content">
+                        <div class="header">
+                            {{ badge.name }}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="ui content">{{ _('This user has not earned any badges or awards.') }}</div>
+            {% endfor %}
+        </div>
 
-        <h4 id="submission-activity-header"></h4>
+        <h4 id="submission-activity-header" class="ui header"></h4>
         <div id="submission-activity" style="display: none;">
-            <div id="submission-activity-actions">
-                <a href="javascript:void(0)" id="prev-year-action">&laquo;</a>
-                &nbsp;<span id="year"></span>&nbsp;
-                <a href="javascript:void(0)" id="next-year-action">&raquo;</a>
+            <div id="submission-activity-actions" class="ui buttons icon">
+                <a href="javascript:void(0)" id="prev-year-action" class="ui button">
+                    <i class="icon angle left"></i>
+                </a>
+                &nbsp;<span id="year" class="ui button disabled"></span>&nbsp;
+                <a href="javascript:void(0)" id="next-year-action" class="ui button">
+                    <i class="icon angle right"></i>
+                </a>
             </div>
-            <div id="submission-activity-display">
+            <div id="submission-activity-display" class="ui segment">
                 <table id="submission-activity-table">
                     <tr id="submission-0">
                         <th class="submission-date-col info-text">
@@ -106,11 +126,21 @@
                     <table class="info-table">
                         <tr>
                             <th class="info-table-text info-text">{{ _('Less') }}</th>
-                            <td class="activity-0"><div></div></td>
-                            <td class="activity-1"><div></div></td>
-                            <td class="activity-2"><div></div></td>
-                            <td class="activity-3"><div></div></td>
-                            <td class="activity-4"><div></div></td>
+                            <td class="activity-0">
+                                <div></div>
+                            </td>
+                            <td class="activity-1">
+                                <div></div>
+                            </td>
+                            <td class="activity-2">
+                                <div></div>
+                            </td>
+                            <td class="activity-3">
+                                <div></div>
+                            </td>
+                            <td class="activity-4">
+                                <div></div>
+                            </td>
                             <th class="info-table-text info-text">{{ _('More') }}</th>
                         <tr>
                     </table>
@@ -119,7 +149,9 @@
         </div>
 
         {% if rating %}
-            <h4>{{ _('Rating history') }}</h4>
+            <h4 class="ui header">
+                {{ _('Rating history') }}
+            </h4>
             <div id="rating-chart">
                 <canvas></canvas>
             </div>
@@ -269,7 +301,7 @@
                                 $tooltip.find('.contest').text(item.label);
                                 $tooltip.find('.date').text(item.date);
                                 $tooltip.find('.rate-box').attr('class', 'rate-box ' + item.class)
-                                        .find('span').css('height', item.height);
+                                    .find('span').css('height', item.height);
                                 $tooltip.find('.rating').text(item.rating).attr('class', 'rating ' + item.class);
                                 $tooltip.find('.rank').text(item.ranking);
 

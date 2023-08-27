@@ -99,9 +99,9 @@
 
         <div class="blog-sidebar column five wide">
             <div style="position: sticky; top: 80px">
-                <div class="blog-sidebox sidebox">
+                <div class="ui segment">
                     <h3 class="ui header">
-                        <i class="icon question circle"></i>
+                        <i class="icon cog"></i>
                         <div class="content">
                             {{ _('Controls') }}
                         </div>
@@ -143,27 +143,28 @@
                             {% if perms.judge.edit_organization_post %}
                                 <a class="item"
                                    href="{{ url('blog_post_create_organization', organization.id, organization.slug) }}">
+                                    <i class="icon plus"></i>
                                     {{ _('Create blog post') }}
                                 </a>
                             {% endif %}
                             <a class="item" href="{{ url('edit_organization', organization.id, organization.slug) }}">
+                                <i class="icon pencil"></i>
                                 {{ _('Edit organization') }}
                             </a>
                         {% endif %}
                         {% if perms.judge.change_organization %}
                             <a class="item" href="{{ url('admin:judge_organization_change', organization.id) }}">
+                                <i class="icon cog"></i>
                                 {{ _('Admin organization') }}
                             </a>
                         {% endif %}
                     </div>
                 </div>
 
-                <hr class="ui divider"/>
-
                 {% if new_contests %}
-                    <div class="blog-sidebox sidebox">
+                    <div class="ui segment">
                         <h3 class="ui header">
-                            <i class="icon trophy"></i>
+                            <i class="icon trophy outline"></i>
                             <div class="content">
                                 {{ _('New contests') }}
                             </div>
@@ -195,10 +196,9 @@
                             </ul>
                         </div>
                     </div>
-                    <hr class="ui divider"/>
                 {% endif %}
                 {% if new_problems %}
-                    <div class="sidebox">
+                    <div class="ui segment">
                         <h3 class="ui header">
                             <i class="icon puzzle"></i>
                             <div class="content">

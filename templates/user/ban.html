@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <form action="" method="post">
+    <form action="" method="post" class="ui form">
         {% csrf_token %}
         {{ form }}
-        <input type="submit" value="Submit">
+        <hr class="ui divider"/>
+        <input type="submit" value="Submit" class="ui button">
     </form>
 {% endblock %}

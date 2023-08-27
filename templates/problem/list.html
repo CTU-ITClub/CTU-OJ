@@ -155,7 +155,7 @@
                     </th>
                     <th class="editorial" title="{{ _('Editorial') }}">
                         <a href="{{ sort_links.editorial }}">
-                            <i class="fa fa-book"></i>{{ sort_order.editorial }}
+                            <i class="icon book"></i>{{ sort_order.editorial }}
                         </a>
                     </th>
                 </tr>
@@ -168,9 +168,9 @@
                                 <td class="solved" solved="1">
                                     <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
                                         {% if problem.is_public %}
-                                            <i class="solved-problem-color fa fa-check-circle"></i>
+                                            <i class="icon check circle green outline"></i>
                                         {% else %}
-                                            <i class="solved-problem-color fa fa-lock"></i>
+                                            <i class="icon lock green"></i>
                                         {% endif %}
                                     </a>
                                 </td>
@@ -178,9 +178,9 @@
                                 <td class="solved" solved="0">
                                     <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
                                         {% if problem.is_public %}
-                                            <i class="attempted-problem-color fa fa-frown-o"></i>
+                                            <i class="icon frown outline orange"></i>
                                         {% else %}
-                                            <i class="attempted-problem-color fa fa-lock"></i>
+                                            <i class="icon lock orange"></i>
                                         {% endif %}
                                     </a>
                                 </td>
@@ -189,7 +189,7 @@
                                     {% if problem.is_public %}
                                         <i class="unsolved-problem-color fa"></i>
                                     {% else %}
-                                        <i class="unsolved-problem-color fa fa-lock"></i>
+                                        <i class="icon lock black"></i>
                                     {% endif %}
                                 </td>
                             {% endif %}
@@ -230,19 +230,29 @@
             </table>
         </div>
 
-        <div id="content-right" class="four wide column">
+        <div id="content-right" class="four wide column ui segment">
             <div class="info-float card" style="position: sticky; top: 80px">
                 {% include "problem/search-form.html" %}
                 {% if hot_problems %}
-                    <div class="sidebox">
-                        <h3>{{ _('Hot problems') }} <i class="fa fa-fire"></i></h3>
-                        <div class="sidebox-content">
-                            <ul class="problem-list">{% for problem in hot_problems %}
-                                <li><a href="{{ url('problem_detail', problem.code) }}" class="hot-problem-link">
-                                    {{ problem.name }}
-                                </a></li>
-                            {% endfor %}</ul>
-                        </div>
+                    <hr class="ui divider"/>
+                    <div class="ui list relaxed divided">
+                        <h3 class="ui header">
+                            <i class="icon fire"></i>
+                            <div class="content">
+                                {{ _('Hot problems') }}
+                            </div>
+                        </h3>
+                        {% for problem in hot_problems %}
+                            <div class="item">
+                                <i class="icon puzzle"></i>
+
+                                <div class="content">
+                                    <a href="{{ url('problem_detail', problem.code) }}" class="header">
+                                        {{ problem.name }}
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                 {% endif %}
             </div>
