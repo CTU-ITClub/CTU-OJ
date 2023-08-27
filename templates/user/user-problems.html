@@ -81,13 +81,18 @@
     {% endif %}
 
     {% if request.user.is_authenticated and request.user != user.user %}
-        <div class="hide-solved-problems"><span>
+        <div class="ui divider horizontal">
             <form name="form" action="" method="get">
-                <input id="hide_solved" style="vertical-align:middle" onclick="form.submit()" type="checkbox"
-                       name="hide_solved"{% if hide_solved %} checked{% endif %} value="1">
-                <label style="vertical-align:middle" for="hide_solved">{{ _("Hide problems I've solved") }}</label>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input id="hide_solved" style="vertical-align:middle" onclick="form.submit()" type="checkbox"
+                               name="hide_solved"{% if hide_solved %} checked{% endif %} value="1">
+                        <label style="vertical-align:middle"
+                               for="hide_solved">{{ _("Hide problems I've solved") }}</label>
+                    </div>
+                </div>
             </form>
-        </span></div>
+        </div>
     {% else %}
     {% endif %}
 
@@ -126,6 +131,8 @@
                 </table>
             </div>
         </div>
+
+        <hr class="ui divider"/>
     {% endfor %}
 {% endblock %}
 
