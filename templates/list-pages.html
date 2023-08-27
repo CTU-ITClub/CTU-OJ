@@ -1,4 +1,4 @@
-<div class="ui pagination menu">
+<div class="ui pagination menu" style="margin: 10px 0">
     {% if page_obj.has_previous() %}
         {% if page_obj.previous_page_number() == 1 and first_page_href != None %}
             <a class="icon item" href="{{ first_page_href }}">
@@ -30,7 +30,9 @@
     {% endfor %}
 
     {% if page_obj.has_next() %}
-        <li><a href="{{ page_prefix or '' }}{{ page_obj.next_page_number() }}{{ page_suffix or '' }}">»</a></li>
+        <a href="{{ page_prefix or '' }}{{ page_obj.next_page_number() }}{{ page_suffix or '' }}" class="icon item">
+            <i class="icon angle right"></i>
+        </a>
     {% else %}
         <div class="icon item disabled">
             <i class="icon angle right"></i>

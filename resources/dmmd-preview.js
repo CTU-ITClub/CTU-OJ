@@ -1,8 +1,10 @@
+import gautamPatadiyaCkeditorCustomBuild from 'https://cdn.skypack.dev/@gautam-patadiya/ckeditor-custom-build';
+
 $(function () {
     window.register_dmmd_preview = function ($preview) {
         var $form = $preview.parents('form').first();
         var $update = $preview.find('.dmmd-preview-update');
-        var $content = $preview.find('.dmmd-preview-content');
+        var $content = $preview.find('.content');
         var preview_url = $preview.attr('data-preview-url');
         var $textarea = $('#' + $preview.attr('data-textarea-id'));
 
@@ -13,6 +15,73 @@ $(function () {
                 $form.submit();
             }
         });
+
+        gautamPatadiyaCkeditorCustomBuild.create($form.find('.ck-editor')[0]).then(editor => {
+            let lastText;
+            let timeout;
+
+            editor.model.document.on('change:data', async () => {
+                $content.val(editor.getData())
+                $textarea.val(editor.getData())
+
+                timeout = setTimeout(async () => {
+                    if (timeout) {
+                        clearTimeout(timeout)
+                        timeout = null
+                    }
+
+                    const text = editor.getData()
+
+                    if (text === lastText) {
+                        return
+                    }
+
+                    lastText = text;
+
+                    $preview.addClass('dmmd-preview-stale');
+
+
+                    $.post(preview_url, {
+                        content: text,
+                        csrfmiddlewaretoken: $.cookie('csrftoken'),
+                    }, res => {
+                        $content.html(res)
+                        $preview.addClass('dmmd-preview-has-content').removeClass('dmmd-preview-stale');
+
+                        var $jax = $content.find('.require-mathjax-support');
+                        if ($jax.length) {
+                            if (!('MathJax' in window)) {
+                                $.ajax({
+                                    type: 'GET',
+                                    url: $jax.attr('data-config'),
+                                    dataType: 'script',
+                                    cache: true,
+                                    success: function () {
+                                        $.ajax({
+                                            type: 'GET',
+                                            url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-chtml.min.js',
+                                            dataType: 'script',
+                                            cache: true,
+                                            success: function () {
+                                                MathJax.typesetPromise([$content[0]]).then(function () {
+                                                    $content.find('.tex-image').hide();
+                                                    $content.find('.tex-text').show();
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                MathJax.typesetPromise([$content[0]]).then(function () {
+                                    $content.find('.tex-image').hide();
+                                    $content.find('.tex-text').show();
+                                });
+                            }
+                        }
+                    })
+                }, 500)
+            })
+        })
 
         $update.click(function () {
             var text = $textarea.val();
@@ -87,7 +156,7 @@ $(function () {
     });
 
     if ('django' in window && 'jQuery' in window.django)
-        django.jQuery(document).on('formset:added', function(event, $row) {
+        django.jQuery(document).on('formset:added', function (event, $row) {
             var $preview = $row.find('.dmmd-preview');
             if ($preview.length) {
                 var id = $row.attr('id');

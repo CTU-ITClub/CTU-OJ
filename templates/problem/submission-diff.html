@@ -29,14 +29,14 @@
                 var first = $('#case-table tr td:nth-child(1) input.sub-check:checked')[0];
                 var second = $('#case-table tr td:nth-child(2) input.sub-check:checked')[0];
                 if (!first || !second) {
-                    alert('Please select two submissions.');
+                    _alert('Please select two submissions.');
                     return;
                 }
 
                 var first_id = $(first).parent().parent().attr('sub-id');
                 var second_id = $(second).parent().parent().attr('sub-id');
                 if (first_id === second_id) {
-                    alert('Please select two different submissions.');
+                    _alert('Please select two different submissions.');
                     return;
                 }
 
@@ -62,48 +62,11 @@
 
 {% block media %}
     <style>
-        #content-body {
-            overflow-x: auto;
-            padding-bottom: 0;
-        }
-
-        .sub-id {
-            width: 4em;
-            min-width: 4em;
-        }
-
-        .sub-username {
-            width: 5em;
-        }
-
-        .sub-result {
-            width: 3em;
-        }
-
-        .sub-language {
-            width: 6em;
-        }
-
-        .sub-date {
-            min-width: 8em;
-        }
-
-        .sub-case {
-            min-width: 3em;
-        }
-
-        .sub-case-status {
-            text-decoration: underline;
-        }
-
-        .highlighted {
-            background: lightBlue
-        }
     </style>
 {% endblock %}
 
 {% block body %}
-    <table id="case-table" class="table">
+    <table id="case-table" class="ui table form">
         <thead>
         <tr>
             <th class="sub-check">{{ _('1st') }}</th>
@@ -121,11 +84,17 @@
         <tbody>
         {% for sub in submissions %}
             <tr sub-id={{ sub.id }}>
-                <td><input class="sub-check" type="checkbox"></td>
-                <td><input class="sub-check" type="checkbox"></td>
+                <td>
+                    <input class="sub-check ui checkbox" type="checkbox">
+                </td>
+                <td>
+                    <input class="sub-check ui checkbox" type="checkbox">
+                </td>
                 <td><a href="{{ url('submission_source', sub.id) }}">{{ sub.id }}</a></td>
                 <td>{{ link_user(sub.user) }}</td>
-                <td><span class="case-{{ sub.result }}">{{ sub.result }}</span></td>
+                <td>
+                    <span class="ui label case-{{ sub.result }}">{{ sub.result }}</span>
+                </td>
                 <td>{{ sub.language.name }}</td>
                 <td><span class="time">{{ relative_time(sub.date) }}</span></td>
                 {% for case in sub.test_cases.all() %}
@@ -133,7 +102,7 @@
                         {% if case.status == 'SC' %}
                             <span class="case-SC">---</span>
                         {% else %}
-                            <a href="javascript:void(0);" class="sub-case-status case-{{ case.status }}">
+                            <a href="javascript:void(0);" class="ui label sub-case-status case-{{ case.status }}">
                                 {% if case.status == 'AC' %}
                                     {{ case.time|floatformat(2) }}
                                 {% else %}
@@ -147,12 +116,14 @@
         {% endfor %}
         </tbody>
     </table>
-    <div style="display: none" class="partial-output-window"><pre><code></code></pre></div>
+    <div style="display: none" class="partial-output-window">
+        <pre><code></code></pre>
+    </div>
 {% endblock %}
 
 {% block bodyend %}
-    <div style="padding-bottom: 4em;">
-        <a id="diff" class="unselectable button full" href="#" style="width: 90%; margin: auto;">
+    <div>
+        <a id="diff" class="ui button primary" href="#">
             {{ _('Diff source code') }}
         </a>
     </div>

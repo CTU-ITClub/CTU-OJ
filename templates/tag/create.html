@@ -10,22 +10,34 @@
 {% endblock %}
 
 {% block body %}
-    <div class="alert alert-warning alert-dismissable">
-        <a class="close">x</a>
-        <b>{{ _('Creating new problem can take longer than usual!') }}</b>
-        <br>
-        {{ _('Due to API requests and cache optimization, creating problem can take longer than usual.') }}
-        <br>{{ _('If no problem is created after 2 to 3 minutes, please open a ticket, or contact the admin for further information.') }}
-    </div>
-    <div>
-        <form action="" method="post" class="form-area" style="display: flex; justify-content: center; flex-direction: column;">
-            {% csrf_token %}
-            <table class="django-as-table">{{ form.as_table() }}</table>
-            <hr>
-            <table>
-                <tr><td style="float: left;">
-                <td style="float: right;"><input type="submit" value="{{ _('Create') }}" class="button"></td></tr>
-            </table>
-        </form>
+    <div class="ui container">
+        <div class="ui message icon warning">
+            <i class="icon warning"></i>
+            <a class="icon close">
+                <i class="icon close"></i>
+            </a>
+            <div class="content">
+                <div class="header">{{ _('Creating new problem can take longer than usual!') }}</div>
+                <p>
+                    {{ _('Due to API requests and cache optimization, creating problem can take longer than usual.') }}
+                    <br>{{ _('If no problem is created after 2 to 3 minutes, please open a ticket, or contact the admin for further information.') }}
+                </p>
+            </div>
+        </div>
+        <div>
+            <form action="" method="post" class="form-area ui form"
+                  style="display: flex; justify-content: center; flex-direction: column;">
+                {% csrf_token %}
+                <table class="django-as-table">{{ form.as_table() }}</table>
+                <hr class="ui divider">
+                <table>
+                    <tr>
+                        <td style="float: left;">
+                        <td style="float: right;">
+                        <input type="submit" value="{{ _('Create') }}" class="ui button primary"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
 {% endblock %}

@@ -5,14 +5,14 @@
         $(function () {
             $('#tags').select2({
                 theme: '{{ DMOJ_SELECT2_THEME }}',
-                closeOnSelect:false
+                closeOnSelect: false
             });
 
-            $('body').on('click', '.select2-results__group', function() {
+            $('body').on('click', '.select2-results__group', function () {
                 $(this).siblings().toggle();
             });
 
-            $('body').on('click', '.select2-selection__rendered', function() {
+            $('body').on('click', '.select2-selection__rendered', function () {
                 $('.select2-results__group').click();
             });
         });
@@ -35,11 +35,18 @@
 
 {% block body %}
     <div>
-        <form action="" method="post" class="form-area" style="display: flex; justify-content: center; flex-direction: column;">
+        <form action="" method="post" class="form-area ui form"
+              style="display: flex; justify-content: center; flex-direction: column;">
             {% csrf_token %}
-            <label for="tags"><b>{{ _('Tags') }}</b></label>
-            <span class="helptext">You can click on a group's name to show/hide that group.</span>
-            <select id="tags" name="tags" multiple>
+            <label for="tags" class="ui header">
+                <div class="content">
+                    {{ _('Tags') }}
+                    <div class="sub header">
+                        <i class="icon info circle"></i>You can click on a group's name to show/hide that group.
+                    </div>
+                </div>
+            </label>
+            <select name="tags" multiple class="ui search dropdown">
                 {% for group in groups %}
                     <optgroup label="{{ group.name }}">
                         {% for tag in group.tags.all() %}
@@ -48,10 +55,13 @@
                     </optgroup>
                 {% endfor %}
             </select>
-            <hr>
+            <hr class="ui divider">
             <table>
-                <tr><td style="float: left;">
-                <td style="float: right;"><input type="submit" value="{{ _('Assign') }}" class="button"></td></tr>
+                <tr>
+                    <td style="float: left;">
+                    <td style="float: right;">
+                        <input type="submit" value="{{ _('Assign') }}" class="ui button primary"></td>
+                </tr>
             </table>
         </form>
     </div>

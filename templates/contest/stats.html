@@ -34,24 +34,46 @@
 {% endblock %}
 
 {% block body %}
-    <h3>{{ _('Problem Status Distribution') }}</h3>
-    <div id="problem-status-count" class="chart">
-        <canvas></canvas>
-    </div>
+    <div class="ui grid stackable">
+        <div class="column eight wide">
+            <h3 class="ui header">
+                <i class="icon check"></i>
+                {{ _('Problem Status Distribution') }}
+            </h3>
+            <div id="problem-status-count" class="chart ui segment">
+                <canvas></canvas>
+            </div>
+        </div>
 
-    <h3>{{ _('Problem AC Rate') }}</h3>
-    <div id="problem-ac-rate" class="chart">
-        <canvas></canvas>
-    </div>
+        <div class="column eight wide">
+            <h3 class="ui header">
+                <i class="icon check"></i>
+                {{ _('Problem AC Rate') }}
+            </h3>
+            <div id="problem-ac-rate" class="chart ui segment">
+                <canvas></canvas>
+            </div>
+        </div>
 
-    <h3>{{ _('Submissions by Language') }}</h3>
-    <div id="language-count" class="chart">
-        <canvas width="400" height="300"></canvas>
-        <ul class="legend"></ul>
-    </div>
+        <div class="column eight wide">
+            <h3 class="ui header">
+                <i class="icon code"></i>
+                {{ _('Submissions by Language') }}
+            </h3>
+            <div id="language-count" class="chart ui segment">
+                <canvas width="400" height="300"></canvas>
+                <ul class="legend"></ul>
+            </div>
+        </div>
 
-    <h3>{{ _('Language AC Rate') }}</h3>
-    <div id="language-ac-rate" class="chart">
-        <canvas></canvas>
+        <div class="column eight wide">
+            <h3 class="ui header">
+                <i class="icon code"></i>
+                {{ _('Language AC Rate') }}
+            </h3>
+            <div id="language-ac-rate" class="chart ui segment">
+                <canvas></canvas>
+            </div>
+        </div>
     </div>
 {% endblock %}

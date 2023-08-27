@@ -21,7 +21,7 @@
                 count_down($(this));
             });
 
-            $('.blog-sidebar').hide();
+            // $('.blog-sidebar').hide();
             $('#blog-tab').click(function (e) {
                 e.preventDefault();
                 $('#blog-tab').addClass('active');
@@ -43,21 +43,23 @@
 {% block body %}
     {% block before_posts %}{% endblock %}
 
-    <div class="ui top attached tabular menu">
-        <div class="active item" id="blog-tab">
-            <i class="icon info"></i>
-            {{ _('Blog') }}
-        </div>
-        <div class="item" id="event-tab">
-            <i class="icon rss"></i>
-            {{ _('Events') }}
-        </div>
-    </div>
+    {#    <div class="ui top attached tabular menu">#}
+    {#        <div class="active item" id="blog-tab">#}
+    {#            <i class="icon info"></i>#}
+    {#            {{ _('Blog') }}#}
+    {#        </div>#}
+    {#        <div class="item" id="event-tab">#}
+    {#            <i class="icon rss"></i>#}
+    {#            {{ _('Events') }}#}
+    {#        </div>#}
+    {#    </div>#}
 
-    <div id="blog-container">
-        <div class="blog-content sidebox">
-            {% include "blog/blog-list-tabs.html" %}
-            <div class="sidebox-content ui feed" style="border: unset;">
+    <div id="blog-container" class="ui grid stackable">
+        <div class="blog-content sidebox column eleven wide">
+            <div class="ui container">
+                {% include "blog/blog-list-tabs.html" %}
+            </div>
+            <div class="sidebox-content ui feed container">
                 {% for post in posts %}
                     {% include "blog/blog-post.html" %}
                 {% endfor %}
@@ -67,159 +69,189 @@
             {% endif %}
         </div>
 
-        <div class="ui list">
-            {% if own_open_tickets %}
-                <div class="item">
-                    <i class="icon question circle"></i>
-                    <div class="content">
-                        <h3 class="header">{{ _('My open tickets') }}</h3>
-                        <div class="own-open-tickets ui list relaxed divided">
-                            {% for ticket in own_open_tickets %}
-                                <div class="item">
-                                    <i class="icon bug"></i>
-                                    <div class="content">
-                                        <a class="header"
-                                           href="{{ url('ticket', ticket.id) }}">{{ ticket.title }}</a>
-                                        <a href="{{ ticket.linked_item.get_absolute_url() }}">
-                                            {{ ticket.linked_item|item_title|truncatechars_html(30) }}</a>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
-            {% if open_tickets %}
-                <div class="item">
-                    <i class="icon info circle"></i>
-                    <div class="content">
-                        <h3 class="header">{{ _('New tickets') }}</h3>
-
-                        <div class="ui list relaxed divided">
-                            {% for ticket in open_tickets %}
-                                <div class="item">
-                                    <i class="icon bug"></i>
-                                    <div class="content">
-                                        <div class="header">
-                                            <a href="{{ url('ticket', ticket.id) }}">{{ ticket.title }}</a>
-                                        </div>
-                                        <a href="{{ ticket.linked_item.get_absolute_url() }}">
-                                            {{ ticket.linked_item|item_title|truncatechars_html(30) }}</a>
-                                        <div class="author">{{ link_user(ticket.user) }}</div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% if current_contests %}
-                <div class="item">
-                    <i class="icon trophy"></i>
-
-                    <div class="content">
-                        <h3 class="header">{{ _('Ongoing contests') }}</h3>
-
-                        <div class="ui list relaxed">
-                            {% for contest in current_contests %}
-                                <div class="item">
-                                    <div class="content">
-                                        <div class="header">
-                                            <a href="{{ url('contest_view', contest.key) }}">{{ contest.name }}</a>
-                                        </div>
-                                        <div class="time">
-                                            {{ _('Ends in %(countdown)s.', countdown=as_countdown(contest.time_before_end)) }}
+        <div class="column five wide ui segment">
+            <div class="blog-sidebar ui list" style="position: sticky; top: 80px">
+                {% if own_open_tickets %}
+                    <div class="item">
+                        <i class="icon question circle"></i>
+                        <div class="content">
+                            <div class="header">{{ _('My open tickets') }}</div>
+                            <div class="own-open-tickets ui list relaxed divided">
+                                {% for ticket in own_open_tickets %}
+                                    <div class="item">
+                                        <i class="icon bug"></i>
+                                        <div class="content">
+                                            <a class="header"
+                                               href="{{ url('ticket', ticket.id) }}">{{ ticket.title }}</a>
+                                            <a href="{{ ticket.linked_item.get_absolute_url() }}">
+                                                {{ ticket.linked_item|item_title|truncatechars_html(30) }}</a>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
 
-            {% if future_contests %}
-                <div class="item">
-                    <i class="icon trophy"></i>
+                    <hr class="ui divider">
+                {% endif %}
 
-                    <div class="content">
-                        <h3 class="header">{{ _('Ongoing contests') }}</h3>
+                {% if open_tickets %}
+                    <div class="item">
+                        <i class="icon info circle"></i>
+                        <div class="content">
+                            <div class="header">{{ _('New tickets') }}</div>
 
-                        <div class="ui list relaxed">
-                            {% for contest in future_contests %}
-                                <div class="item">
-                                    <div class="content">
-                                        <div class="header">
-                                            <a href="{{ url('contest_view', contest.key) }}">{{ contest.name }}</a>
-                                        </div>
-                                        <div class="time">
-                                            {{ _('Ends in %(countdown)s.', countdown=as_countdown(contest.time_before_start)) }}
+                            <div class="ui list relaxed divided">
+                                {% for ticket in open_tickets %}
+                                    <div class="item">
+                                        <i class="icon bug"></i>
+                                        <div class="content">
+                                            <div class="header">
+                                                <a href="{{ url('ticket', ticket.id) }}">{{ ticket.title }}</a>
+                                            </div>
+                                            <a href="{{ ticket.linked_item.get_absolute_url() }}">
+                                                {{ ticket.linked_item|item_title|truncatechars_html(30) }}</a>
+                                            <div class="author">{{ link_user(ticket.user) }}</div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
+                    <hr class="ui divider">
+                {% endif %}
+                {% if current_contests %}
+                    <div class="item">
+                        <i class="icon trophy"></i>
 
-            {% if top_pp_users %}
-                {% include "blog/top-pp.html" %}
-            {% endif %}
-            {% if top_contrib %}
-                {% include "blog/top-contrib.html" %}
-            {% endif %}
-            <div class="item">
-                <i class="icon comment"></i>
-                <div class="content">
-                    <h3 class="header" style="display: flex; justify-content: space-between; white-space: nowrap;">
-                    <span style="margin-right: 10px;">
-                        {{ _('Comment stream') }}
-                    </span>
-                        {% if misc_config.discord_invite_link and misc_config.discord_invite_shieldio %}
-                            <span style="margin: 0.1em 0.3em -6px;">
+                        <div class="content">
+                            <div class="header">{{ _('Ongoing contests') }}</div>
+
+                            <div class="ui list relaxed">
+                                {% for contest in current_contests %}
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">
+                                                <a href="{{ url('contest_view', contest.key) }}">{{ contest.name }}</a>
+                                            </div>
+                                            <div class="time">
+                                                {{ _('Ends in %(countdown)s.', countdown=as_countdown(contest.time_before_end)) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="ui divider">
+                {% endif %}
+
+                {% if future_contests %}
+                    <div class="item">
+                        <i class="icon trophy"></i>
+
+                        <div class="content">
+                            <div class="header">{{ _('Ongoing contests') }}</div>
+
+                            <div class="ui list relaxed">
+                                {% for contest in future_contests %}
+                                    <div class="item">
+                                        <div class="content">
+                                            <div class="header">
+                                                <a href="{{ url('contest_view', contest.key) }}">{{ contest.name }}</a>
+                                            </div>
+                                            <div class="time">
+                                                {{ _('Ends in %(countdown)s.', countdown=as_countdown(contest.time_before_start)) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="ui divider">
+                {% endif %}
+
+                {% if top_pp_users %}
+                    {% include "blog/top-pp.html" %}
+
+                    <hr class="ui divider">
+                {% endif %}
+                {% if top_contrib %}
+                    {% include "blog/top-contrib.html" %}
+
+                    <hr class="ui divider">
+                {% endif %}
+                <div class="item">
+                    <i class="icon comment"></i>
+                    <div class="content">
+                        <div class="header">
+                            {{ _('Comment stream') }}
+                            {% if misc_config.discord_invite_link and misc_config.discord_invite_shieldio %}
+                                <span style="margin: 0.1em 0.3em -6px;">
                             <a href="{{ misc_config.discord_invite_link }}">
-                                <img style="max-width: none;" src="{{ misc_config.discord_invite_shieldio }}"
-                                     alt="Discord">
+                                <img src="{{ misc_config.discord_invite_shieldio }}" alt="Discord">
                             </a>
                         </span>
-                        {% endif %}
-                    </h3>
-                    <div class="ui list relaxed divided">
-                        {% for comment in comments %}
-                            <div class="item">
-                                <span style="padding-left:0.25em" class="poster">
-                                    {{ link_user(comment.author) }}
-                                </span> &rarr;
-                                <a href="{{ comment.link }}#comment-{{ comment.id }}">{{ comment.page_title }}</a>
-                            </div>
-                        {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="ui list relaxed divided">
+                            {% for comment in comments %}
+                                <div class="item">
+                                    <div class="content">
+                                        <div class="header">
+                                            {{ link_user(comment.author) }}
+                                        </div>
+                                        <p>
+                                            <i class="icon arrow right"></i>
+                                            <a href="{{ comment.link }}#comment-{{ comment.id }}">{{ comment.page_title }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <hr class="ui divider"/>
+                        <a href="{{ url('comment_rss') }}" class="ui label icon orange">
+                            <i class="icon rss"></i>
+                            RSS
+                        </a>
+                        <a href="{{ url('comment_atom') }}" class="ui label violet">
+                            <i class="icon react"></i>
+                            Atom
+                        </a>
                     </div>
-                    <span class="rssatom">
-                        <a href="{{ url('comment_rss') }}"><span><i class="fa fa-rss"></i></span> RSS</a>
-                        /
-                        <a href="{{ url('comment_atom') }}">Atom</a>
-                    </span>
                 </div>
-            </div>
 
-            <div class="item">
-                <i class="icon puzzle"></i>
+                <div class="item">
+                    <i class="icon puzzle"></i>
 
-                <div class="content">
-                    <h3 class="header">{{ _('New problems') }}</h3>
-                    <div class="ui list relaxed divided">
-                        {% for problem in new_problems %}
-                            <div class="item"><a href="{{ url('problem_detail', problem.code) }}">{{ problem.name }}</a>
-                            </div>
-                        {% endfor %}
+                    <div class="content">
+                        <div class="header">{{ _('New problems') }}</div>
+
+                        <div class="ui list relaxed divided">
+                            {% for problem in new_problems %}
+                                <div class="item">
+                                    <a href="{{ url('problem_detail', problem.code) }}" class="content">
+                                        <div class="header">
+                                            {{ problem.name }}
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <hr class="ui divider"/>
+                        <a href="{{ url('problem_rss') }}" class="ui label icon orange">
+                            <i class="icon rss"></i>
+                            RSS
+                        </a>
+                        <a href="{{ url('problem_atom') }}" class="ui label violet">
+                            <i class="icon react"></i>
+                            Atom
+                        </a>
                     </div>
-                    <span class="rssatom">
-                        <a href="{{ url('problem_rss') }}"><span><i class="fa fa-rss"></i></span> RSS</a>
-                        /
-                        <a href="{{ url('problem_atom') }}">Atom</a>
-                    </span>
                 </div>
             </div>
         </div>

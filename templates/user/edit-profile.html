@@ -99,22 +99,22 @@
             });
 
             $('#disable-2fa-button').click(function () {
-                alert("{{ _('The administrators for this site require all the staff to have Two-factor Authentication enabled, so it may not be disabled at this time.') }}");
+                _alert("{{ _('The administrators for this site require all the staff to have Two-factor Authentication enabled, so it may not be disabled at this time.') }}");
             });
 
             $('#generate-api-token-button').click(function (event) {
                 event.preventDefault();
                 if (confirm("{{ _('Are you sure you want to generate or regenerate your API token?') }}\n"
-                          + "{{ _('This will invalidate any previous API tokens.') }} "
-                          + "{{ _('It also allows access to your account without Two-factor Authentication.') }}\n\n"
-                          + "{{ _('You will not be able to view your API token after you leave this page!') }}")) {
+                    + "{{ _('This will invalidate any previous API tokens.') }} "
+                    + "{{ _('It also allows access to your account without Two-factor Authentication.') }}\n\n"
+                    + "{{ _('You will not be able to view your API token after you leave this page!') }}")) {
                     $('#api-token').text("{{ _('Generating...') }}");
 
                     $.ajax({
                         type: 'POST',
                         url: $(this).attr('href'),
                         dataType: 'json',
-                        success: function(data) {
+                        success: function (data) {
                             $('#api-token').text(data.data.token);
                             $('#generate-api-token-button').text("{{ _('Regenerate') }}");
 
@@ -137,7 +137,7 @@
                         type: 'POST',
                         url: $(this).attr('href'),
                         dataType: 'json',
-                        success: function(data) {
+                        success: function (data) {
                             $('#api-token').text('');
                             $('#generate-api-token-button').text("{{ _('Generate') }}");
                             $('#remove-api-token-button').remove();
@@ -156,7 +156,7 @@
                 event.preventDefault();
 
                 if (typeof window.PublicKeyCredential === 'undefined') {
-                    alert('{{ _('WebAuthn is not supported by your browser.') }}');
+                    _alert('{{ _('WebAuthn is not supported by your browser.') }}');
                     return;
                 }
 
@@ -177,10 +177,10 @@
                                     name: $('#new-webauthn-name').val(),
                                 })
                                     .then(() => window.location.reload())
-                                    .fail((jqXHR) => alert(jqXHR.responseText));
+                                    .fail((jqXHR) => _alert(jqXHR.responseText));
                             });
                     })
-                    .fail(() => alert('{{ _('Failed to contact server.') }}'));
+                    .fail(() => _alert('{{ _('Failed to contact server.') }}'));
             });
 
             $('.webauthn-delete').click(function (event) {
@@ -188,7 +188,7 @@
                 if (confirm("{{ _('Are you sure you want to delete this security key?') }}")) {
                     $.post($(this).attr('data-delete-url'))
                         .then(() => window.location.reload())
-                        .fail((jqXHR) => alert(jqXHR.responseText));
+                        .fail((jqXHR) => _alert(jqXHR.responseText));
                 }
             });
         });
@@ -197,11 +197,11 @@
     <script src="{{ static('libs/clipboard/tooltip.js') }}"></script>
     <script type="text/javascript">
         $(function () {
-            $('#generate-scratch-codes-button').click(function(event) {
+            $('#generate-scratch-codes-button').click(function (event) {
                 event.preventDefault();
                 if (confirm("{{ _('Are you sure you want to generate or regenerate a new set of scratch codes?') }}\n"
-                          + "{{ _('This will invalidate any previous scratch codes you have.') }}\n\n"
-                          + "{{ _('You will not be able to view your scratch codes after you leave this page!') }}")) {
+                    + "{{ _('This will invalidate any previous scratch codes you have.') }}\n\n"
+                    + "{{ _('You will not be able to view your scratch codes after you leave this page!') }}")) {
                     $('#scratch-codes').text("{{ _('Generating...') }}");
 
                     $('pre code').each(function () {
@@ -221,12 +221,12 @@
 
                         var curClipboard = new Clipboard(copyButton.get(0));
 
-                        curClipboard.on('success', function(e) {
+                        curClipboard.on('success', function (e) {
                             e.clearSelection();
                             showTooltip(e.trigger, '{{ _('Copied!') }}');
                         });
 
-                        curClipboard.on('error', function(e) {
+                        curClipboard.on('error', function (e) {
                             showTooltip(e.trigger, fallbackMessage(e.action));
                         });
                     });
@@ -235,7 +235,7 @@
                         type: 'POST',
                         url: $(this).attr('href'),
                         dataType: 'json',
-                        success: function(data) {
+                        success: function (data) {
                             $('#scratch-codes').text(data.data.codes.join('\n'));
                             $('#scratch-codes-copy-button').attr('data-clipboard-text', data.data.codes.join('\n'));
                             $('#generate-scratch-codes-button').text("{{ _('Regenerate') }}");
@@ -258,7 +258,7 @@
 {% endblock %}
 
 {% block body %}
-    <div class="centered-form">
+    <div class="ui container">
         <form id="edit-form" action="" method="post" class="form-area ui form">
             {% if form.errors %}
                 <div class="alert alert-danger alert-dismissable">
@@ -270,141 +270,188 @@
 
             {% csrf_token %}
             {% if form_user.first_name %}
-                <table>
-                    <tr>
-                        <td><div class="block-header grayed">{{ _('Full name') }}:</div></td>
-                        {% if form.display_badge %}
-                            <td><div class="block-header grayed">{{ _('Display badge') }}:</div></td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <td>{{ form_user.first_name }}</td>
-                        {% if form.display_badge %}
-                            <td>{{ form.display_badge }}</td>
-                        {% endif %}
-                    </tr>
-                </table>
-                <hr>
+                <div class="field">
+                    <label>
+                        {{ _('Full name') }}:
+                    </label>
+
+                    {{ form_user.first_name }}
+                </div>
+
+                {% if form.display_badge %}
+                    <div class="field">
+                        <label>
+                            {{ _('Display badge') }}:
+                        </label>
+                        {{ form.display_badge }}
+                    </div>
+                {% endif %}
+                <hr class="ui divider">
             {% endif %}
 
             {% if form.about %}
-                <div style="padding-top:0.5em" class="block-header grayed">{{ _('Self-description:') }}</div>
+                <div class="field">
+                    <label>{{ _('Self-description:') }}</label>
                     {{ form.about }}
-                <hr>
+                </div>
+                <hr class="ui divider">
             {% endif %}
 
-            <div class="settings" style="padding-top:0.7em">
-                <div class="pane ui form" style="vertical-align:top">
-                    <table style="padding-right:0.8em">
-                        <tr title="{{ _('Select your closest major city') }}">
-                            <td><label class="inline-header grayed">{{ _('Time zone:') }}</label></td>
-                            <td><span class="fullwidth">{{ form.timezone }}</span></td>
-                        </tr>
-                        <tr>
-                            <td><label class="inline-header grayed">{{ _('Language:') }}</label></td>
-                            <td><span class="fullwidth">{{ form.language }}</span></td>
-                        </tr>
-                        <tr{% if not perms.judge.test_site %} style="display: none"{% endif %}>
-                            <td><label class="inline-header grayed">{{ _('Site theme:') }}</label></td>
-                            <td><span class="fullwidth">{{ form.site_theme }}</span></td>
-                        </tr>
-                        <tr>
-                            <td><label class="inline-header grayed">{{ _('Editor theme:') }}</label></td>
-                            <td><span class="fullwidth">{{ form.ace_theme }}</span></td>
-                        </tr>
-                        {% if has_math_config %}
-                            <tr>
-                                <td><label class="inline-header grayed">{{ _('Math engine:') }}</label></td>
-                                <td><span class="fullwidth">{{ form.math_engine }}</span></td>
-                            </tr>
-                        {% endif %}
-                    </table>
-                </div>
-                {% if form.organizations %}
-                    <div class="pane">
-                        <div style="padding-bottom:0.3em; margin-top:0.3em" class="block-header grayed">
-                            {{ _('Affiliated organizations') }}:
-                        </div>
-                        {{ form.organizations }}
+            <div class="ui grid stackable">
+                <div class="column eight wide">
+                    <div class="field">
+                        <label class="inline-header grayed">{{ _('Time zone:') }}</label>
+                        {{ form.timezone }}
                     </div>
-                {% endif %}
+                    <div class="field">
+                        <label class="inline-header grayed">{{ _('Language:') }}</label>
+                        {{ form.language }}
+                    </div>
+                    {% if perms.judge.test_site %}
+                        <div class="field">
+                            <label class="inline-header grayed">{{ _('Site theme:') }}</label>
+                            {{ form.site_theme }}
+                        </div>
+                    {% endif %}
+                    <div class="field">
+
+                        <label class="inline-header grayed">{{ _('Editor theme:') }}</label>
+                        {{ form.ace_theme }}
+                    </div>
+                    {% if has_math_config %}
+                        <div class="field">
+                            <label class="inline-header grayed">{{ _('Math engine:') }}</label>
+                            {{ form.math_engine }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="column eight wide">
+                    {% if form.organizations %}
+                        <div class="field">
+                            <label>
+                                {{ _('Affiliated organizations') }}:
+                            </label>
+                            {{ form.organizations }}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-            <hr>
+
+            <hr class="ui divider">
+
             <div class="settings" style="padding-top:0.7em">
                 <div class="pane">
                     <table>
                         {% if form.newsletter %}
-                            <tr><td>
-                                {{ form.newsletter }}
-                                <label for="id_newsletter" style="float: unset" class="inline-header grayed">
-                                        {{- _('Notify me about upcoming contests') -}}
-                                </label>
-                            </td></tr>
+                            <tr>
+                                <td>
+                                    <div class="field">
+                                        <div class="ui checkbox">
+                                            {{ form.newsletter }}
+                                            <label for="id_newsletter">
+                                                {{- _('Notify me about upcoming contests') -}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
                         {% endif %}
-                        <tr><td>
-                            {{ form.test_site }}
-                            <label for="id_test_site" style="float: unset" class="inline-header grayed">
-                                {{- form.test_site.label -}}
-                            </label>
-                        </td></tr>
-                        <tr><td>
-                            <a href="https://www.gravatar.com/" target="_blank" class="inline-header" rel="noopener">
-                                {{ _('Change your avatar') }}
-                            </a>
-                        </td></tr>
-                        <tr><td>
-                            <a href="{{ url('password_change') }}" class="inline-header">
-                                {{ _('Change your password') }}
-                            </a>
-                        </td></tr>
-                        {% if can_download_data %}
-                            <tr><td>
-                                <a href="{{ url('user_prepare_data') }}" class="inline-header">
-                                    {{ _('Download your data') }}
+                        <tr>
+                            <td>
+                                <div class="field">
+                                    <div class="ui checkbox">
+                                        {{ form.test_site }}
+                                        <label for="id_test_site">
+                                            {{- form.test_site.label -}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="https://www.gravatar.com/" target="_blank" class="ui button green"
+                                   rel="noopener" style="width: 100%">
+                                    <i class="icon picture"></i>
+                                    {{ _('Change your avatar') }}
                                 </a>
-                            </td></tr>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="{{ url('password_change') }}" class="ui button" style="width: 100%">
+                                    <i class="icon key"></i>
+                                    {{ _('Change your password') }}
+                                </a>
+                            </td>
+                        </tr>
+                        {% if can_download_data %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url('user_prepare_data') }}" class="ui button" style="width: 100%">
+                                        <i class="icon download"></i>
+                                        {{ _('Download your data') }}
+                                    </a>
+                                </td>
+                            </tr>
                         {% endif %}
                     </table>
                 </div>
                 <div class="pane">
                     <div>
                         {% if profile.is_totp_enabled %}
-                            <div class="block-header grayed">{{ _('Two-factor authentication is enabled:') }}</div>
-                            <div class="block-buttons">
-                                {% if require_staff_2fa and request.user.is_staff and not profile.is_webauthn_enabled %}
-                                    <a id="disable-2fa-button" class="button inline-button">{{ _('Disable') }}</a>
-                                {% else %}
-                                    <a href="{{ url('disable_2fa') }}"
-                                       class="button inline-button">{{ _('Disable') }}</a>
-                                {% endif %}
-                                <a href="{{ url('refresh_2fa') }}" class="button inline-button">{{ _('Refresh') }}</a>
+                            <div class="field">
+                                <label>{{ _('Two-factor authentication is enabled:') }}</label>
+                                <div class="ui buttons basic">
+                                    {% if require_staff_2fa and request.user.is_staff and not profile.is_webauthn_enabled %}
+                                        <a id="disable-2fa-button" class="ui button">{{ _('Disable') }}</a>
+                                    {% else %}
+                                        <a href="{{ url('disable_2fa') }}" class="ui button">{{ _('Disable') }}</a>
+                                    {% endif %}
+                                    <a href="{{ url('refresh_2fa') }}" class="ui button">
+                                        {{ _('Refresh') }}
+                                    </a>
+                                </div>
                             </div>
-                            <div class="block-header grayed">
-                                {{ _('Scratch codes:') }}
+
+                            <div class="field">
+                                <label>
+                                    {{ _('Scratch codes:') }}
+                                </label>
+
                                 {% if profile.scratch_codes %}
                                     <a id="generate-scratch-codes-button" href="{{ url('generate_scratch_codes') }}"
-                                       class="button inline-button">{{ _('Regenerate') }}</a>
+                                       class="ui button">
+                                        <i class="icon refresh"></i>
+                                        {{ _('Regenerate') }}
+                                    </a>
                                     <div id="hidden-word">{{ _('Hidden') }}</div>
                                 {% else %}
                                     <a id="generate-scratch-codes-button" href="{{ url('generate_scratch_codes') }}"
                                        class="button inline-button">{{ _('Generate') }}</a>
                                 {% endif %}
-                                <div style="display: none" id="scratch-codes-regen">
-                                    <div id="scratch-codes-text">
+                                <div style="display: none" id="scratch-codes-regen" class="markdown-body">
+                                    <p id="scratch-codes-text">
                                         {{ _('Below is a list of one-time use scratch codes.') }}
                                         {{ _('These codes can only be used once and are for emergency use.') }}
                                         {{ _('You can use these codes to login to your account or disable two-factor authentication.') }}
                                         {{ _('If you ever need more scratch codes, you can regenerate them here.') }}
                                         {{ _('Please write these down and keep them in a secure location.') }}<br><br>
-                                        {{ _('You will not be able to view your scratch codes after you leave this page!') }}</div>
+                                        {{ _('You will not be able to view your scratch codes after you leave this page!') }}
+                                    </p>
                                     <pre><code id="scratch-codes"></code></pre>
                                 </div>
                             </div>
                         {% else %}
-                            <span class="inline-header grayed">
-                                {{ _('Two-factor Authentication is disabled:') }}
-                                <a href="{{ url('enable_2fa') }}" class="button inline-button">{{ _('Enable') }}</a>
-                            </span>
+                            <div class="field">
+                                <label>
+                                    {{ _('Two-factor Authentication is disabled:') }}
+                                </label>
+                                <a href="{{ url('enable_2fa') }}" class="ui button primary mini">
+                                    <i class="icon key"></i>
+                                    {{ _('Enable') }}
+                                </a>
+                            </div>
                         {% endif %}
                     </div>
                     <span class="grayed">
@@ -427,15 +474,21 @@
                                 {% endfor %}
                             {% endif %}
                             <tr>
-                                <td><input id="new-webauthn-name" type="text" placeholder="{{ _('Enter a name for this key') }}"></td>
-                                <td><button id="new-webauthn" class="inline-button">{{ _('Add') }}</button></td>
+                                <td>
+                                    <input id="new-webauthn-name" type="text"
+                                           placeholder="{{ _('Enter a name for this key') }}">
+                                </td>
+                                <td>
+                                    <button id="new-webauthn" class="inline-button">{{ _('Add') }}</button>
+                                </td>
                             </tr>
                         </table>
                     {% endif %}
                     </span>
                 </div>
             </div>
-            <hr>
+
+            <hr class="ui divider">
 
             <input type="submit" class="submit-bar ui button primary" value="{{ _('Update profile') }}">
         </form>

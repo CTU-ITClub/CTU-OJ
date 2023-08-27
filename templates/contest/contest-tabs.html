@@ -92,9 +92,9 @@
         {% endif %}
     {% elif (contest.can_join and not contest.require_registration) or contest.can_register %}
         <form action="{{ url('auth_login') }}" method="get"
-              class="contest-join-pseudotab unselectable button">
+              class="contest-join-pseudotab">
             <input type="hidden" name="next" value="{{ LOGIN_RETURN_PATH|urlencode }}">
-            <input type="submit" value="{{ _('Log in to participate') }}">
+            <input type="submit" class="ui button" value="{{ _('Log in to participate') }}">
         </form>
     {% endif %}
 {% endblock %}
