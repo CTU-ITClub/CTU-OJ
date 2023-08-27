@@ -1,0 +1,188 @@
+INFO 2023-08-27 08:36:03,458 judge_handler Judge connected from: ('127.0.0.1', 36712)
+INFO 2023-08-27 08:36:03,467 judge_handler Judge authenticated: ('127.0.0.1', 36712) (test1)
+INFO 2023-08-27 08:36:54,400 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:36:55,214 judge_handler Judge connected from: ('127.0.0.1', 42110)
+INFO 2023-08-27 08:36:55,221 judge_handler Judge authenticated: ('127.0.0.1', 42110) (test1)
+INFO 2023-08-27 08:37:29,023 judge_handler Judge disconnected from: ('127.0.0.1', 42110) with name test1
+INFO 2023-08-27 08:37:43,842 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:37:46,196 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:37:52,873 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:37:55,978 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:37:59,534 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:38:02,961 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:38:04,600 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:38:04,615 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:38:04,696 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:38:04,708 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:38:05,246 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:38:13,528 judge_handler test1: Updated problem list
+INFO 2023-08-27 08:38:14,343 judge_handler Judge connected from: ('127.0.0.1', 47034)
+INFO 2023-08-27 08:38:14,352 judge_handler Judge authenticated: ('127.0.0.1', 47034) (test2)
+INFO 2023-08-27 08:38:31,814 judge_handler Judge disconnected from: ('127.0.0.1', 36712) with name test1
+INFO 2023-08-27 08:38:33,365 judge_handler test2: Updated problem list
+INFO 2023-08-27 08:38:34,199 judge_handler Judge connected from: ('127.0.0.1', 55366)
+INFO 2023-08-27 08:38:34,205 judge_handler Judge authenticated: ('127.0.0.1', 55366) (test1)
+INFO 2023-08-27 09:11:52,772 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:11:52,774 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:13:12,841 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:13:12,841 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:13:29,946 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:13:29,946 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:13:33,569 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:13:33,569 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:13:46,277 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:13:46,277 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:14:26,991 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:14:26,991 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:14:30,196 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:14:30,196 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:15:08,550 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:15:08,551 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:15:56,624 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:15:56,624 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:17:29,792 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:17:29,793 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:18:13,201 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:18:13,201 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:18:27,006 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:18:27,006 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:18:55,413 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:18:55,413 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:18:58,319 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:18:58,319 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:18:58,333 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:18:58,333 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:18:58,341 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:18:58,365 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:18:58,365 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:19:24,178 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:19:24,178 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:19:26,831 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:19:26,833 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:20:07,451 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:20:07,451 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:20:10,672 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:20:10,672 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:20:18,018 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:20:18,018 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:21:14,757 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:21:14,757 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:21:36,302 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:21:36,303 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:22:10,737 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:22:10,737 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:22:16,911 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:22:16,911 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:22:21,820 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:22:21,822 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:22:43,022 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:22:43,022 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:23:13,829 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:23:13,831 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:24:03,282 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:24:03,282 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:24:28,804 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:24:28,804 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:03,962 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:03,963 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:08,125 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:08,125 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:08,138 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:08,138 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:14,156 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:14,156 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:14,183 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:14,183 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:14,214 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:14,214 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:40,316 judge_list Free judges: 2
+INFO 2023-08-27 09:26:40,316 judge_list Dispatched submission 57 to: test2
+INFO 2023-08-27 09:26:40,326 judge_handler Submission acknowledged: 57
+INFO 2023-08-27 09:26:40,333 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:40,345 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:40,346 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:40,352 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:40,371 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:40,372 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:40,378 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:40,379 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:41,023 judge_handler test2: Submission generated compiler messages: 57
+INFO 2023-08-27 09:26:41,029 judge_handler test2: Grading has begun on: 57
+INFO 2023-08-27 09:26:41,045 judge_handler test2: 2 test case(s) completed on: 57
+INFO 2023-08-27 09:26:41,062 judge_handler test2: Grading has ended on: 57
+INFO 2023-08-27 09:26:41,063 judge_list Judge available after grading 57: test2
+INFO 2023-08-27 09:26:42,745 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:42,745 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:26:42,751 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:26:42,752 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:27:31,390 judge_list Free judges: 2
+INFO 2023-08-27 09:27:31,390 judge_list Dispatched submission 58 to: test1
+INFO 2023-08-27 09:27:31,403 judge_handler Submission acknowledged: 58
+INFO 2023-08-27 09:27:31,409 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:27:31,419 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:27:31,423 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:27:31,430 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:27:31,444 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:27:31,445 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:27:31,452 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:27:31,453 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:27:32,600 judge_handler test1: Submission generated compiler messages: 58
+INFO 2023-08-27 09:27:32,606 judge_handler test1: Grading has begun on: 58
+INFO 2023-08-27 09:27:32,618 judge_handler test1: 2 test case(s) completed on: 58
+INFO 2023-08-27 09:27:32,632 judge_handler test1: Grading has ended on: 58
+INFO 2023-08-27 09:27:32,632 judge_list Judge available after grading 58: test1
+INFO 2023-08-27 09:27:39,120 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:27:39,120 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:27:39,127 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:27:39,128 judge_handler test1: Updated problem list
+INFO 2023-08-27 09:41:04,636 judge_handler Judge disconnected from: ('127.0.0.1', 55366) with name test1
+INFO 2023-08-27 09:52:09,708 judge_list Specified judge test2 is available
+INFO 2023-08-27 09:52:09,708 judge_list Dispatched submission 59 to: test2
+INFO 2023-08-27 09:52:09,717 judge_handler Submission acknowledged: 59
+INFO 2023-08-27 09:52:09,736 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:52:09,743 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:52:09,761 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:52:09,768 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:52:09,817 judge_handler test2: Submission generated compiler messages: 59
+INFO 2023-08-27 09:52:09,824 judge_handler test2: Grading has begun on: 59
+INFO 2023-08-27 09:52:09,835 judge_handler test2: 1 test case(s) completed on: 59
+INFO 2023-08-27 09:52:09,846 judge_handler test2: Grading has ended on: 59
+INFO 2023-08-27 09:52:09,846 judge_list Judge available after grading 59: test2
+INFO 2023-08-27 09:52:14,891 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:52:14,897 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:52:27,387 judge_list Free judges: 1
+INFO 2023-08-27 09:52:27,388 judge_list Dispatched submission 60 to: test2
+INFO 2023-08-27 09:52:27,398 judge_handler Submission acknowledged: 60
+INFO 2023-08-27 09:52:27,416 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:52:27,423 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:52:27,445 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:52:27,452 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:52:27,504 judge_handler test2: Submission generated compiler messages: 60
+INFO 2023-08-27 09:52:27,510 judge_handler test2: Grading has begun on: 60
+INFO 2023-08-27 09:52:27,530 judge_handler test2: 1 test case(s) completed on: 60
+INFO 2023-08-27 09:52:27,552 judge_handler test2: Grading has ended on: 60
+INFO 2023-08-27 09:52:27,553 judge_list Judge available after grading 60: test2
+INFO 2023-08-27 09:56:10,657 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:56:10,666 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:56:20,817 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:56:20,823 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:56:21,830 judge_handler test2: Updated problem list
+INFO 2023-08-27 09:56:21,837 judge_handler test2: Updated problem list
+INFO 2023-08-27 10:34:08,477 judge_handler test2: Updated problem list
+INFO 2023-08-27 10:34:08,485 judge_handler test2: Updated problem list
+INFO 2023-08-27 10:34:08,501 judge_handler test2: Updated problem list
+INFO 2023-08-27 10:34:08,524 judge_handler test2: Updated problem list
+INFO 2023-08-27 10:34:24,554 judge_list Specified judge test2 is available
+INFO 2023-08-27 10:34:24,554 judge_list Dispatched submission 61 to: test2
+INFO 2023-08-27 10:34:24,565 judge_handler Submission acknowledged: 61
+INFO 2023-08-27 10:34:24,605 judge_handler test2: Updated problem list
+INFO 2023-08-27 10:34:24,612 judge_handler test2: Updated problem list
+INFO 2023-08-27 10:34:24,619 judge_handler test2: Updated problem list
+INFO 2023-08-27 10:34:24,624 judge_handler test2: Updated problem list
+INFO 2023-08-27 10:34:25,165 judge_handler test2: Submission generated compiler messages: 61
+INFO 2023-08-27 10:34:25,169 judge_handler test2: Grading has begun on: 61
+INFO 2023-08-27 10:34:25,182 judge_handler test2: 2 test case(s) completed on: 61
+INFO 2023-08-27 10:34:25,193 judge_handler test2: Grading has ended on: 61
+INFO 2023-08-27 10:34:25,193 judge_list Judge available after grading 61: test2
+INFO 2023-08-27 10:34:26,228 judge_handler test2: Updated problem list
+INFO 2023-08-27 10:34:26,235 judge_handler test2: Updated problem list

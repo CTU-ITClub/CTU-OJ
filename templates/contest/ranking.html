@@ -460,7 +460,10 @@
                        style="vertical-align: bottom">{{ _('Show virtual participations') }}</label>
             </div>
             {% if not is_ICPC_format %}
-                <a href="#" onclick="download_table_as_csv()" style="float: right;">{{ _('Download as CSV') }}</a>
+                <a href="#" onclick="download_table_as_csv()" class="ui button green" style="float: right;">
+                    <i class="icon download"></i>
+                    {{ _('Download as CSV') }}
+                </a>
             {% endif %}
         {% endif %}
     </div>
