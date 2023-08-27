@@ -26,6 +26,7 @@ from judge.utils.unicode import utf8text
 from judge.utils.views import TitleMixin, add_file_response, generic_message
 from judge.views.problem import ProblemMixin
 from judge.widgets import Select2Widget
+from judge.widgets.dropdown import DropdownWidget
 
 mimetypes.init()
 mimetypes.add_type('application/x-yaml', '.yml')
@@ -57,10 +58,10 @@ def grader_args_cleaner(self):
 
 class ProblemDataForm(ModelForm):
     io_method = ChoiceField(choices=IO_METHODS, label=gettext_lazy('IO Method'), initial='standard', required=False,
-                            widget=Select2Widget(attrs={'style': 'width: 200px'}))
+                            widget=DropdownWidget(attrs={'style': 'width: 200px'}))
     io_input_file = CharField(max_length=100, label=gettext_lazy('Input from file'), required=False)
     io_output_file = CharField(max_length=100, label=gettext_lazy('Output to file'), required=False)
-    checker_type = ChoiceField(choices=CUSTOM_CHECKERS, widget=Select2Widget(attrs={'style': 'width: 200px'}))
+    checker_type = ChoiceField(choices=CUSTOM_CHECKERS, widget=DropdownWidget(attrs={'style': 'width: 200px'}))
 
     def clean_zipfile(self):
         if hasattr(self, 'zip_valid') and not self.zip_valid:
@@ -81,8 +82,8 @@ class ProblemDataForm(ModelForm):
         ]
         widgets = {
             'checker_args': HiddenInput,
-            'checker': Select2Widget(attrs={'style': 'width: 200px'}),
-            'grader': Select2Widget(attrs={'style': 'width: 200px'}),
+            'checker': DropdownWidget(attrs={'style': 'width: 200px'}),
+            'grader': DropdownWidget(attrs={'style': 'width: 200px'}),
         }
         help_texts = {
             'output_limit': _('Can be left blank. In case the output can be too long (over 20MB), please set this.'),
@@ -99,7 +100,7 @@ class ProblemCaseForm(ModelForm):
                   'checker', 'checker_args', 'generator_args')
         widgets = {
             'generator_args': HiddenInput,
-            'type': Select(attrs={'style': 'width: 100%'}),
+            'type': DropdownWidget(attrs={'style': 'width: 100%'}),
             'points': NumberInput(attrs={'style': 'width: 4em'}),
             # 'output_prefix': NumberInput(attrs={'style': 'width: 4.5em'}),
             # 'output_limit': NumberInput(attrs={'style': 'width: 6em'}),

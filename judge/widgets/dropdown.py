@@ -46,13 +46,13 @@ from django.core import signing
 from django.forms.models import ModelChoiceIterator
 from django.urls import reverse_lazy
 
-__all__ = ['Select2Widget', 'Select2MultipleWidget', 'Select2TagWidget',
-           'HeavySelect2Widget', 'HeavySelect2MultipleWidget', 'HeavySelect2TagWidget',
-           'AdminSelect2Widget', 'AdminSelect2MultipleWidget', 'AdminHeavySelect2Widget',
-           'AdminHeavySelect2MultipleWidget']
+__all__ = ['DropdownWidget', 'DropdownMultipleWidget', 'DropdownTagWidget',
+           'HeavyDropdownWidget', 'HeavyDropdownMultipleWidget', 'HeavyDropdownTagWidget',
+           'AdminSelect2Widget', 'AdminDropdownMultipleWidget', 'AdminHeavyDropdownWidget',
+           'AdminHeavyDropdownMultipleWidget']
 
 
-class Select2Mixin(object):
+class DropdownMixin(object):
     """
     The base mixin of all Select2 widgets.
 
@@ -63,7 +63,7 @@ class Select2Mixin(object):
 
     def build_attrs(self, base_attrs, extra_attrs=None):
         """Add select2 data attributes."""
-        attrs = super(Select2Mixin, self).build_attrs(base_attrs, extra_attrs)
+        attrs = super(DropdownMixin, self).build_attrs(base_attrs, extra_attrs)
         attrs.setdefault('data-theme', settings.DMOJ_SELECT2_THEME)
         if self.is_required:
             attrs.setdefault('data-allow-clear', 'false')
@@ -73,16 +73,16 @@ class Select2Mixin(object):
 
         attrs.setdefault('data-minimum-input-length', 0)
         if 'class' in attrs:
-            attrs['class'] += 'django-select2'
+            attrs['class'] += 'ui search dropdown'
         else:
-            attrs['class'] = 'django-select2'
+            attrs['class'] = 'ui search dropdown'
         return attrs
 
     def optgroups(self, name, value, attrs=None):
         """Add empty option for clearable selects."""
         if not self.is_required and not self.allow_multiple_selected:
             self.choices = list(chain([('', '')], self.choices))
-        return super(Select2Mixin, self).optgroups(name, value, attrs=attrs)
+        return super(DropdownMixin, self).optgroups(name, value, attrs=attrs)
 
     @property
     def media(self):
@@ -98,16 +98,15 @@ class Select2Mixin(object):
         )
 
 
-class AdminSelect2Mixin(Select2Mixin):
+class AdminDropdownMixin(DropdownMixin):
     @property
     def media(self):
         return forms.Media(
             js=['admin/js/jquery.init.js', settings.SELECT2_JS_URL, 'django_select2.js'],
-            css={'screen': [settings.SELECT2_CSS_URL, 'select2-dmoj.css']},
         )
 
 
-class Select2TagMixin(object):
+class DropdownTagMixin(object):
     """Mixin to add select2 tag functionality."""
 
     def build_attrs(self, base_attrs, extra_attrs=None):
@@ -116,10 +115,10 @@ class Select2TagMixin(object):
         extra_attrs.setdefault('data-minimum-input-length', 1)
         extra_attrs.setdefault('data-tags', 'true')
         extra_attrs.setdefault('data-token-separators', [',', ' '])
-        return super(Select2TagMixin, self).build_attrs(base_attrs, extra_attrs)
+        return super(DropdownTagMixin, self).build_attrs(base_attrs, extra_attrs)
 
 
-class Select2Widget(Select2Mixin, forms.Select):
+class DropdownWidget(DropdownMixin, forms.Select):
     """
     Select2 drop in widget.
 
@@ -143,7 +142,7 @@ class Select2Widget(Select2Mixin, forms.Select):
     pass
 
 
-class Select2MultipleWidget(Select2Mixin, forms.SelectMultiple):
+class DropdownMultipleWidget(DropdownMixin, forms.SelectMultiple):
     """
     Select2 drop in widget for multiple select.
 
@@ -153,7 +152,7 @@ class Select2MultipleWidget(Select2Mixin, forms.SelectMultiple):
     pass
 
 
-class Select2TagWidget(Select2TagMixin, Select2Mixin, forms.SelectMultiple):
+class DropdownTagWidget(DropdownTagMixin, DropdownMixin, forms.SelectMultiple):
     """
     Select2 drop in widget for for tagging.
 
@@ -170,7 +169,7 @@ class Select2TagWidget(Select2TagMixin, Select2Mixin, forms.SelectMultiple):
     pass
 
 
-class HeavySelect2Mixin(Select2Mixin):
+class HeavyDropdownMixin(DropdownMixin):
     """Mixin that adds select2's ajax options."""
 
     def __init__(self, attrs=None, choices=(), **kwargs):
@@ -194,7 +193,7 @@ class HeavySelect2Mixin(Select2Mixin):
 
     def build_attrs(self, base_attrs, extra_attrs=None):
         """Set select2's ajax attributes."""
-        attrs = super(HeavySelect2Mixin, self).build_attrs(base_attrs, extra_attrs)
+        attrs = super(HeavyDropdownMixin, self).build_attrs(base_attrs, extra_attrs)
 
         # encrypt instance Id
         self.widget_id = signing.dumps(id(self))
@@ -209,7 +208,7 @@ class HeavySelect2Mixin(Select2Mixin):
         return attrs
 
     def format_value(self, value):
-        result = super(HeavySelect2Mixin, self).format_value(value)
+        result = super(HeavyDropdownMixin, self).format_value(value)
         if isinstance(self.choices, ModelChoiceIterator):
             chosen = copy(self.choices)
             chosen.queryset = chosen.queryset.filter(pk__in=[
@@ -220,7 +219,7 @@ class HeavySelect2Mixin(Select2Mixin):
         return result
 
 
-class HeavySelect2Widget(HeavySelect2Mixin, forms.Select):
+class HeavyDropdownWidget(HeavyDropdownMixin, forms.Select):
     """
     Select2 widget with AJAX support.
 
@@ -243,29 +242,29 @@ class HeavySelect2Widget(HeavySelect2Mixin, forms.Select):
     pass
 
 
-class HeavySelect2MultipleWidget(HeavySelect2Mixin, forms.SelectMultiple):
+class HeavyDropdownMultipleWidget(HeavyDropdownMixin, forms.SelectMultiple):
     """Select2 multi select widget similar to :class:`.HeavySelect2Widget`."""
 
     pass
 
 
-class HeavySelect2TagWidget(Select2TagMixin, HeavySelect2MultipleWidget):
+class HeavyDropdownTagWidget(DropdownTagMixin, HeavyDropdownMultipleWidget):
     """Select2 tag widget."""
 
     pass
 
 
-class AdminSelect2Widget(AdminSelect2Mixin, Select2Widget):
+class AdminSelect2Widget(AdminDropdownMixin, DropdownWidget):
     pass
 
 
-class AdminSelect2MultipleWidget(AdminSelect2Mixin, Select2MultipleWidget):
+class AdminDropdownMultipleWidget(AdminDropdownMixin, DropdownMultipleWidget):
     pass
 
 
-class AdminHeavySelect2Widget(AdminSelect2Mixin, HeavySelect2Widget):
+class AdminHeavyDropdownWidget(AdminDropdownMixin, HeavyDropdownWidget):
     pass
 
 
-class AdminHeavySelect2MultipleWidget(AdminSelect2Mixin, HeavySelect2MultipleWidget):
+class AdminHeavyDropdownMultipleWidget(AdminDropdownMixin, HeavyDropdownMultipleWidget):
     pass

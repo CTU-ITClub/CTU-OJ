@@ -25,6 +25,7 @@ from judge.models import BlogPost, Contest, ContestAnnouncement, ContestProblem,
 from judge.utils.subscription import newsletter_id
 from judge.widgets import HeavyPreviewPageDownWidget, HeavySelect2MultipleWidget, HeavySelect2Widget, MartorWidget, \
     Select2MultipleWidget, Select2Widget
+from judge.widgets.dropdown import DropdownWidget
 
 TOTP_CODE_LENGTH = 6
 
@@ -57,11 +58,11 @@ class ProfileForm(ModelForm):
         fields = ['about', 'display_badge', 'organizations', 'timezone', 'language', 'ace_theme',
                   'site_theme', 'user_script']
         widgets = {
-            'display_badge': Select2Widget(attrs={'style': 'width:200px'}),
-            'timezone': Select2Widget(attrs={'style': 'width:200px'}),
-            'language': Select2Widget(attrs={'style': 'width:200px'}),
-            'ace_theme': Select2Widget(attrs={'style': 'width:200px'}),
-            'site_theme': Select2Widget(attrs={'style': 'width:200px'}),
+            'display_badge': DropdownWidget(attrs={'style': 'width:200px'}),
+            'timezone': DropdownWidget(attrs={'style': 'width:200px'}),
+            'language': DropdownWidget(attrs={'style': 'width:200px'}),
+            'ace_theme': DropdownWidget(attrs={'style': 'width:200px'}),
+            'site_theme': DropdownWidget(attrs={'style': 'width:200px'}),
         }
 
         # Make sure that users cannot change their `about` in contest mode
@@ -72,7 +73,7 @@ class ProfileForm(ModelForm):
         has_math_config = bool(settings.MATHOID_URL)
         if has_math_config:
             fields.append('math_engine')
-            widgets['math_engine'] = Select2Widget(attrs={'style': 'width:200px'})
+            widgets['math_engine'] = DropdownWidget(attrs={'style': 'width:200px'})
 
         if HeavyPreviewPageDownWidget is not None:
             widgets['about'] = HeavyPreviewPageDownWidget(
@@ -364,7 +365,7 @@ class ProblemSubmitForm(ModelForm):
         self.fields['language'].queryset = Language.objects.filter(judges__online=True).distinct()
 
         if judge_choices:
-            self.fields['judge'].widget = Select2Widget(
+            self.fields['judge'].widget = DropdownWidget(
                 attrs={'style': 'width: 150px', 'data-placeholder': _('Any judge')},
             )
             self.fields['judge'].choices = judge_choices

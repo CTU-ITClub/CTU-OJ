@@ -6,15 +6,15 @@
     {% set tab = 'detail' %}
     {% include "contest/contest-tabs.html" %}
     {% if contest.is_organization_private %}
-        <span class="organization-tags">
+        <div style="margin: -5px;">
             {% for org in contest.organizations.all() %}
-                <span class="organization-tag">
-                    <a href="{{ org.get_absolute_url() }}">
-                        <i class="fa fa-lock"></i> {{ org.name }}
-                    </a>
-                </span>
+                <a href="{{ org.get_absolute_url() }}" class="ui label black">
+                    <i class="icon lock"></i> {{ org.name }}
+                </a>
             {% endfor %}
-        </span>
+        </div>
+
+        <hr class="ui divider"/>
     {% endif %}
 {% endblock %}
 
@@ -150,11 +150,11 @@
                             </div>
                             <div class="item">
                                 <div class="ui accordion segment">
-                                    <div class="title">
+                                    <div class="title active">
                                         <i class="icon dropdown"></i>
                                         {{ _('Test cases') }}
                                     </div>
-                                    <div class="content ui list relaxed">
+                                    <div class="content ui list relaxed active">
                                         <div class="item">
                                             <i class="icon check green"></i>
                                             <div class="content">
@@ -192,12 +192,12 @@
                             </div>
                             <div class="item">
                                 <div class="ui accordion segment">
-                                    <div class="title" style="display: flex">
+                                    <div class="title active" style="display: flex">
                                         <i class="icon dropdown"></i>
                                         {{ _('The contest format is **%(format)s**.', format=contest.format.name)|markdown('default') }}
                                     </div>
 
-                                    <div class="content ui list relaxed">
+                                    <div class="content ui list relaxed active">
                                         {% for line in contest.format.get_short_form_display() %}
                                             <div class="item">
                                                 <i class="icon check green"></i>

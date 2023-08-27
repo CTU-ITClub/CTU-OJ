@@ -35,29 +35,31 @@
 {% endblock %}
 
 {% block title_row %}
-    <div class="problem-title" style="display: flex; align-items: center">
-        {% if request.user.is_authenticated %}
-            {% if problem.id in completed_problem_ids %}
-                <a href="{{ url('user_submissions', problem.code, request.user.username) }}"
-                   class="ui button icon circular black">
-                    {% if problem.is_public or request.in_contest %}
-                        <i class="icon circle check"></i>
-                    {% else %}
-                        <i class="icon lock"></i>
-                    {% endif %}
-                </a>
-            {% elif problem.id in attempted_problems %}
-                <a href="{{ url('user_submissions', problem.code, request.user.username) }}"
-                   class="ui button icon circular black">
-                    {% if problem.is_public or request.in_contest %}
-                        <i class="icon trophy"></i>
-                    {% else %}
-                        <i class="icon lock"></i>
-                    {% endif %}
-                </a>
+    <div class="ui title">
+        <h2 class="content">
+            {% if request.user.is_authenticated %}
+                {% if problem.id in completed_problem_ids %}
+                    <a href="{{ url('user_submissions', problem.code, request.user.username) }}"
+                       class="ui button icon circular green">
+                        {% if problem.is_public or request.in_contest %}
+                            <i class="icon circle check"></i>
+                        {% else %}
+                            <i class="icon lock"></i>
+                        {% endif %}
+                    </a>
+                {% elif problem.id in attempted_problems %}
+                    <a href="{{ url('user_submissions', problem.code, request.user.username) }}"
+                       class="ui button icon circular yellow">
+                        {% if problem.is_public or request.in_contest %}
+                            <i class="icon trophy"></i>
+                        {% else %}
+                            <i class="icon lock"></i>
+                        {% endif %}
+                    </a>
+                {% endif %}
             {% endif %}
-        {% endif %}
-        <h2 style="display: inline-block; flex: 1">{{ title }}</h2>
+            {{ title }}
+        </h2>
         {% if problem.is_organization_private %}
             <span class="organization-tags" style="margin-right: 5px;">
                 {% for org in problem.organizations.all() %}
@@ -80,6 +82,7 @@
         {{ _('View as PDF') }}
         </a>
     </div>
+    <hr class="ui divider"/>
 {% endblock %}
 
 {% block info_float %}
@@ -136,7 +139,8 @@
         <hr class="ui divider">
         <div>
             <a href="{{ url('problem_ticket_list', problem.code) }}">{{ _('Manage tickets') }}
-                {% if num_open_tickets %}<span class="ui label red circular mini">{{ num_open_tickets }}</span>{% endif %}
+                {% if num_open_tickets %}
+                    <span class="ui label red circular mini">{{ num_open_tickets }}</span>{% endif %}
             </a>
         </div>
         <div><a href="{{ url('problem_edit', problem.code) }}">{{ _('Edit problem') }}</a></div>
