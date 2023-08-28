@@ -3,6 +3,14 @@
 {% block js_media %}
     <script type="text/javascript" src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
     <script>
+        const languageMap = {
+            'c_cpp': 'cpp',
+        };
+
+        function mapLanguage(lang) {
+            return languageMap[lang] || lang;
+        }
+
         require.config({paths: {'vs': 'https://unpkg.com/monaco-editor@latest/min/vs'}});
 
         window.MonacoEnvironment = {
@@ -18,7 +26,7 @@
 
         require(["vs/editor/editor.main"], function () {
             window.$_editor = monaco.editor.create(document.querySelector('.monaco-editor-container'), {
-                language: 'cpp',
+                language: mapLanguage('{{ default_lang.ace }}'),
                 value: $('#id_source').val(),
                 theme: 'vs-dark',
                 automaticLayout: true,
@@ -223,7 +231,40 @@
             if (window.performance.getEntriesByType("navigation")[0].type === "back_forward") {
                 location.reload(true);
             }
+
+            $(() => {
+                const $toggleFullscreenButton = $('#toggle-fullscreen')
+
+
+                $toggleFullscreenButton.click(() => {
+                    $('#problem_submit')[0].classList.toggle('fullscreen')
+
+                    $toggleFullscreenButton.find('i').toggleClass('compress expand')
+                })
+
+                $toggleFullscreenButton.click()
+            })
+
         </script>
+    {% endcompress %}
+
+    {% compress css %}
+        <style>
+            #problem_submit.fullscreen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1000;
+                background: #fff;
+                width: 100%;
+            }
+
+            #problem_submit.fullscreen .monaco-editor-container {
+                height: 100vh !important;
+            }
+        </style>
     {% endcompress %}
 {% endblock %}
 
@@ -232,148 +273,167 @@
 {% endblock %}
 
 {% block body %}
-
-
-    <form id="problem_submit" action="" method="post" class="form-area ui form grid stackable"
+    <form id="problem_submit" action="" method="post" class="form-area ui form"
           enctype="multipart/form-data">
-        <div class="column eleven wide">
-            <div id="submit-wrapper">
-                <div id="editor">
-                    {{ form.source.errors }}
-                    {{ form.source }}
+        <div class="ui grid stackable">
+            <div class="column eleven wide">
+                <div id="submit-wrapper">
+                    <div id="editor">
+                        {{ form.source.errors }}
+                        {{ form.source }}
 
-                    <div class="monaco-editor-container" style="height: 70vh"></div>
-                </div>
-                <div id="file-submit" class="hidden">
-                    <div class="ui message error icon">
-                        <i class="icon warning"></i>
-                        <a class="icon close">
-                            <i class="icon close"></i>
-                        </a>
-                        <div class="content">
-                            {{ _('You can only submit file for this language.') }}
-                        </div>
+                        <div class="monaco-editor-container" id="monaco-editor-container" style="height: 70vh"></div>
                     </div>
-                    {{ form.submission_file.errors }}
-                    <input id="file_upload" type="file" name="submission_file" style="display: none;"
-                           onchange="handleFileChange()">
-                    <label for="file_upload" id="file_drag"></label>
-                </div>
-            </div>
-        </div>
-
-        <div class="column five wide">
-            {% if not no_judges %}
-                {% if default_lang not in form.fields.language.queryset %}
-                    <div class="ui message warning icon">
-                        <i class="icon warning"></i>
-
-                        <a class="icon close">
-                            <i class="icon close"></i>
-                        </a>
-
-                        <div class="content">
-                            <div class="header">
-                                {{ _('Warning!') }}
-                            </div>
-                            <p>
-                                {{ _('Your default language, %(language)s, is unavailable for this problem and has been deselected.', language=bold(default_lang.name)) }}
-                            </p>
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if request.in_contest and submission_limit %}
-                    {% if submissions_left > 0 %}
-                        <div class="ui message info icon">
-                            <i class="icon info"></i>
-
-                            <a class="icon close">
-                                <i class="icon close"></i>
-                            </a>
-
-                            <div class="content">
-                                {% trans left=submissions_left -%}
-                                    You have {{ left }} submission left
-                                    {%- pluralize -%}
-                                    You have {{ left }} submissions left
-                                {%- endtrans %}
-                            </div>
-                        </div>
-                    {% else %}
+                    <div id="file-submit" class="hidden">
                         <div class="ui message error icon">
                             <i class="icon warning"></i>
-
                             <a class="icon close">
                                 <i class="icon close"></i>
                             </a>
-
                             <div class="content">
-                                {{ _('You have 0 submissions left') }}
+                                {{ _('You can only submit file for this language.') }}
                             </div>
                         </div>
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-            <div class="ui segment" style="position: sticky; top: 80px">
-                {% if no_judges %}
-                    <div class="ui message yellow icon">
-                        <i class="icon warning"></i>
-                        <div class="content">
-                            {{ _('No judge is available for this problem.') }}
-                        </div>
+                        {{ form.submission_file.errors }}
+                        <input id="file_upload" type="file" name="submission_file" style="display: none;"
+                               onchange="handleFileChange()">
+                        <label for="file_upload" id="file_drag"></label>
                     </div>
-                    <hr class="ui divider"/>
-                {% else %}
-                    <button type="submit" class="ui button green"
-                            {% if request.in_contest and submission_limit and not submissions_left %}disabled{% endif %}
-                            style="width: 100%">
-                        <i class="icon play"></i>
-                        {{ _('Submit!') }}
-                    </button>
-                    <hr class="ui divider"/>
-                    <div class="field">
-                        <label>{{ _('Judge') }}</label>
-                        {{ form.judge }}
-                    </div>
-                    <hr class="ui divider"/>
-                {% endif %}
-
-                {% if not no_judges %}
-                    <div id="language">
-                        {{ form.language.errors }}
-                        <div id="language-select" class="field">
-                            <label>{{ _('Language') }}</label>
-                            <select id="id_language" name="language" class="ui search dropdown">
-                                {% for lang in form.fields.language.queryset %}
-                                    <option value="{{ lang.id }}" data-id="{{ lang.id }}" data-name="{{ lang.name }}"
-                                            data-info="{{ lang.info }}" data-ace="{{ lang.ace }}"
-                                            data-fileonly="{{ lang.file_only }}"
-                                            data-ext="{{ lang.extension }}" data-file-size="{{ lang.file_size_limit }}"
-                                            data-judge-info="{{ runtime_versions(lang.runtime_versions()) }}"
-                                            {% if lang.id == default_lang.id %}selected{% endif %}>{{ lang.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <hr class="ui divider"/>
-                {% endif %}
-
-                <div>
-                    <label for="file_select" class="ui placeholder segment primary">
-                        <div class="ui icon header">
-                            <i class="icon file code"></i>
-                            {{ _('Paste your source code here or load it from a file:') }}
-                        </div>
-
-                        <label for="file_select" class="ui button primary">{{ _('Select file') }}</label>
-                    </label>
-                    <input id="file_select" type="file" onchange="handleFileSelect()" hidden>
                 </div>
-
-                {% csrf_token %}
-                {{ form.non_field_errors() }}
             </div>
+
+            <div class="column five wide">
+                <div style="height: 10px"></div>
+                <div class="ui segment">
+                    {% if not no_judges %}
+                        {% if default_lang not in form.fields.language.queryset %}
+                            <div class="ui message warning icon">
+                                <i class="icon warning"></i>
+
+                                <a class="icon close">
+                                    <i class="icon close"></i>
+                                </a>
+
+                                <div class="content">
+                                    <div class="header">
+                                        {{ _('Warning!') }}
+                                    </div>
+                                    <p>
+                                        {{ _('Your default language, %(language)s, is unavailable for this problem and has been deselected.', language=bold(default_lang.name)) }}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if request.in_contest and submission_limit %}
+                            {% if submissions_left > 0 %}
+                                <div class="ui message info icon">
+                                    <i class="icon info"></i>
+
+                                    <a class="icon close">
+                                        <i class="icon close"></i>
+                                    </a>
+
+                                    <div class="content">
+                                        {% trans left=submissions_left -%}
+                                            You have {{ left }} submission left
+                                            {%- pluralize -%}
+                                            You have {{ left }} submissions left
+                                        {%- endtrans %}
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="ui message error icon">
+                                    <i class="icon warning"></i>
+
+                                    <a class="icon close">
+                                        <i class="icon close"></i>
+                                    </a>
+
+                                    <div class="content">
+                                        {{ _('You have 0 submissions left') }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    <div class="ui buttons basic">
+                        <button class="ui button" type="button"
+                                onclick="confirm('{{ _('Do you want reset code?') }}') && window.$update_language_template()">
+                            <i class="icon undo"></i>
+                            {{ _('Reset') }}
+                        </button>
+
+                        <button id="toggle-fullscreen" class="ui button icon" type="button">
+                            <i class="icon expand"></i>
+                        </button>
+                    </div>
+                    <hr class="ui divider"/>
+                    {% if no_judges %}
+                        <div class="ui message yellow icon">
+                            <i class="icon warning"></i>
+                            <div class="content">
+                                {{ _('No judge is available for this problem.') }}
+                            </div>
+                        </div>
+                        <hr class="ui divider"/>
+                    {% else %}
+                        <button type="submit" class="ui button green"
+                                {% if request.in_contest and submission_limit and not submissions_left %}disabled{% endif %}
+                                style="width: 100%">
+                            <i class="icon play"></i>
+                            {{ _('Submit!') }}
+                        </button>
+
+                        <hr class="ui divider"/>
+                        {% if form.judge %}
+                            <div class="field">
+                                <label>{{ _('Judge') }}</label>
+                                {{ form.judge }}
+                            </div>
+                            <hr class="ui divider"/>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if not no_judges %}
+                        <div id="language">
+                            {{ form.language.errors }}
+                            <div id="language-select" class="field">
+                                <label>{{ _('Language') }}</label>
+                                <select id="id_language" name="language" class="ui search dropdown">
+                                    {% for lang in form.fields.language.queryset %}
+                                        <option value="{{ lang.id }}" data-id="{{ lang.id }}"
+                                                data-name="{{ lang.name }}"
+                                                data-info="{{ lang.info }}" data-ace="{{ lang.ace }}"
+                                                data-fileonly="{{ lang.file_only }}"
+                                                data-ext="{{ lang.extension }}"
+                                                data-file-size="{{ lang.file_size_limit }}"
+                                                data-judge-info="{{ runtime_versions(lang.runtime_versions()) }}"
+                                                {% if lang.id == default_lang.id %}selected{% endif %}>{{ lang.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <hr class="ui divider"/>
+                    {% endif %}
+
+                    <div>
+                        <label for="file_select" class="ui placeholder segment primary">
+                            <div class="ui icon header">
+                                <i class="icon file code"></i>
+                                {{ _('Paste your source code here or load it from a file:') }}
+                            </div>
+
+                            <label for="file_select" class="ui button primary">{{ _('Select file') }}</label>
+                        </label>
+                        <input id="file_select" type="file" onchange="handleFileSelect()" hidden>
+                    </div>
+
+                    {% csrf_token %}
+                    {{ form.non_field_errors() }}
+                </div>
+            </div>
+
         </div>
     </form>
 {% endblock %}
