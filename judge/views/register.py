@@ -17,7 +17,6 @@ from sortedm2m.forms import SortedMultipleChoiceField
 from judge.models import Language, Organization, Profile, TIMEZONE
 from judge.utils.recaptcha import ReCaptchaField, ReCaptchaWidget
 from judge.utils.subscription import Subscription, newsletter_id
-from judge.widgets import Select2MultipleWidget, Select2Widget
 from judge.widgets.dropdown import DropdownWidget, DropdownMultipleWidget
 
 bad_mail_regex = list(map(re.compile, settings.BAD_MAIL_PROVIDER_REGEX))
