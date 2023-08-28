@@ -1,5 +1,6 @@
 import json
 import os
+import zipfile
 from operator import attrgetter, itemgetter
 
 import pyotp
@@ -123,6 +124,7 @@ class UserForm(ModelForm):
         if settings.VNOJ_OFFICIAL_CONTEST_MODE:
             fields.remove('first_name')
 
+
 class ProposeProblemSolutionForm(ModelForm):
     class Meta:
         model = Solution
@@ -132,6 +134,7 @@ class ProposeProblemSolutionForm(ModelForm):
             'content': MartorWidget(attrs={'data-markdownfy-url': reverse_lazy('solution_preview')}),
             'publish_on': DateInput(attrs={'type': 'date'}),
         }
+
 
 class LanguageLimitForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -354,6 +357,18 @@ class ProblemSubmitForm(ModelForm):
             elif content.size > max_file_size:
                 raise forms.ValidationError(_('File size is too big! Maximum file size is %s')
                                             % filesizeformat(max_file_size))
+
+            if lang_obj.key == 'SCRATCH':
+                try:
+                    archive = zipfile.ZipFile(content.file)
+                    info = archive.getinfo('project.json')
+                    if info.file_size > max_file_size:
+                        raise forms.ValidationError(_('project.json is too big! Maximum file size is %s')
+                                                    % filesizeformat(max_file_size))
+
+                    self.files['submission_file'].file = archive.open('project.json')
+                except (zipfile.BadZipFile, KeyError):
+                    pass
 
     def __init__(self, *args, judge_choices=(), **kwargs):
         super(ProblemSubmitForm, self).__init__(*args, **kwargs)

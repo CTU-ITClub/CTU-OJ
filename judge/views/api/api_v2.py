@@ -682,7 +682,6 @@ class APIOrganizationList(APIListView):
             'member_count': organization.member_count,
         }
 
-
 class APILanguageList(APIListView):
     model = Language
     basic_filters = (
