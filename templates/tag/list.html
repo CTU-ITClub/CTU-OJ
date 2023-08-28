@@ -105,13 +105,16 @@
         <div id="content-right" class="column five wide">
             <div>
                 {% include "tag/search-form.html" %}
-                <div class="accordion">
+                <div class="ui segment">
                     {% for group in groups %}
-                        <div class="card">
-                            <a class="card-toggle" href="#">{{ group.name }}</a>
-                            <div class="card-body">
+                        <div class="ui accordion">
+                            <a class="title" href="#">
+                                <i class="icon dropdown"></i>
+                                {{ group.name }}
+                            </a>
+                            <div class="content ui list relaxed divided">
                                 {% for tag in group.tags.all() %}
-                                    <div>
+                                    <div class="item">
                                         {{ make_tag_url(tag) }}<br>
                                     </div>
                                 {% endfor %}

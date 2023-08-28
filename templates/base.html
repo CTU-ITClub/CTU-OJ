@@ -601,13 +601,12 @@
 
                 {% else %}
                     <div class="item">
-
                         <a class="ui button " href="{{ url('auth_login') }}">
                             {{ _('Login') }}
                         </a>
 
                         {% if misc_config.registration %}
-                            <a class="item button primary" href="{{ url('registration_register') }}">
+                            <a class="ui button primary" style="margin-left: 10px;" href="{{ url('registration_register') }}">
                                 {{ _('Register') }}
                             </a>
                         {% endif %}

@@ -32,10 +32,10 @@
 {% endblock %}
 
 {% block body %}
-    <form action="" method="post" class="form-area">
+    <form action="" method="post" class="form-area ui form">
         {% csrf_token %}
-        <table border="0" style="text-align:left">{{ form.as_table() }}</table>
-        <input type="submit" style="float:right;" value="{{ _('Continue >') }}">
+        <table style="text-align:left">{{ form.as_table() }}</table>
+        <input class="ui button primary" type="submit" style="float:right;" value="{{ _('Continue >') }}">
     </form>
 
     <div class="map-wrap">

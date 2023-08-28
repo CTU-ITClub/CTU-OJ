@@ -1,4 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
-    <p>{{ _('%(key)s is an invalid activation key.', key=activation_key) }}</p>
+    <div class="ui message red icon">
+        <i class="icon warning sign"></i>
+        <div class="content">{{ _('%(key)s is an invalid activation key.', key=activation_key) }}</div>
+    </div>
 {% endblock %}

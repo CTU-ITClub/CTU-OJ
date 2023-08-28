@@ -66,72 +66,102 @@
 
 {% block body %}
     <hr class="ui divider">
-    {% if not submission.language.file_only or request.user.is_superuser %}
-        <a class="ui button icon basic primary" href="{{ url('submission_source', submission.id) }}">
-            <i class="icon file code outline"></i>
-            {{ _('View source') }}
-        </a>
-    {% endif %}
-    {% if submission.language.file_only %}
-        <a class="ui button icon basic primary" href="{{ url('submission_source_download', submission.id) }}">
-            <i class="icon download"></i>
-            {{ _('Download') }}
-        </a>
-    {% endif %}
-    {% if (request.user == submission.user.user or perms.judge.resubmit_other) and not submission.language.file_only %}
-        <a class="ui button icon red basic" href="{{ url('problem_submit', submission.problem.code, submission.id) }}">
-            <i class="icon upload"></i>
-            {{ _('Resubmit') }}
-        </a>
-    {% endif %}
-    {% set can_edit = submission.problem.is_editable_by(request.user) %}
-    {% if perms.judge.rejudge_submission and can_edit and not submission.is_locked %}
-        {% compress js %}
-            <script type="text/javascript">
-                window.confirm_and_rejudge = function (form) {
-                    if (confirm("{{ _('Are you sure you want to rejudge?') }}")) {
-                        form.submit();
-                    }
-                };
-            </script>
-        {% endcompress %}
-        <form action="{{ url('submission_rejudge') }}" method="post" style="display: inline">
-            {% csrf_token %}
-            <a class="ui button green icon" href="#" onclick="confirm_and_rejudge(parentNode)">
-                <i class="icon refresh"></i>
-                {{ _('Rejudge') }}
-            </a>
-            <input type="hidden" name="id" value="{{ submission.id }}">
-            <input type="hidden" name="path" value="{{ url('submission_status', submission.id) }}">
-        </form>
-    {% endif %}
-    {% if can_edit and not submission.language.file_only %}
-        <a class="ui button violet icon basic"
-           href="{{ url('problem_submission_diff', submission.problem.code) }}?username={{ submission.user.user.username }}&highlight={{ submission.id }}">
-            <i class="icon copy outline"></i>
-            {{ _('Diff this submission') }}
-        </a>
-    {% endif %}
 
-    <br>
-    <hr class="ui divider">
-    <br>
-
-    <div id="test-cases">{% include "submission/status-testcases.html" %}</div>
-
-    {% if not submission.is_graded %}
-        {% if request.user == submission.user.user or perms.judge.abort_any_submission %}
-            <div id="abort-button">
-                <br class="ui divider">
-                <hr class="ui divider">
-                <br>
-                <form action="{{ url('submission_abort', submission.id) }}" method="post"
-                      title="{{ _('Press Ctrl-Enter or Command-Enter to abort.') }}">
-                    {% csrf_token %}
-                    <input type="submit" value="{{ _('Abort') }}" class="ui button">
-                    <br><br>
-                </form>
+    <div class="ui grid">
+        <div class="column four wide">
+            <div class="ui segment" style="position: sticky; top: 80px">
+                <div class="ui list relaxed divided">
+                    {% if not submission.language.file_only or request.user.is_superuser %}
+                        <a class="item" href="{{ url('submission_source', submission.id) }}">
+                            <i class="icon code"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{ _('View source') }}
+                                </div>
+                            </div>
+                        </a>
+                    {% endif %}
+                    {% if submission.language.file_only %}
+                        <a class="item" href="{{ url('submission_source_download', submission.id) }}">
+                            <i class="icon download"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{ _('Download') }}
+                                </div>
+                            </div>
+                        </a>
+                    {% endif %}
+                    {% if (request.user == submission.user.user or perms.judge.resubmit_other) and not submission.language.file_only %}
+                        <a class="item" href="{{ url('problem_submit', submission.problem.code, submission.id) }}">
+                            <i class="icon upload"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{ _('Resubmit') }}
+                                </div>
+                            </div>
+                        </a>
+                    {% endif %}
+                    {% set can_edit = submission.problem.is_editable_by(request.user) %}
+                    {% if perms.judge.rejudge_submission and can_edit and not submission.is_locked %}
+                        {% compress js %}
+                            <script type="text/javascript">
+                                window.confirm_and_rejudge = function (form) {
+                                    if (confirm("{{ _('Are you sure you want to rejudge?') }}")) {
+                                        form.submit();
+                                    }
+                                };
+                            </script>
+                        {% endcompress %}
+                        <a class="item" href="#" onclick="confirm_and_rejudge($('#re-judge')[0])">
+                            <i class="icon refresh"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{ _('Rejudge') }}
+                                </div>
+                            </div>
+                        </a>
+                        <form action="{{ url('submission_rejudge') }}" id="re-judge" method="post"
+                              style="display: inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ submission.id }}">
+                            <input type="hidden" name="path" value="{{ url('submission_status', submission.id) }}">
+                        </form>
+                    {% endif %}
+                    {% if can_edit and not submission.language.file_only %}
+                        <a class="item"
+                           href="{{ url('problem_submission_diff', submission.problem.code) }}?username={{ submission.user.user.username }}&highlight={{ submission.id }}">
+                            <i class="icon copy outline"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{ _('Diff this submission') }}
+                                </div>
+                            </div>
+                        </a>
+                    {% endif %}
+                </div>
             </div>
-        {% endif %}
-    {% endif %}
+        </div>
+
+        <div class="column twelve wide">
+            <div class="ui segment">
+                <div id="test-cases">{% include "submission/status-testcases.html" %}</div>
+
+                {% if not submission.is_graded %}
+                    {% if request.user == submission.user.user or perms.judge.abort_any_submission %}
+                        <div id="abort-button">
+                            <br class="ui divider">
+                            <hr class="ui divider">
+                            <br>
+                            <form action="{{ url('submission_abort', submission.id) }}" method="post"
+                                  title="{{ _('Press Ctrl-Enter or Command-Enter to abort.') }}">
+                                {% csrf_token %}
+                                <input type="submit" value="{{ _('Abort') }}" class="ui button">
+                                <br><br>
+                            </form>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

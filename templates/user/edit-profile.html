@@ -259,14 +259,19 @@
 
 {% block body %}
     <div class="ui container">
-        <form id="edit-form" action="" method="post" class="form-area ui form">
-            {% if form.errors %}
-                <div class="alert alert-danger alert-dismissable">
-                    <a href="#" class="close">x</a>
+        {% if form.errors %}
+            <div class="ui message warning">
+                <a href="#" class="icon close">
+                    <i class="icon close"></i>
+                </a>
+
+                <div class="content">
                     {{ form.non_field_errors() }}
                     {{ form.about.errors }}
                 </div>
-            {% endif %}
+            </div>
+        {% endif %}
+        <form id="edit-form" action="" method="post" class="form-area ui form">
 
             {% csrf_token %}
             {% if form_user.first_name %}

@@ -1,4 +1,4 @@
-import gautamPatadiyaCkeditorCustomBuild from 'https://cdn.skypack.dev/@gautam-patadiya/ckeditor-custom-build';
+import CkEditor from 'https://cdn.skypack.dev/@gautam-patadiya/ckeditor-custom-build';
 
 $(function () {
     window.register_dmmd_preview = function ($preview) {
@@ -16,7 +16,7 @@ $(function () {
             }
         });
 
-        gautamPatadiyaCkeditorCustomBuild.create($form.find('.ck-editor')[0]).then(editor => {
+        CkEditor.create($form.find('.ck-editor')[0]).then(editor => {
             let lastText;
             let timeout;
 
