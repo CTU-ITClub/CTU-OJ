@@ -671,9 +671,6 @@ class APIOrganizationList(APIListView):
         ('is_open', 'is_open'),
     )
 
-    def get_unfiltered_queryset(self):
-        return Organization.objects.annotate(member_count=Count('member')).order_by('id')
-
     def get_object_data(self, organization):
         return {
             'id': organization.id,
