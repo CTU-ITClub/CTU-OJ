@@ -134,6 +134,13 @@ class ProposeProblemSolutionForm(ModelForm):
             'publish_on': DateInput(attrs={'type': 'date'}),
         }
 
+class EditOrganizationForm(ModelForm):
+    class Meta:
+        model = Organization
+        fields = ['about', 'logo_override_image', 'admins']
+        widgets = {'admins': Select2MultipleWidget(attrs={'style': 'width: 200px'})}
+        if HeavyPreviewPageDownWidget is not None:
+            widgets['about'] = HeavyPreviewPageDownWidget(preview=reverse_lazy('organization_preview'))
 
 class LanguageLimitForm(ModelForm):
     def __init__(self, *args, **kwargs):
