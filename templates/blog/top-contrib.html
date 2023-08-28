@@ -27,19 +27,10 @@
             {% endfor %}
             </tbody>
         </table>
-        <div style="position: relative; font-size: smaller; padding: unset;">
-            <table class="table bottom">
-                <tbody>
-                <tr>
-                    <td class="right">
-                        <a class="ui button icon link primary mini" href="{{ url('contributors_list') }}">
-                            {{ _('View all') }}
-                            <i class="icon angle right"></i>
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <hr class="ui divider"/>
+        <a class="ui button icon link primary mini" href="{{ url('contributors_list') }}">
+            {{ _('View all') }}
+            <i class="icon angle right"></i>
+        </a>
     </div>
 </div>

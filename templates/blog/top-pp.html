@@ -27,24 +27,13 @@
             {% endfor %}
             </tbody>
         </table>
-        <div style="position: relative; font-size: smaller; padding: unset;">
-            <table class="table bottom">
-                <tbody>
-                <tr>
-                    <td>
-                        <a href="{{ url('organization_list') }}" class="ui button mini">
-                            {{ _('Organizations') }}
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ url('user_list') }}" class="ui button mini primary icon">
-                            {{ _('View all') }}
-                            <i class="icon angle right"></i>
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <hr class="ui divider"/>
+        <a href="{{ url('organization_list') }}" class="ui button mini">
+            {{ _('Organizations') }}
+        </a>
+        <a href="{{ url('user_list') }}" class="ui button mini primary icon">
+            {{ _('View all') }}
+            <i class="icon angle right"></i>
+        </a>
     </div>
 </div>
