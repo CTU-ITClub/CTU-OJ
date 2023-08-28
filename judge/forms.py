@@ -123,7 +123,6 @@ class UserForm(ModelForm):
         if settings.VNOJ_OFFICIAL_CONTEST_MODE:
             fields.remove('first_name')
 
-
 class ProposeProblemSolutionForm(ModelForm):
     class Meta:
         model = Solution
