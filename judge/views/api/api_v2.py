@@ -671,8 +671,9 @@ class APIOrganizationList(APIListView):
         ('is_open', 'is_open'),
     )
 
-    # default if no "is_open" query is "False", it already set in model.
-    
+    def get_unfiltered_queryset(self):
+        return Organization.objects.annotate(member_count=Count('member')).order_by('id')
+
     def get_object_data(self, organization):
         return {
             'id': organization.id,
@@ -681,6 +682,7 @@ class APIOrganizationList(APIListView):
             'is_open': organization.is_open,
             'member_count': organization.member_count,
         }
+
 
 class APILanguageList(APIListView):
     model = Language
