@@ -225,6 +225,33 @@
             }
         </script>
     {% endcompress %}
+
+    {% compress css %}
+        <style>
+            #problem_submit.fullscreen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1000;
+                background: #fff;
+                width: 100%;
+            }
+
+            #problem_submit.fullscreen .monaco-editor-container {
+                height: 100% !important;
+            }
+
+            #problem_submit.fullscreen #submit-wrapper {
+                height: 100% !important;
+            }
+
+            #problem_submit.fullscreen #editor {
+                height: 100% !important;
+            }
+        </style>
+    {% endcompress %}
 {% endblock %}
 
 {% block media %}
@@ -242,7 +269,7 @@
                     {{ form.source.errors }}
                     {{ form.source }}
 
-                    <div class="monaco-editor-container" style="height: 70vh"></div>
+                    <div class="monaco-editor-container" id="monaco-editor-container" style="height: 70vh"></div>
                 </div>
                 <div id="file-submit" class="hidden">
                     <div class="ui message error icon">
@@ -325,18 +352,27 @@
                     </div>
                     <hr class="ui divider"/>
                 {% else %}
-                    <button type="submit" class="ui button green"
-                            {% if request.in_contest and submission_limit and not submissions_left %}disabled{% endif %}
-                            style="width: 100%">
-                        <i class="icon play"></i>
-                        {{ _('Submit!') }}
-                    </button>
-                    <hr class="ui divider"/>
-                    <div class="field">
-                        <label>{{ _('Judge') }}</label>
-                        {{ form.judge }}
+                    <div class="ui buttons">
+                        <button type="submit" class="ui button green"
+                                {% if request.in_contest and submission_limit and not submissions_left %}disabled{% endif %}>
+                            <i class="icon play"></i>
+                            {{ _('Submit!') }}
+                        </button>
+
+                        <button id="toggle-fullscreen" class="ui button" type="button"
+                                onclick="$('#problem_submit')[0].classList.toggle('fullscreen')">
+                            <i class="icon expand"></i>
+                            {{ _('Full screen') }}
+                        </button>
                     </div>
                     <hr class="ui divider"/>
+                    {% if form.judge %}
+                        <div class="field">
+                            <label>{{ _('Judge') }}</label>
+                            {{ form.judge }}
+                        </div>
+                        <hr class="ui divider"/>
+                    {% endif %}
                 {% endif %}
 
                 {% if not no_judges %}

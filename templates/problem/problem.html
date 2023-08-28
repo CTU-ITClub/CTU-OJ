@@ -410,8 +410,8 @@
 {% block post_description_end %}
     {% if request.user.is_authenticated and not request.profile.mute %}
         <a href="{{ url('new_problem_ticket', problem.code) }}" class="ui button basic">
-            <i class="icon plane paper"></i>
             {%- if comment_lock and request.profile.current_contest.live -%}
+                <i class="icon plane paper"></i>
                 {{ _('Request clarification') }}
             {%- else -%}
                 <i class="icon bug"></i>
