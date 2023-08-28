@@ -86,93 +86,96 @@
 {% endblock %}
 
 {% block info_float %}
-    {% if request.user.is_authenticated and request.in_contest and submission_limit %}
-        {% if submissions_left > 0 %}
-            <a href="{{ url('problem_submit', problem.code) }}" class="ui button primary"
-               style="width: 100%;margin-bottom: 5px">
+    <div>
+        {% if request.user.is_authenticated and request.in_contest and submission_limit %}
+            {% if submissions_left > 0 %}
+                <a href="{{ url('problem_submit', problem.code) }}" class="ui button primary"
+                   style="width: 100%;margin-bottom: 5px">
+                    {{ _('Submit solution') }}
+                </a>
+                <div class="ui message info icon">
+                    <i class="icon info circle"></i>
+                    <div class="content">
+                        {% trans trimmed counter=submissions_left %}
+                            {{ counter }} submission left
+                            {% pluralize %}
+                            {{ counter }} submissions left
+                        {% endtrans %}
+                    </div>
+                </div>
+            {% else %}
+                <a class="ui button disabled" style="width: 100%">{{ _('Submit solution') }}</a>
+                <div class="ui message icon">
+                    <i class="icon info circle"></i>
+                    <div class="content">
+                        {{ _('0 submissions left') }}
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <a href="{{ url('problem_submit', problem.code) }}" class="unselectable ui button primary"
+               style="width: 100%">
                 {{ _('Submit solution') }}
             </a>
-            <div class="ui message info icon">
-                <i class="icon info circle"></i>
-                <div class="content">
-                    {% trans trimmed counter=submissions_left %}
-                        {{ counter }} submission left
-                        {% pluralize %}
-                        {{ counter }} submissions left
-                    {% endtrans %}
-                </div>
-            </div>
-        {% else %}
-            <a class="ui button disabled" style="width: 100%">{{ _('Submit solution') }}</a>
-            <div class="ui message icon">
-                <i class="icon info circle"></i>
-                <div class="content">
-                    {{ _('0 submissions left') }}
-                </div>
-            </div>
         {% endif %}
-    {% else %}
-        <a href="{{ url('problem_submit', problem.code) }}" class="unselectable ui button primary" style="width: 100%">
-            {{ _('Submit solution') }}
-        </a>
-    {% endif %}
 
-    <div class="ui list relaxed divided segment">
+        <div class="ui list relaxed divided segment">
 
-        {% if request.in_contest and contest_problem %}
-            {% set contest = contest_problem.contest %}
-            <a class="item"
-               href="{{ url('contest_user_submissions', contest.key, request.user.username, problem.code) }}">
-                {{ _('My submissions') }}
-            </a>
-            {% if contest.can_see_full_submission_list(request.user) %}
-                <a class="item" href="{{ url('chronological_submissions', problem.code) }}">
-                    {{ _('All submissions') }}
-                </a>
-                <a class="item" href="{{ url('contest_ranked_submissions', contest.key, problem.code) }}">
-                    {{ _('Best submissions') }}
-                </a>
-            {% endif %}
-        {% else %}
-            {% if request.user.is_authenticated and has_submissions %}
+            {% if request.in_contest and contest_problem %}
+                {% set contest = contest_problem.contest %}
                 <a class="item"
-                   href="{{ url('user_submissions', problem.code, request.user.username) }}">{{ _('My submissions') }}</a>
+                   href="{{ url('contest_user_submissions', contest.key, request.user.username, problem.code) }}">
+                    {{ _('My submissions') }}
+                </a>
+                {% if contest.can_see_full_submission_list(request.user) %}
+                    <a class="item" href="{{ url('chronological_submissions', problem.code) }}">
+                        {{ _('All submissions') }}
+                    </a>
+                    <a class="item" href="{{ url('contest_ranked_submissions', contest.key, problem.code) }}">
+                        {{ _('Best submissions') }}
+                    </a>
+                {% endif %}
+            {% else %}
+                {% if request.user.is_authenticated and has_submissions %}
+                    <a class="item"
+                       href="{{ url('user_submissions', problem.code, request.user.username) }}">{{ _('My submissions') }}</a>
+                {% endif %}
+                <a class="item"
+                   href="{{ url('chronological_submissions', problem.code) }}">{{ _('All submissions') }}</a>
+                <a class="item" href="{{ url('ranked_submissions', problem.code) }}">{{ _('Best submissions') }}</a>
             {% endif %}
-            <a class="item" href="{{ url('chronological_submissions', problem.code) }}">{{ _('All submissions') }}</a>
-            <a class="item" href="{{ url('ranked_submissions', problem.code) }}">{{ _('Best submissions') }}</a>
-        {% endif %}
-        {% if (editorial and editorial.is_accessible_by(request.user)) and not request.in_contest %}
-            <a class="item" href="{{ url('problem_editorial', problem.code) }}">{{ _('Read editorial') }}</a>
-        {% endif %}
-        {% if can_edit_problem %}
-            <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">{{ _('Manage tickets') }}
-                {% if num_open_tickets %}
-                    <span class="ui label red circular mini">{{ num_open_tickets }}</span>{% endif %}
-            </a>
-            <a class="item" href="{{ url('problem_edit', problem.code) }}">{{ _('Edit problem') }}</a>
-            {% if not problem.is_manually_managed %}
-                <a class="item" href="{{ url('problem_data', problem.code) }}">{{ _('Edit test data') }}</a>
+            {% if (editorial and editorial.is_accessible_by(request.user)) and not request.in_contest %}
+                <a class="item" href="{{ url('problem_editorial', problem.code) }}">{{ _('Read editorial') }}</a>
             {% endif %}
-        {% elif request.user.is_authenticated and has_tickets %}
-            <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">{{ _('My tickets') }}
-                {% if num_open_tickets %}<span class="badge">{{ num_open_tickets }}</span>{% endif %}
-            </a>
-        {% endif %}
+            {% if can_edit_problem %}
+                <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">{{ _('Manage tickets') }}
+                    {% if num_open_tickets %}
+                        <span class="ui label red circular mini">{{ num_open_tickets }}</span>{% endif %}
+                </a>
+                <a class="item" href="{{ url('problem_edit', problem.code) }}">{{ _('Edit problem') }}</a>
+                {% if not problem.is_manually_managed %}
+                    <a class="item" href="{{ url('problem_data', problem.code) }}">{{ _('Edit test data') }}</a>
+                {% endif %}
+            {% elif request.user.is_authenticated and has_tickets %}
+                <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">{{ _('My tickets') }}
+                    {% if num_open_tickets %}<span class="badge">{{ num_open_tickets }}</span>{% endif %}
+                </a>
+            {% endif %}
 
-        {% if problem.is_subs_manageable_by(request.user) %}
-            <a class="item"
-               href="{{ url('problem_manage_submissions', problem.code) }}">{{ _('Manage submissions') }}</a>
-        {% endif %}
+            {% if problem.is_subs_manageable_by(request.user) %}
+                <a class="item"
+                   href="{{ url('problem_manage_submissions', problem.code) }}">{{ _('Manage submissions') }}</a>
+            {% endif %}
 
-        {% if perms.judge.clone_problem and can_edit_problem %}
-            <a class="item" href="{{ url('problem_clone', problem.code) }}">{{ _('Clone problem') }}</a>
-        {% endif %}
-    </div>
+            {% if perms.judge.clone_problem and can_edit_problem %}
+                <a class="item" href="{{ url('problem_clone', problem.code) }}">{{ _('Clone problem') }}</a>
+            {% endif %}
+        </div>
 
-    <div class="ui list divided relaxed segment">
+        <div class="ui list divided relaxed segment">
 
-        <div class="problem-info-entry item">
-            <i class="icon check"></i><span class="content">{{ _('Points:') }} <strong>
+            <div class="problem-info-entry item">
+                <i class="icon check"></i><span class="content">{{ _('Points:') }} <strong>
             {% if contest_problem %}
                 {{ contest_problem.points }}{% if contest_problem.partial %} {{ _('(partial)') }}{% endif %}
             {% else %}
@@ -180,208 +183,210 @@
             {% endif %}
                 </strong>
             </span>
-        </div>
+            </div>
 
-        <div class="problem-info-entry item">
-            <i class="icon clock"></i><span
-                class="content">{{ _('Time limit:') }} <strong>{{ problem.time_limit }}s</strong></span>
-        </div>
+            <div class="problem-info-entry item">
+                <i class="icon clock"></i><span
+                    class="content">{{ _('Time limit:') }} <strong>{{ problem.time_limit }}s</strong></span>
+            </div>
 
-        <div class="problem-lang-limits">
-            {% for name, limit in problem.language_time_limit %}
-                <div class="lang-limit ui label">
-                    <span class="lang-name">{{ name }}</span>
-                    <span class="lang-tl">{{ limit }}s</span>
-                </div>
-            {% endfor %}
-        </div>
+            <div class="problem-lang-limits">
+                {% for name, limit in problem.language_time_limit %}
+                    <div class="lang-limit ui label">
+                        <span class="lang-name">{{ name }}</span>
+                        <span class="lang-tl">{{ limit }}s</span>
+                    </div>
+                {% endfor %}
+            </div>
 
-        <div class="problem-info-entry item">
-            <i class="icon server"></i><span class="content">{{ _('Memory limit:') }}
+            <div class="problem-info-entry item">
+                <i class="icon server"></i><span class="content">{{ _('Memory limit:') }}
             <strong>{{ problem.memory_limit|kbsimpleformat }}</strong>
         </span>
+            </div>
+
+            <div class="problem-lang-limits">
+                {% for name, limit in problem.language_memory_limit %}
+                    <div class="lang-limit ui label">
+                        <span class="lang-name">{{ name }}</span>
+                        <span class="lang-ml">{{ limit|kbsimpleformat }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if problem.io_method.method == 'standard' %}
+                <div class="item">
+                    <i class="icon keyboard"></i>
+                    <div class="content">
+                        {{ _('Input:') }}
+                        <strong>stdin</strong>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <i class="icon print"></i>
+                    <div class="content">
+                        {{ _('Output:') }}
+                        <strong>stdout</strong>
+                    </div>
+                </div>
+            {% elif problem.io_method.method == 'file' %}
+                <div class="item">
+                    <i class="icon keyboard"></i>
+                    <div class="content">
+                        {{ _('Input:') }}
+                        <strong>
+                            <i>
+                                {{ problem.io_method.input }}
+                            </i>
+                        </strong>
+                    </div>
+                </div>
+                <div class="item">
+                    <i class="icon print"></i>
+                    <div class="content">
+                        {{ _('Output:') }}
+                        <strong>
+                            <i>
+                                {{ problem.io_method.output }}
+                            </i>
+                        </strong>
+                    </div>
+                </div>
+            {% endif %}
+
         </div>
 
-        <div class="problem-lang-limits">
-            {% for name, limit in problem.language_memory_limit %}
-                <div class="lang-limit ui label">
-                    <span class="lang-name">{{ name }}</span>
-                    <span class="lang-ml">{{ limit|kbsimpleformat }}</span>
-                </div>
-            {% endfor %}
-        </div>
-
-        {% if problem.io_method.method == 'standard' %}
-            <div class="item">
-                <i class="icon keyboard"></i>
-                <div class="content">
-                    {{ _('Input:') }}
-                    <strong>stdin</strong>
-                </div>
-            </div>
-
-            <div class="item">
-                <i class="icon print"></i>
-                <div class="content">
-                    {{ _('Output:') }}
-                    <strong>stdout</strong>
-                </div>
-            </div>
-        {% elif problem.io_method.method == 'file' %}
-            <div class="item">
-                <i class="icon keyboard"></i>
-                <div class="content">
-                    {{ _('Input:') }}
-                    <strong>
-                        <i>
-                            {{ problem.io_method.input }}
-                        </i>
-                    </strong>
-                </div>
-            </div>
-            <div class="item">
-                <i class="icon print"></i>
-                <div class="content">
-                    {{ _('Output:') }}
-                    <strong>
-                        <i>
-                            {{ problem.io_method.output }}
-                        </i>
-                    </strong>
-                </div>
-            </div>
-        {% endif %}
-
-    </div>
-
-    <div class="ui list relaxed divided segment">
-        {% if not contest_problem or not contest_problem.contest.hide_problem_authors %}
-            {% cache 86400 'problem_authors' problem.id LANGUAGE_CODE %}
-                {% with authors=problem.authors.all() %}
-                    {% if authors %}
-                        <div class="problem-info-entry item">
-                            <i class="icon pencil"></i>
-                            <div class="content">
-                                <div class="header">
-                                    {% trans trimmed count=authors|length %}
-                                        Author:
-                                        {% pluralize count %}
-                                        Authors:
-                                    {% endtrans %}
+        <div class="ui list relaxed divided segment">
+            {% if not contest_problem or not contest_problem.contest.hide_problem_authors %}
+                {% cache 86400 'problem_authors' problem.id LANGUAGE_CODE %}
+                    {% with authors=problem.authors.all() %}
+                        {% if authors %}
+                            <div class="problem-info-entry item">
+                                <i class="icon pencil"></i>
+                                <div class="content">
+                                    <div class="header">
+                                        {% trans trimmed count=authors|length %}
+                                            Author:
+                                            {% pluralize count %}
+                                            Authors:
+                                        {% endtrans %}
+                                    </div>
+                                    <div class="pi-value ui label"
+                                         style="margin-top: 5px;">{{ link_users(authors) }}</div>
                                 </div>
-                                <div class="pi-value ui label" style="margin-top: 5px;">{{ link_users(authors) }}</div>
+                            </div>
+                        {% endif %}
+                        {% if problem.suggester %}
+                            <div class="problem-info-entry item">
+                                <i class="icon pencil"></i>
+                                <div class="content">
+                                    <div class="header">
+                                        {{ _("Suggester:") }}
+                                    </div>
+
+                                    <p>{{ link_user(problem.suggester) }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endcache %}
+            {% endif %}
+
+            {% if problem.source %}
+                <div class="problem-info-entry item">
+                    <i class="icon pencil"></i>
+                    <div class="content">
+                        {{ _('Problem source:') }}
+                        <strong>{{ problem.source }}</strong>
+                    </div>
+                </div>
+            {% endif %}
+
+
+            {% if not contest_problem or not contest_problem.contest.hide_problem_tags %}
+                <div id="problem-types item">
+                    {% with types=problem.types_list %}
+                        <div class="ui accordion">
+                            <div class="title">
+                                <i class="icon dropdown"></i>
+                                {% trans trimmed count=problem.types_list|length %}
+                                    Problem type
+                                    {% pluralize count %}
+                                    Problem types
+                                {% endtrans %}
+                            </div>
+                            <div class="content">
+                                {% for type in problem.types_list %}
+                                    <div class="ui label" style="margin: 5px">
+                                        {{ type }}
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
-                    {% endif %}
-                    {% if problem.suggester %}
-                        <div class="problem-info-entry item">
-                            <i class="icon pencil"></i>
-                            <div class="content">
-                                <div class="header">
-                                    {{ _("Suggester:") }}
-                                </div>
-
-                                <p>{{ link_user(problem.suggester) }}</p>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endwith %}
-            {% endcache %}
-        {% endif %}
-
-        {% if problem.source %}
-            <div class="problem-info-entry item">
-                <i class="icon pencil"></i>
-                <div class="content">
-                    {{ _('Problem source:') }}
-                    <strong>{{ problem.source }}</strong>
+                    {% endwith %}
                 </div>
-            </div>
-        {% endif %}
-
-
-        {% if not contest_problem or not contest_problem.contest.hide_problem_tags %}
-            <div id="problem-types item">
-                {% with types=problem.types_list %}
+            {% endif %}
+            {% if show_languages %}
+                <div id="allowed-langs" class="item">
                     <div class="ui accordion">
                         <div class="title">
                             <i class="icon dropdown"></i>
-                            {% trans trimmed count=problem.types_list|length %}
-                                Problem type
-                                {% pluralize count %}
-                                Problem types
-                            {% endtrans %}
+                            <span class="content">{{ _('Allowed languages') }}</span>
                         </div>
                         <div class="content">
-                            {% for type in problem.types_list %}
-                                <div class="ui label" style="margin: 5px">
-                                    {{ type }}
-                                </div>
-                            {% endfor %}
+                            {% with usable=problem.usable_common_names, langs=problem.languages_list() %}
+                                {% for lang in langs %}
+                                    {%- if lang in usable -%}
+                                        <div class="ui label green" style="margin: 5px">
+                                            {{ lang }}
+                                        </div>
+                                    {%- else -%}
+                                        <div class="ui label" style="margin: 5px"
+                                             title="{{ _('No %(lang)s judge online', lang=lang) }}">
+                                            <s>
+                                                {{ lang }}
+                                            </s>
+                                        </div>
+                                    {%- endif -%}
+                                {% endfor %}
+                            {% endwith %}
                         </div>
                     </div>
-                {% endwith %}
-            </div>
-        {% endif %}
-        {% if show_languages %}
-            <div id="allowed-langs" class="item">
-                <div class="ui accordion">
-                    <div class="title">
-                        <i class="icon dropdown"></i>
-                        <span class="content">{{ _('Allowed languages') }}</span>
-                    </div>
-                    <div class="content">
-                        {% with usable=problem.usable_common_names, langs=problem.languages_list() %}
-                            {% for lang in langs %}
-                                {%- if lang in usable -%}
-                                    <div class="ui label green" style="margin: 5px">
-                                        {{ lang }}
-                                    </div>
-                                {%- else -%}
-                                    <div class="ui label" style="margin: 5px"
-                                         title="{{ _('No %(lang)s judge online', lang=lang) }}">
-                                        <s>
-                                            {{ lang }}
-                                        </s>
-                                    </div>
-                                {%- endif -%}
-                            {% endfor %}
-                        {% endwith %}
-                    </div>
                 </div>
-            </div>
-        {% endif %}
-        {% if problem.is_editable_by(request.user) %}
-            <div id="available-judges" class="item">
-                <i class="icon database"></i>
-                <div class="content ui">
-                    <div class="header">
-                        {% trans trimmed count=available_judges|length %}
-                            Judge:
-                            {% pluralize count %}
-                            Judges:
-                        {% endtrans %}
-                    </div>
+            {% endif %}
+            {% if problem.is_editable_by(request.user) %}
+                <div id="available-judges" class="item">
+                    <i class="icon database"></i>
+                    <div class="content ui">
+                        <div class="header">
+                            {% trans trimmed count=available_judges|length %}
+                                Judge:
+                                {% pluralize count %}
+                                Judges:
+                            {% endtrans %}
+                        </div>
 
-                    <div class="content">
-                        {% if available_judges %}
-                            {% if perms.judge.change_judge %}
-                                {% for judge in available_judges %}
-                                    <a class="ui label green" style="margin: 5px"
-                                       href="{{ url('admin:judge_judge_change', judge.id) }}">{{ judge.name }}</a>
-                                {% endfor %}
-                            {% else %}f
-                                {% for judge in available_judges %}
-                                    <div class="ui label" style="margin: 5px">{{ judge.name }}</div>
-                                {% endfor %}
+                        <div class="content">
+                            {% if available_judges %}
+                                {% if perms.judge.change_judge %}
+                                    {% for judge in available_judges %}
+                                        <a class="ui label green" style="margin: 5px"
+                                           href="{{ url('admin:judge_judge_change', judge.id) }}">{{ judge.name }}</a>
+                                    {% endfor %}
+                                {% else %}f
+                                    {% for judge in available_judges %}
+                                        <div class="ui label" style="margin: 5px">{{ judge.name }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% else %}
+                                <i>{{ _('none available') }}</i>
                             {% endif %}
-                        {% else %}
-                            <i>{{ _('none available') }}</i>
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
 
@@ -404,7 +409,8 @@
 
 {% block post_description_end %}
     {% if request.user.is_authenticated and not request.profile.mute %}
-        <a href="{{ url('new_problem_ticket', problem.code) }}" class="ui button basic red">
+        <a href="{{ url('new_problem_ticket', problem.code) }}" class="ui button basic">
+            <i class="icon plane paper"></i>
             {%- if comment_lock and request.profile.current_contest.live -%}
                 {{ _('Request clarification') }}
             {%- else -%}
