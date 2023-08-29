@@ -401,6 +401,72 @@
                 display: none;
             }
         }
+
+
+        /*** ZIT Label ***/
+        .zit-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 10px;
+            background: linear-gradient(45deg, #46d3ff30, #5eff8c30);
+            border-radius: 50px;
+            width: fit-content;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .zit-label::before {
+            content: '';
+            width: 40px;
+            height: 200px;
+            background: #ffffff10;
+            position: absolute;
+            top: 0;
+            transform: skew(-20deg);
+            animation: zit_label 4s infinite;
+        }
+
+        .zit-label::after {
+            content: '';
+            width: 10px;
+            height: 200px;
+            background: #ffffff10;
+            position: absolute;
+            top: 0;
+            transform: skew(-20deg);
+            animation: zit_label 5s infinite;
+        }
+
+        @keyframes zit_label {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        .zit-label div {
+            padding-right: 10px;
+            color: #fff;
+        }
+
+        .zit-label span {
+            font-weight: 900;
+            color: transparent;
+            background: linear-gradient(45deg, #46d3ff, #5eff8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dmoj-label img {
+            width: 200px;
+            height: auto;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -706,52 +772,84 @@
     <footer class="ui footer segment inverted" style="border-radius: 0; padding: 50px 0; margin-top: 50px;">
         <div id="footer-content" class="ui container aligned">
             <div class="ui stackable grid">
-                <div class="four wide column">
-                    {% include 'site-logo-fragment.html' %}
+                <div class="column eight wide">
+                    <div style="display: flex; align-items: center" class="dmoj-label">
+                        {% include 'site-logo-fragment.html' %}
+                    </div>
+
+                    <a href="https://fb.com/zit.software" class="zit-label">
+                        <img src="https://github.com/zit-software.png" class="ui image avatar mini"/>
+
+                        <div>
+                            {{ _('Redesign by ') }}
+                            <span>
+                                ZIT Software
+                            </span>
+                        </div>
+                    </a>
                 </div>
                 <div class="four wide column">
-                </div>
-                <div class="four wide column">
-                    <h4 class="ui header inverted">
-                        <i class="icon sitemap"></i>
+                    <div class="ui header inverted">
+                        <i class="icon building"></i>
                         <div class="content">
                             Đơn vị
                         </div>
-                    </h4>
-
-                    <div class="ui list link inverted">
+                    </div>
+                    <hr class="ui divider"/>
+                    <div class="ui list link inverted relaxed divided">
                         <a class="item" href="https://ctu.edu.vn" target="_blank">
-                            Đại học Cần Thơ
+                            <i class="icon university"></i>
+                            <div class="content">
+                                Đại học Cần Thơ
+                            </div>
                         </a>
                         <a class="item" href="https://htql.ctu.edu.vn" target="_blank">
-                            Hệ thống quản lý
+                            <i class="icon server"></i>
+                            <div class="content">
+                                Hệ thống quản lý
+                            </div>
                         </a>
                         <a class="item" href="https://cit.ctu.edu.vn" target="_blank">
-                            Trường CNTT&TT
+                            <i class="icon building"></i>
+                            <div class="content">
+                                Trường CNTT&TT
+                            </div>
                         </a>
                         <a class="item" href="https://cit.ctu.edu.vn/doankhoa" target="_blank">
-                            Đoàn Trường CNTT&TT
+                            <i class="icon users"></i>
+                            <div class="content">
+                                Đoàn Trường CNTT&TT
+                            </div>
                         </a>
                     </div>
                 </div>
 
                 <div class="four wide column">
-                    <h4 class="ui header inverted">
+                    <div class="ui header inverted">
                         <i class="icon linkify"></i>
                         <div class="content">
                             Liên kết
                         </div>
-                    </h4>
-
-                    <div class="ui list link inverted">
+                    </div>
+                    <hr class="ui divider"/>
+                    <div class="ui list link inverted relaxed divided">
                         <a class="item" href="https://ctuit.club" target="_blank">
-                            Câu lạc bộ tin học
+                            <i class="icon computer"></i>
+                            <div class="content">
+                                Câu lạc bộ tin học
+                            </div>
                         </a>
                         <a class="item" href="https://www.facebook.com/ctuit.club/" target="_blank">
-                            Facebook
+                            <i class="icon facebook"></i>
+                            <div class="content">
+                                Facebook
+                            </div>
                         </a>
                         <a class="item" href="https://github.com/CTU-ITClub" target="_blank">
-                            Github
+                            <i class="icon github"></i>
+                            <div class="content">
+                                Github
+                            </div>
                         </a>
                     </div>
                 </div>
