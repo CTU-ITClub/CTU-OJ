@@ -250,7 +250,7 @@
                         </a>
                     {% endif %}
 
-                    <table class="ui table striped celled">
+                    <table class="ui table celled fixed">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -322,7 +322,7 @@
                         {% endfor %}
 
                         <tr>
-                            <td colspan="4">
+                            <td colspan="{% if metadata.has_public_editorials %}5{% else %}4{% endif %} ">
                                 <a class="ui button success" href="{{ url('contest_all_problems', contest.key) }}">
                                     <i class="icon list"></i>
                                     {{ _('All problems') }}
@@ -345,7 +345,7 @@
                                 {{ _('Announcements') }}
                             </div>
                         </h2>
-                        <table id="contest-clartifications" class="ui table striped celled">
+                        <table id="contest-clartifications" class="ui table celled fixed">
                             <thead>
                             <tr>
                                 <th>{{ _('When') }}</th>
