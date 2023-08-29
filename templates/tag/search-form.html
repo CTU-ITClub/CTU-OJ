@@ -1,11 +1,11 @@
 <div class="sidebox">
-    <h3 class="ui header">
+    <h3 class="ui header block attached top">
         <i class="icon search"></i>
         <div class="content">
             {{ _('Problem search') }}
         </div>
     </h3>
-    <div class="sidebox-content">
+    <div class="sidebox-content ui segment attached top">
         <form id="filter-form" name="form" action="" method="get" class="ui form">
             {% if selected_tag %}<input type="hidden" name="tag_id" value="{{ selected_tag }}">{% endif %}
             <div class="field">
