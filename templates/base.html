@@ -278,6 +278,10 @@
             font-family: 'Monaco', monospace;
         }
 
+        html {
+            font-family: 'Roboto', sans-serif;
+        }
+
         .ui {
             font-family: 'Roboto', sans-serif !important;
         }
@@ -523,12 +527,12 @@
 </div>
 
 <div id="page-container" class="ui pusher">
-    <nav class="ui menu main fixed borderless top {% if request.user.is_impersonate %} inverted{% endif %}">
+    <nav class="ui menu main fixed borderless top inverted {% if request.user.is_impersonate %} inverted{% endif %}">
         <div class="ui container">
 
             <a href="{{ url('home') }}" class="header item">{% include "site-logo-fragment.html" %}</a>
 
-            <div class="ui menu container fluid {% if request.user.is_impersonate %} inverted{% endif %}"
+            <div class="ui menu container fluid inverted {% if request.user.is_impersonate %} inverted{% endif %}"
                  style="border: none; border-radius: 0" id="hide-on-mobile">
                 <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
 
@@ -670,7 +674,7 @@
         <div id="announcement">{{ misc_config.announcement|safe }}</div>
     {% endif %}
 
-    <footer class="ui footer segment" style="border-radius: 0; padding: 50px 0; margin-top: 50px;">
+    <footer class="ui footer segment inverted" style="border-radius: 0; padding: 50px 0; margin-top: 50px;">
         <div id="footer-content" class="ui container aligned">
             <div class="ui stackable grid">
                 <div class="four wide column">
@@ -679,14 +683,14 @@
                 <div class="four wide column">
                 </div>
                 <div class="four wide column">
-                    <h4 class="ui header">
+                    <h4 class="ui header inverted">
                         <i class="icon sitemap"></i>
                         <div class="content">
                             Đơn vị
                         </div>
                     </h4>
 
-                    <div class="ui list link">
+                    <div class="ui list link inverted">
                         <a class="item" href="https://ctu.edu.vn" target="_blank">
                             Đại học Cần Thơ
                         </a>
@@ -703,14 +707,14 @@
                 </div>
 
                 <div class="four wide column">
-                    <h4 class="ui header">
+                    <h4 class="ui header inverted">
                         <i class="icon linkify"></i>
                         <div class="content">
                             Liên kết
                         </div>
                     </h4>
 
-                    <div class="ui list link">
+                    <div class="ui list link inverted">
                         <a class="item" href="https://ctuit.club" target="_blank">
                             Câu lạc bộ tin học
                         </a>

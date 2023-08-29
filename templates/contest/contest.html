@@ -39,6 +39,7 @@
 {% endblock %}
 
 {% block body %}
+    <div style="height: 10px"></div>
     <div class="ui grid stackable">
         <div id="banner" class="column five wide ui segment">
             <div style="position: sticky; top: 80px">
@@ -119,40 +120,36 @@
                                 {% endif %}
                             {% endwith %}
                             <div class="item">
-                                <i class="icon check green"></i>
-                                <div class="content">
-                                    {% if contest.is_rated %}
-                                        {% if contest.rate_all %}
-                                            {% if contest.rating_floor is not none and contest.rating_ceiling is not none %}
-                                                {{ _('This contest will be **rated** for **all** participants who have a rating between **%(rating_floor)d** and **%(rating_ceiling)d**, inclusive.', rating_floor=contest.rating_floor, rating_ceiling=contest.rating_ceiling)|markdown('default') }}
-                                            {% elif contest.rating_floor is not none and contest.rating_ceiling is none %}
-                                                {{ _('This contest will be **rated** for **all** participants who have a rating of at least **%(rating_floor)d**.', rating_floor=contest.rating_floor)|markdown('default') }}
-                                            {% elif contest.rating_floor is none and contest.rating_ceiling is not none %}
-                                                {{ _('This contest will be **rated** for **all** participants who have a rating of at most **%(rating_ceiling)d**.', rating_ceiling=contest.rating_ceiling)|markdown('default') }}
-                                            {% else %}
-                                                {{ _('This contest will be **rated** for **all** participants.')|markdown('default') }}
-                                            {% endif %}
-                                        {% else %}
-                                            {% if contest.rating_floor is not none and contest.rating_ceiling is not none %}
-                                                {{ _('This contest will be **rated** for participants who submit at least once and have a rating between **%(rating_floor)d** and **%(rating_ceiling)d**, inclusive.', rating_floor=contest.rating_floor, rating_ceiling=contest.rating_ceiling)|markdown('default') }}
-                                            {% elif contest.rating_floor is not none and contest.rating_ceiling is none %}
-                                                {{ _('This contest will be **rated** for participants who submit at least once and have a rating of at least **%(rating_floor)d**.', rating_floor=contest.rating_floor)|markdown('default') }}
-                                            {% elif contest.rating_floor is none and contest.rating_ceiling is not none %}
-                                                {{ _('This contest will be **rated** for participants who submit at least once and have a rating of at most **%(rating_ceiling)d**.', rating_ceiling=contest.rating_ceiling)|markdown('default') }}
-                                            {% else %}
-                                                {{ _('This contest will be **rated** for participants who submit at least once.')|markdown('default') }}
-                                            {% endif %}
-                                        {% endif %}
-                                    {% else %}
-                                        {{ _('This contest will **not** be rated.')|markdown('default') }}
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="item">
                                 <div class="ui accordion segment">
-                                    <div class="title active">
+                                    <div class="title active" style="display: flex">
                                         <i class="icon dropdown"></i>
-                                        {{ _('Test cases') }}
+                                        <div class="content">
+                                            {% if contest.is_rated %}
+                                                {% if contest.rate_all %}
+                                                    {% if contest.rating_floor is not none and contest.rating_ceiling is not none %}
+                                                        {{ _('This contest will be **rated** for **all** participants who have a rating between **%(rating_floor)d** and **%(rating_ceiling)d**, inclusive.', rating_floor=contest.rating_floor, rating_ceiling=contest.rating_ceiling)|markdown('default') }}
+                                                    {% elif contest.rating_floor is not none and contest.rating_ceiling is none %}
+                                                        {{ _('This contest will be **rated** for **all** participants who have a rating of at least **%(rating_floor)d**.', rating_floor=contest.rating_floor)|markdown('default') }}
+                                                    {% elif contest.rating_floor is none and contest.rating_ceiling is not none %}
+                                                        {{ _('This contest will be **rated** for **all** participants who have a rating of at most **%(rating_ceiling)d**.', rating_ceiling=contest.rating_ceiling)|markdown('default') }}
+                                                    {% else %}
+                                                        {{ _('This contest will be **rated** for **all** participants.')|markdown('default') }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if contest.rating_floor is not none and contest.rating_ceiling is not none %}
+                                                        {{ _('This contest will be **rated** for participants who submit at least once and have a rating between **%(rating_floor)d** and **%(rating_ceiling)d**, inclusive.', rating_floor=contest.rating_floor, rating_ceiling=contest.rating_ceiling)|markdown('default') }}
+                                                    {% elif contest.rating_floor is not none and contest.rating_ceiling is none %}
+                                                        {{ _('This contest will be **rated** for participants who submit at least once and have a rating of at least **%(rating_floor)d**.', rating_floor=contest.rating_floor)|markdown('default') }}
+                                                    {% elif contest.rating_floor is none and contest.rating_ceiling is not none %}
+                                                        {{ _('This contest will be **rated** for participants who submit at least once and have a rating of at most **%(rating_ceiling)d**.', rating_ceiling=contest.rating_ceiling)|markdown('default') }}
+                                                    {% else %}
+                                                        {{ _('This contest will be **rated** for participants who submit at least once.')|markdown('default') }}
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% else %}
+                                                {{ _('This contest will **not** be rated.')|markdown('default') }}
+                                            {% endif %}
+                                        </div>
                                     </div>
                                     <div class="content ui list relaxed active">
                                         <div class="item">
@@ -253,7 +250,7 @@
                         </a>
                     {% endif %}
 
-                    <table class="ui table striped">
+                    <table class="ui table striped celled">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -323,13 +320,19 @@
                                 {% endif %}
                             </tr>
                         {% endfor %}
+
+                        <tr>
+                            <td colspan="4">
+                                <a class="ui button success" href="{{ url('contest_all_problems', contest.key) }}">
+                                    <i class="icon list"></i>
+                                    {{ _('All problems') }}
+                                </a>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
 
-                    <a class="ui button success" href="{{ url('contest_all_problems', contest.key) }}">
-                        <i class="icon list"></i>
-                        {{ _('All problems') }}
-                    </a>
+
                 </div>
 
                 <hr class="ui divider"/>
@@ -342,7 +345,7 @@
                                 {{ _('Announcements') }}
                             </div>
                         </h2>
-                        <table id="contest-clartifications" class="ui table striped">
+                        <table id="contest-clartifications" class="ui table striped celled">
                             <thead>
                             <tr>
                                 <th>{{ _('When') }}</th>
@@ -378,9 +381,9 @@
                             </tbody>
                         </table>
                     </div>
+                    <hr class="ui divider"/>
                 {% endif %}
 
-                <hr class="ui divider"/>
 
                 {% if has_clarifications %}
                     <div class="contest-clartifications">
@@ -388,7 +391,7 @@
                             <i class="icon file outline"></i>
                             {{ _('Clarifications') }}
                         </h2>
-                        <table id="contest-clartifications" class="ui table striped">
+                        <table id="contest-clartifications" class="ui table striped celled">
                             <thead>
                             <tr>
                                 <th>{{ _('When') }}</th>
@@ -417,10 +420,8 @@
                         </table>
                     </div>
                 {% endif %}
+                <hr class="ui divider"/>
             {% endif %}
-
-            <hr class="ui divider"/>
-
 
             <div class="content-description markdown-body">
                 {% cache 3600 'contest_html' contest.id MATH_ENGINE %}

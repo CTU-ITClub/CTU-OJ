@@ -318,7 +318,7 @@
                 </a>
             </div>
 
-            <table id="submissions-table" class="ui table striped definition">
+            <table id="submissions-table" class="ui table striped definition celled">
                 <tbody>
                 {% set profile_id = request.profile.id if request.user.is_authenticated else 0 %}
                 {% for submission in submissions %}

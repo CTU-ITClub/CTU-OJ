@@ -59,7 +59,7 @@
                             {% with author=node.author, user=node.author.user %}
                                 <a href="{{ url('user_page', user.username) }}" class="avatar"
                                    style="position: sticky; top: 80px">
-                                    <img src="{{ gravatar(author, 75) }}">
+                                    <img alt="{{ user.username }}" src="{{ gravatar(author, 75) }}">
                                 </a>
                             {% endwith %}
                             <div class="content">

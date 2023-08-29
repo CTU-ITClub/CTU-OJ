@@ -1,5 +1,5 @@
 {% spaceless %}
-    <table {% if table_id %}id="{{ table_id }}"{% endif %} class="ui table striped">
+    <table {% if table_id %}id="{{ table_id }}"{% endif %} class="ui table celled striped">
         <thead>
         <tr>
             <th class="header rank" style="width: 5%;">{{ rank_header or _("Rank") }}</th>
@@ -42,7 +42,8 @@
                                     {% for organization in user.organizations.all() %}
                                         <a href="{{ organization.get_absolute_url() }}" class="ui mini black label">
                                             {% if organization.logo_override_image %}
-                                                <img src="{{ organization.logo_override_image }}"
+                                                <img alt="{{ organization.name }}"
+                                                     src="{{ organization.logo_override_image }}"
                                                      class="ui image spaced"/>
                                             {% endif %}
                                             {{ organization.name }}

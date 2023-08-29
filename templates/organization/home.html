@@ -68,8 +68,8 @@
                 <div class="content">
                     {{ _('About') }} {{ organization.name }}
                 </div>
-                <hr class="ui divider">
             </h3>
+            <hr class="ui divider"/>
             <div class="sidebox-content ui">
                 <div style="margin: 1.4em;" class="markdown-body">
                     {% cache 3600 'organization_html' organization.id MATH_ENGINE %}

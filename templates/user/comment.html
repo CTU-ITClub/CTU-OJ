@@ -33,7 +33,7 @@
                     {% with author=comment.author, user=comment.author.user %}
                         <a href="{{ url('user_page', user.username) }}" class="avatar"
                            style="position: sticky; top: 60px">
-                            <img src="{{ gravatar(author, 135) }}">
+                            <img alt="{{ author }}" src="{{ gravatar(author, 135) }}">
                         </a>
                     {% endwith %}
                     <div class="content">
