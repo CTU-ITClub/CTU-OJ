@@ -596,7 +596,7 @@ class ProposeContestProblemFormSet(
         Contest,
         ContestProblem,
         form=ProposeContestProblemForm,
-        can_delete=True
+        can_delete=True,
     )
 ):
 
