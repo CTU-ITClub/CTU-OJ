@@ -2,36 +2,6 @@
 
 {% block media %}
     <style>
-        .post {
-            margin: 0 0.5em;
-        }
-
-        .post:first-child {
-            margin-top: 0.6em;
-        }
-
-        .comment-count {
-            font-size: 12px;
-        }
-
-        .comment-icon {
-            padding: 0.1em 0.2em 0 0.5em;
-        }
-
-        .comment-count-link {
-            color: #555;
-        }
-
-        table.bottom td.left {
-            text-align: left;
-            border-right: none !important;
-            border-top: none !important;
-        }
-
-        table.bottom td.right {
-            text-align: right;
-            border-top: none !important;
-        }
     </style>
 {% endblock %}
 
@@ -106,57 +76,59 @@
                     </div>
                 </h3>
 
-                <div class="ui list relaxed divided attached bottom segment">
-                    {% if request.user.is_authenticated %}
-                        {% if is_member %}
-                            <form method="post"
-                                  action="{{ url('leave_organization', organization.id, organization.slug) }}">
-                                {% csrf_token %}
-                                <input type="submit" class="ui button full red"
-                                       value="{{ _('Leave organization') }}"
-                                       style="width: 100%">
-                            </form>
-                        {% elif organization.is_open %}
-                            <form method="post"
-                                  action="{{ url('join_organization', organization.id, organization.slug) }}">
-                                {% csrf_token %}
-                                <input type="submit" class="ui button primary" style="width: 100%;"
-                                       value="{{ _('Join organization') }}">
-                            </form>
-                        {% else %}
-                            <a href="{{ url('request_organization', organization.id, organization.slug) }}"
-                               class="ui button" style="width: 100%">
-                                {{ _('Request membership') }}
+                <div class="ui segment attached bottom">
+                    <div class="ui list relaxed divided">
+                        {% if request.user.is_authenticated %}
+                            {% if is_member %}
+                                <form method="post"
+                                      action="{{ url('leave_organization', organization.id, organization.slug) }}">
+                                    {% csrf_token %}
+                                    <input type="submit" class="ui button full red"
+                                           value="{{ _('Leave organization') }}"
+                                           style="width: 100%">
+                                </form>
+                            {% elif organization.is_open %}
+                                <form method="post"
+                                      action="{{ url('join_organization', organization.id, organization.slug) }}">
+                                    {% csrf_token %}
+                                    <input type="submit" class="ui button primary" style="width: 100%;"
+                                           value="{{ _('Join organization') }}">
+                                </form>
+                            {% else %}
+                                <a href="{{ url('request_organization', organization.id, organization.slug) }}"
+                                   class="ui button" style="width: 100%">
+                                    {{ _('Request membership') }}
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        <br class="ui divider">
+                        {% if can_edit %}
+                            {% if not organization.is_open %}
+                                <a class="item"
+                                   href="{{ url('organization_requests_pending', organization.id, organization.slug) }}">
+                                    {{ _('View requests') }}
+                                    {% if num_requests %}<span class="badge">{{ num_requests }}</span>{% endif %}
+                                </a>
+                            {% endif %}
+                            {% if perms.judge.edit_organization_post %}
+                                <a class="item"
+                                   href="{{ url('blog_post_create_organization', organization.id, organization.slug) }}">
+                                    <i class="icon plus"></i>
+                                    {{ _('Create blog post') }}
+                                </a>
+                            {% endif %}
+                            <a class="item" href="{{ url('edit_organization', organization.id, organization.slug) }}">
+                                <i class="icon pencil"></i>
+                                {{ _('Edit organization') }}
                             </a>
                         {% endif %}
-                    {% endif %}
-                    <br class="ui divider">
-                    {% if can_edit %}
-                        {% if not organization.is_open %}
-                            <a class="item"
-                               href="{{ url('organization_requests_pending', organization.id, organization.slug) }}">
-                                {{ _('View requests') }}
-                                {% if num_requests %}<span class="badge">{{ num_requests }}</span>{% endif %}
+                        {% if perms.judge.change_organization %}
+                            <a class="item" href="{{ url('admin:judge_organization_change', organization.id) }}">
+                                <i class="icon cog"></i>
+                                {{ _('Admin organization') }}
                             </a>
                         {% endif %}
-                        {% if perms.judge.edit_organization_post %}
-                            <a class="item"
-                               href="{{ url('blog_post_create_organization', organization.id, organization.slug) }}">
-                                <i class="icon plus"></i>
-                                {{ _('Create blog post') }}
-                            </a>
-                        {% endif %}
-                        <a class="item" href="{{ url('edit_organization', organization.id, organization.slug) }}">
-                            <i class="icon pencil"></i>
-                            {{ _('Edit organization') }}
-                        </a>
-                    {% endif %}
-                    {% if perms.judge.change_organization %}
-                        <a class="item" href="{{ url('admin:judge_organization_change', organization.id) }}">
-                            <i class="icon cog"></i>
-                            {{ _('Admin organization') }}
-                        </a>
-                    {% endif %}
+                    </div>
                 </div>
 
                 {% if new_contests %}
