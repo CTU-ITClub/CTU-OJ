@@ -2,8 +2,8 @@
 {% set profile = request.profile if logged_in else None %}
 <section class="{% if post.sticky %}sticky {% endif %} ui event" id="post-{{ post.id }}"
          style="display: flex; gap: 10px">
-    <div class="vote">
-        <div class="ui vertical buttons icon" style="position: sticky; top: 80px">
+    <div>
+        <div class="ui icon buttons vertical" style="position: sticky; top: 80px;">
             {% if logged_in %}
                 <a href="javascript:blog_upvote({{ post.id }})"
                    class="ui button {% if post.vote_score == 1 %} active{% endif %}">

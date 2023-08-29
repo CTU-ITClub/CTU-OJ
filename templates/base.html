@@ -649,7 +649,7 @@
         <div id="noscript">{{ _('This site works best with JavaScript enabled.') }}</div>
     </noscript>
 
-    <main id="content" class="ui container" style="padding: 0 20px">
+    <main id="content" class="ui container" style="padding: 0 20px; min-height: calc(100vh - 410px)">
         {% if misc_config.top_notification %}
             {{ render_django(misc_config.top_notification) }}
         {% endif %}

@@ -24,7 +24,7 @@ from judge.models import BlogPost, Contest, ContestAnnouncement, ContestProblem,
 from judge.utils.subscription import newsletter_id
 from judge.widgets import HeavyPreviewPageDownWidget, HeavySelect2MultipleWidget, HeavySelect2Widget, MartorWidget, \
     Select2MultipleWidget, Select2Widget
-from judge.widgets.dropdown import DropdownWidget
+from judge.widgets.dropdown import DropdownWidget, DropdownMultipleWidget
 
 TOTP_CODE_LENGTH = 6
 
@@ -267,7 +267,7 @@ class UserDownloadDataForm(Form):
     submission_problem_glob = CharField(initial='*', label=_('Filter by problem code glob:'), max_length=100)
     submission_results = MultipleChoiceField(
         required=False,
-        widget=Select2MultipleWidget(
+        widget=DropdownMultipleWidget(
             attrs={'style': 'width: 260px', 'data-placeholder': _('Leave empty to include all submissions')},
         ),
         choices=sorted(map(itemgetter(0, 0), Submission.RESULT)),

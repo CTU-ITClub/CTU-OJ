@@ -35,7 +35,7 @@
 {% endblock %}
 {% block body %}
     {% if has_results %}
-        <table class="ui table striped">
+        <table class="ui table striped celled">
             <thead>
             <tr>
                 <th class="header">{{ _('Problem') }}</th>
@@ -69,21 +69,21 @@
         </table>
     {% endif %}
     <div class="panes">
-        <div class="pane">
-            <form method="post" action="{{ url('contest_moss', contest.key) }}">
-                {% csrf_token %}
-                <input type="submit" class="ui button black"
-                       value="{% if has_results %} {{ _('Re-MOSS contest') }} {% else %} {{ _('MOSS contest') }} {% endif %}">
-            </form>
-        </div>
+        <form method="post" action="{{ url('contest_moss', contest.key) }}">
+            {% csrf_token %}
+            <button type="submit" class="ui button black">
+                <i class="icon gavel"></i>
+                {% if has_results %} {{ _('Re-MOSS contest') }} {% else %} {{ _('MOSS contest') }} {% endif %}
+            </button>
+        </form>
         {% if has_results %}
-            <div class="pane">
-                <form method="post" action="{{ url('contest_moss_delete', contest.key) }}">
-                    {% csrf_token %}
-                    <input type="submit" class="unselectable button full contest-moss-delete" style="padding: 10px;"
-                           value="{{ _('Delete MOSS results') }}">
-                </form>
-            </div>
+            <form method="post" action="{{ url('contest_moss_delete', contest.key) }}">
+                {% csrf_token %}
+                <button type="submit" class="ui button red">
+                    <i class="icon trash"></i>
+                    {{ _('Delete MOSS results') }}
+                </button>
+            </form>
         {% endif %}
     </div>
 {% endblock %}
