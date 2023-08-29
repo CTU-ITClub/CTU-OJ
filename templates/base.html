@@ -358,6 +358,31 @@
             color: black !important;
         }
 
+        .case-AC {
+            color: green;
+            font-weight: bold;
+        }
+
+        .case-_AC {
+            color: #BBCC00;
+            font-weight: bold;
+        }
+
+        .case-WA {
+            color: red;
+            font-weight: bold;
+        }
+
+        .case-TLE, .case-SC {
+            color: grey;
+            font-weight: bold;
+        }
+
+        .case-MLE, .case-OLE, .case-RTE, .case-IR {
+            color: orange;
+            font-weight: bold;
+        }
+
         .points.header, .points.header * {
             color: #000 !important;
             text-align: center;
@@ -527,12 +552,16 @@
 </div>
 
 <div id="page-container" class="ui pusher">
-    <nav class="ui menu main fixed borderless top inverted {% if request.user.is_impersonate %} inverted{% endif %}">
+    <nav class="ui menu main fixed borderless top inverted {% if request.user.is_impersonate %} blue compact {% endif %}">
         <div class="ui container">
 
-            <a href="{{ url('home') }}" class="header item">{% include "site-logo-fragment.html" %}</a>
+            <a href="{{ url('home') }}" class="header item">
+                <div>
+                    {% include "site-logo-fragment.html" %}
+                </div>
+            </a>
 
-            <div class="ui menu container fluid inverted {% if request.user.is_impersonate %} inverted{% endif %}"
+            <div class="ui menu container fluid inverted {% if request.user.is_impersonate %} blue compact{% endif %}"
                  style="border: none; border-radius: 0" id="hide-on-mobile">
                 <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
 
