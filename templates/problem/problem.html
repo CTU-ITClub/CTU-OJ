@@ -89,9 +89,16 @@
     <div>
         {% if request.user.is_authenticated and request.in_contest and submission_limit %}
             {% if submissions_left > 0 %}
-                <a href="{{ url('problem_submit', problem.code) }}" class="ui button primary"
-                   style="width: 100%;margin-bottom: 5px">
+                <a href="{{ url('problem_submit', problem.code) }}" class="ui button black" style="width: 100%;">
+                    <i class="icon plane paper"></i>
                     {{ _('Submit solution') }}
+                    <div class="ui label floating red">
+                        {% trans trimmed counter=submissions_left %}
+                            {{ counter }}
+                            {% pluralize %}
+                            {{ counter }}
+                        {% endtrans %}
+                    </div>
                 </a>
                 <div class="ui message info icon">
                     <i class="icon info circle"></i>
@@ -104,7 +111,10 @@
                     </div>
                 </div>
             {% else %}
-                <a class="ui button disabled" style="width: 100%">{{ _('Submit solution') }}</a>
+                <a class="ui button disabled" style="width: 100%">
+                    <i class="icon plane paper"></i>
+                    {{ _('Submit solution') }}
+                </a>
                 <div class="ui message icon">
                     <i class="icon info circle"></i>
                     <div class="content">
@@ -115,6 +125,7 @@
         {% else %}
             <a href="{{ url('problem_submit', problem.code) }}" class="unselectable ui button primary"
                style="width: 100%">
+                <i class="icon plane paper"></i>
                 {{ _('Submit solution') }}
             </a>
         {% endif %}

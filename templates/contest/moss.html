@@ -53,11 +53,13 @@
                     {% for result in results %}
                         <td>
                             {% if result.submission_count %}
-                                <a href="{{ result.url }}">{% trans trimmed count=result.submission_count %}
-                                    {{ count }} submission
-                                    {% pluralize %}
-                                    {{ count }} submissions
-                                {% endtrans %}</a>
+                                <a class="ui label red icon very basic" href="{{ result.url }}">
+                                    <i class="icon warning"></i>
+                                    {% trans trimmed count=result.submission_count %}
+                                        {{ count }} submission
+                                        {% pluralize %}
+                                        {{ count }} submissions
+                                    {% endtrans %}</a>
                             {% else %}
                                 {{ _('No submissions') }}
                             {% endif %}

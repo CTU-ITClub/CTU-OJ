@@ -42,7 +42,16 @@
                         style: 'width: 100%'
                     })).val();
                     var option = new Option(val, val, true, true);
-                    $select.select2(select2_settings).append(option).change().on('change', function () {
+
+                    if ($select.attr('id').endsWith('input_file')) {
+                        for (const option of valid_files_options) {
+                            if (option.id == val) {
+                                continue;
+                            }
+                            const opt = new Option(option.text, option.id, true, true);
+                        }
+                    }
+                    $select.addClass('ui search dropdown').append(option).dropdown().change().on('change', function () {
                         var val = $select.val();
                         if (val) {
                             if ($select.attr('id').endsWith('input_file'))
@@ -52,6 +61,8 @@
                         }
                     });
                 });
+                $tr.find('select').dropdown()
+
             });
 
             var order = 0;
@@ -402,7 +413,7 @@
                 }
                 if (newIndex != oldIndex)
                     handle_table_reorder();
-            };
+            }
 
             $('a#add-case-first-row').click(function () {
                 var cntRow = parseInt($total.val());
@@ -478,7 +489,7 @@
                     alert(s);
                 }
                 return false;
-            };
+            }
 
             var oldIndex;
             $table.sortable({
@@ -630,13 +641,14 @@
     {% if problem.is_organization_private %}
         <span class="organization-tags">
             {% for org in problem.organizations.all() %}
-                <span class="organization-tag">
-                    <a href="{{ org.get_absolute_url() }}">
-                        <i class="fa fa-lock"></i> {{ org.name }}
-                    </a>
-                </span>
+                <a class="ui label" href="{{ org.get_absolute_url() }}">
+                    <i class="icon lock"></i>
+                    {{ org.name }}
+                </a>
             {% endfor %}
         </span>
+
+        <hr class="ui divider"/>
     {% endif %}
     {% if data_form.instance.has_yml() %}
         <div class="title-line-action">
@@ -645,14 +657,19 @@
                 {{ _('View YAML') }}
             </a>
         </div>
+        <hr class="ui divider"/>
     {% endif %}
 {% endblock %}
 
 {% block body %}
     {% if data_form.instance.feedback %}
-        <ul class="errorlist">
-            <li>{{ data_form.instance.feedback }}</li>
-        </ul>
+        <div class="ui message red" style="margin-top: 10px;">
+            <div class="content">
+                <ul>
+                    <li>{{ data_form.instance.feedback }}</li>
+                </ul>
+            </div>
+        </div>
     {% endif %}
     <form action="" method="POST" enctype="multipart/form-data" class="ui form">
         {% csrf_token %}

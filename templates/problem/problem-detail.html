@@ -13,7 +13,7 @@
 
 {% with license=problem.license %}
     {% if license %}
-        <a href="{{ url('license', license.key) }}" class="ui label blue">
+        <a href="{{ url('license', license.key) }}" class="ui label blue block">
             <i class="icon certificate"></i>
             {{ license.display or license.name }}
         </a>

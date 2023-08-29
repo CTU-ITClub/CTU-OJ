@@ -23,8 +23,8 @@ from judge.models import BlogPost, Contest, ContestAnnouncement, ContestProblem,
     Organization, Problem, Profile, Solution, Submission, Tag, WebAuthnCredential
 from judge.utils.subscription import newsletter_id
 from judge.widgets import HeavyPreviewPageDownWidget, HeavySelect2MultipleWidget, HeavySelect2Widget, MartorWidget, \
-    Select2MultipleWidget, Select2Widget
-from judge.widgets.dropdown import DropdownWidget, DropdownMultipleWidget
+    Select2MultipleWidget
+from judge.widgets.dropdown import DropdownWidget, DropdownMultipleWidget, HeavyDropdownMultipleWidget
 
 TOTP_CODE_LENGTH = 6
 
@@ -153,7 +153,7 @@ class LanguageLimitForm(ModelForm):
         model = LanguageLimit
         fields = ('language', 'time_limit', 'memory_limit')
         widgets = {
-            'language': Select2Widget(attrs={'style': 'width:200px'}),
+            'language': DropdownWidget(attrs={'style': 'width:200px'}),
         }
 
 
@@ -180,7 +180,7 @@ class ProblemEditForm(ModelForm):
             self.fields['testers'].help_text = _('If private, only these users may see the problem.')
             self.fields['testers'].widget.data_view = None
             self.fields['testers'].widget.data_url = reverse('organization_profile_select2',
-                                                             args=(org_pk, ))
+                                                             args=(org_pk,))
 
         self.fields['testers'].help_text = \
             str(self.fields['testers'].help_text) + ' ' + \
@@ -193,7 +193,7 @@ class ProblemEditForm(ModelForm):
         org = Organization.objects.get(pk=self.org_pk)
         prefix = ''.join(x for x in org.slug.lower() if x.isalpha()) + '_'
         if not code.startswith(prefix):
-            raise forms.ValidationError(_('Problem id code must starts with `%s`') % (prefix, ),
+            raise forms.ValidationError(_('Problem id code must starts with `%s`') % (prefix,),
                                         'problem_id_invalid_prefix')
         return code
 
@@ -225,11 +225,11 @@ class ProblemEditForm(ModelForm):
                   'statement_file', 'source', 'types', 'group', 'testcase_visibility_mode',
                   'description', 'testers']
         widgets = {
-            'types': Select2MultipleWidget,
-            'group': Select2Widget,
-            'testcase_visibility_mode': Select2Widget,
+            'types': DropdownMultipleWidget,
+            'group': DropdownWidget,
+            'testcase_visibility_mode': DropdownWidget,
             'description': MartorWidget(attrs={'data-markdownfy-url': reverse_lazy('problem_preview')}),
-            'testers': HeavySelect2MultipleWidget(
+            'testers': HeavyDropdownMultipleWidget(
                 data_view='profile_select2',
                 attrs={'style': 'width: 100%'},
             ),
@@ -389,7 +389,7 @@ class TagProblemCreateForm(Form):
 
 
 class TagProblemAssignForm(Form):
-    def get_choices():
+    def get_choices(self):
         return list(map(attrgetter('code', 'name'), Tag.objects.all()))
 
     tags = MultipleChoiceField(
@@ -592,12 +592,12 @@ class ProposeContestProblemForm(ModelForm):
 
 
 class ProposeContestProblemFormSet(
-        inlineformset_factory(
-            Contest,
-            ContestProblem,
-            form=ProposeContestProblemForm,
-            can_delete=True,
-        )):
+    inlineformset_factory(
+        Contest,
+        ContestProblem,
+        form=ProposeContestProblemForm,
+        can_delete=True,
+    )):
 
     def clean(self) -> None:
         """Checks that no Contest problems have the same order."""
@@ -644,7 +644,7 @@ class ContestForm(ModelForm):
         if org_pk:
             self.fields['private_contestants'].widget.data_view = None
             self.fields['private_contestants'].widget.data_url = reverse('organization_profile_select2',
-                                                                         args=(org_pk, ))
+                                                                         args=(org_pk,))
 
         self.fields['private_contestants'].help_text = \
             str(self.fields['private_contestants'].help_text) + ' ' + \
@@ -657,7 +657,7 @@ class ContestForm(ModelForm):
 
         has_long_perm = self.user and self.user.has_perm('judge.long_contest_duration')
         if end_time and start_time and \
-           (end_time - start_time).days > settings.VNOJ_CONTEST_DURATION_LIMIT and not has_long_perm:
+                (end_time - start_time).days > settings.VNOJ_CONTEST_DURATION_LIMIT and not has_long_perm:
             raise forms.ValidationError(_('Contest duration cannot be longer than %d days')
                                         % settings.VNOJ_CONTEST_DURATION_LIMIT,
                                         'contest_duration_too_long')
@@ -670,7 +670,7 @@ class ContestForm(ModelForm):
         org = Organization.objects.get(pk=self.org_pk)
         prefix = ''.join(x for x in org.slug.lower() if x.isalpha()) + '_'
         if not key.startswith(prefix):
-            raise forms.ValidationError(_('Contest id must starts with `%s`') % (prefix, ),
+            raise forms.ValidationError(_('Contest id must starts with `%s`') % (prefix,),
                                         'contest_id_invalid_prefix')
         return key
 
@@ -692,7 +692,7 @@ class ContestForm(ModelForm):
             'start_time': DateTimeInput(format='%Y-%m-%d %H:%M:%S', attrs={'class': 'datetimefield'}),
             'end_time': DateTimeInput(format='%Y-%m-%d %H:%M:%S', attrs={'class': 'datetimefield'}),
             'description': MartorWidget(attrs={'data-markdownfy-url': reverse_lazy('contest_preview')}),
-            'scoreboard_visibility': Select2Widget(),
+            'scoreboard_visibility': DropdownWidget(),
             'private_contestants': HeavySelect2MultipleWidget(
                 data_view='profile_select2',
                 attrs={'style': 'width: 100%'},

@@ -1,4 +1,18 @@
 {% spaceless %}
+    {#    <div class="ui cards">#}
+    {#        {% for rank, user in users %}#}
+    {#            <div class="ui card">#}
+    {#                <div class="image">#}
+    {#                    <img src="{{ gravatar(user.user, 512) }}">#}
+    {#                </div>#}
+    {#                <div class="content">#}
+    {#                    <div class="header">#}
+    {#                        {{ user.user }}#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        {% endfor %}#}
+    {#    </div>#}
     <table {% if table_id %}id="{{ table_id }}"{% endif %} class="ui table celled striped">
         <thead>
         <tr>
