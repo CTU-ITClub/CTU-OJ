@@ -213,16 +213,6 @@ img.user-gravatar {
 }
 
 #submission-activity {
-    #submission-activity-actions {
-        text-align: center;
-        #prev-year-action, #next-year-action {
-            font-size: 1.75em;
-        }
-        #year {
-            font-size: 1.25em;
-            color: $color_primary75;
-        }
-    }
 
     #submission-activity-display {
         border: 1px solid $color_primary25;

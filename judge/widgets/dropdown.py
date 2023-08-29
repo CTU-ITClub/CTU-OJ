@@ -76,6 +76,7 @@ class DropdownMixin(object):
             attrs['class'] += 'ui search dropdown'
         else:
             attrs['class'] = 'ui search dropdown'
+
         return attrs
 
     def optgroups(self, name, value, attrs=None):

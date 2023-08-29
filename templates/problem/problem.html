@@ -89,9 +89,16 @@
     <div>
         {% if request.user.is_authenticated and request.in_contest and submission_limit %}
             {% if submissions_left > 0 %}
-                <a href="{{ url('problem_submit', problem.code) }}" class="ui button primary"
-                   style="width: 100%;margin-bottom: 5px">
+                <a href="{{ url('problem_submit', problem.code) }}" class="ui button black" style="width: 100%;">
+                    <i class="icon plane paper"></i>
                     {{ _('Submit solution') }}
+                    <div class="ui label floating red small">
+                        {% trans trimmed counter=submissions_left %}
+                            {{ counter }}
+                            {% pluralize %}
+                            {{ counter }}
+                        {% endtrans %}
+                    </div>
                 </a>
                 <div class="ui message info icon">
                     <i class="icon info circle"></i>
@@ -104,7 +111,10 @@
                     </div>
                 </div>
             {% else %}
-                <a class="ui button disabled" style="width: 100%">{{ _('Submit solution') }}</a>
+                <a class="ui button disabled" style="width: 100%">
+                    <i class="icon plane paper"></i>
+                    {{ _('Submit solution') }}
+                </a>
                 <div class="ui message icon">
                     <i class="icon info circle"></i>
                     <div class="content">
@@ -115,66 +125,96 @@
         {% else %}
             <a href="{{ url('problem_submit', problem.code) }}" class="unselectable ui button primary"
                style="width: 100%">
+                <i class="icon plane paper"></i>
                 {{ _('Submit solution') }}
             </a>
         {% endif %}
 
-        <div class="ui list relaxed divided segment">
-
+        <div class="ui menu vertical pointing secondary">
             {% if request.in_contest and contest_problem %}
                 {% set contest = contest_problem.contest %}
                 <a class="item"
                    href="{{ url('contest_user_submissions', contest.key, request.user.username, problem.code) }}">
+                    <i class="icon user"></i>
                     {{ _('My submissions') }}
                 </a>
                 {% if contest.can_see_full_submission_list(request.user) %}
                     <a class="item" href="{{ url('chronological_submissions', problem.code) }}">
+                        <i class="icon list"></i>
                         {{ _('All submissions') }}
                     </a>
                     <a class="item" href="{{ url('contest_ranked_submissions', contest.key, problem.code) }}">
+                        <i class="icon trophy"></i>
                         {{ _('Best submissions') }}
                     </a>
                 {% endif %}
             {% else %}
                 {% if request.user.is_authenticated and has_submissions %}
-                    <a class="item"
-                       href="{{ url('user_submissions', problem.code, request.user.username) }}">{{ _('My submissions') }}</a>
+                    <a class="item" href="{{ url('user_submissions', problem.code, request.user.username) }}">
+                        <i class="icon user"></i>
+                        {{ _('My submissions') }}
+                    </a>
                 {% endif %}
-                <a class="item"
-                   href="{{ url('chronological_submissions', problem.code) }}">{{ _('All submissions') }}</a>
-                <a class="item" href="{{ url('ranked_submissions', problem.code) }}">{{ _('Best submissions') }}</a>
+                <a class="item" href="{{ url('chronological_submissions', problem.code) }}">
+                    <i class="icon list"></i>
+                    {{ _('All submissions') }}
+                </a>
+                <a class="item" href="{{ url('ranked_submissions', problem.code) }}">
+                    <i class="icon trophy"></i>
+                    {{ _('Best submissions') }}
+                </a>
             {% endif %}
             {% if (editorial and editorial.is_accessible_by(request.user)) and not request.in_contest %}
-                <a class="item" href="{{ url('problem_editorial', problem.code) }}">{{ _('Read editorial') }}</a>
+                <a class="item" href="{{ url('problem_editorial', problem.code) }}">
+                    <i class="icon book"></i>
+                    {{ _('Read editorial') }}
+                </a>
             {% endif %}
             {% if can_edit_problem %}
-                <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">{{ _('Manage tickets') }}
+                <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">
+                    <i class="icon bug"></i>
+                    {{ _('Manage tickets') }}
                     {% if num_open_tickets %}
                         <span class="ui label red circular mini">{{ num_open_tickets }}</span>{% endif %}
                 </a>
-                <a class="item" href="{{ url('problem_edit', problem.code) }}">{{ _('Edit problem') }}</a>
+
+                <a class="item" href="{{ url('problem_edit', problem.code) }}">
+                    <i class="icon pencil"></i>
+                    {{ _('Edit problem') }}
+                </a>
                 {% if not problem.is_manually_managed %}
-                    <a class="item" href="{{ url('problem_data', problem.code) }}">{{ _('Edit test data') }}</a>
+                    <a class="item" href="{{ url('problem_data', problem.code) }}">
+                        <i class="icon database"></i>
+                        {{ _('Edit test data') }}
+                    </a>
                 {% endif %}
             {% elif request.user.is_authenticated and has_tickets %}
-                <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">{{ _('My tickets') }}
-                    {% if num_open_tickets %}<span class="badge">{{ num_open_tickets }}</span>{% endif %}
+                <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">
+                    <i class="icon bug"></i>
+                    {{ _('My tickets') }}
+                    {% if num_open_tickets %}
+                        <span class="ui label red circular mini">{{ num_open_tickets }}</span>{% endif %}
                 </a>
             {% endif %}
 
             {% if problem.is_subs_manageable_by(request.user) %}
-                <a class="item"
-                   href="{{ url('problem_manage_submissions', problem.code) }}">{{ _('Manage submissions') }}</a>
+                <a class="item" href="{{ url('problem_manage_submissions', problem.code) }}">
+                    <i class="icon list"></i>
+                    {{ _('Manage submissions') }}
+                </a>
             {% endif %}
 
             {% if perms.judge.clone_problem and can_edit_problem %}
-                <a class="item" href="{{ url('problem_clone', problem.code) }}">{{ _('Clone problem') }}</a>
+                <a class="item" href="{{ url('problem_clone', problem.code) }}">
+                    <i class="icon clone outline"></i>
+                    {{ _('Clone problem') }}
+                </a>
             {% endif %}
         </div>
 
         <div class="ui list divided relaxed segment">
 
-            <div class="problem-info-entry item">
+            <div class="item">
                 <i class="icon check"></i><span class="content">{{ _('Points:') }} <strong>
             {% if contest_problem %}
                 {{ contest_problem.points }}{% if contest_problem.partial %} {{ _('(partial)') }}{% endif %}
@@ -185,7 +225,7 @@
             </span>
             </div>
 
-            <div class="problem-info-entry item">
+            <div class="item">
                 <i class="icon clock"></i><span
                     class="content">{{ _('Time limit:') }} <strong>{{ problem.time_limit }}s</strong></span>
             </div>
@@ -199,7 +239,7 @@
                 {% endfor %}
             </div>
 
-            <div class="problem-info-entry item">
+            <div class="item">
                 <i class="icon server"></i><span class="content">{{ _('Memory limit:') }}
             <strong>{{ problem.memory_limit|kbsimpleformat }}</strong>
         </span>
@@ -262,7 +302,7 @@
                 {% cache 86400 'problem_authors' problem.id LANGUAGE_CODE %}
                     {% with authors=problem.authors.all() %}
                         {% if authors %}
-                            <div class="problem-info-entry item">
+                            <div class="item">
                                 <i class="icon pencil"></i>
                                 <div class="content">
                                     <div class="header">
@@ -278,7 +318,7 @@
                             </div>
                         {% endif %}
                         {% if problem.suggester %}
-                            <div class="problem-info-entry item">
+                            <div class="item">
                                 <i class="icon pencil"></i>
                                 <div class="content">
                                     <div class="header">
@@ -294,7 +334,7 @@
             {% endif %}
 
             {% if problem.source %}
-                <div class="problem-info-entry item">
+                <div class="item">
                     <i class="icon pencil"></i>
                     <div class="content">
                         {{ _('Problem source:') }}
@@ -425,31 +465,33 @@
     <hr class="ui divider"/>
     {% if comment_lock %}
         <div>
-            <h2 class="ui header">
+            <h2 class="ui header block attached top">
                 <i class="icon question circle"></i>
                 <div class="content">
                     {{ _('Clarifications') }}
                 </div>
             </h2>
 
-            {% if has_clarifications %}
-                <div class="ui list relaxed divided">
-                    {% for clarification in clarifications %}
-                        <div class="item">
-                            <i class="icon quote left"></i>
+            <div class="ui segment attached bottom">
+                {% if has_clarifications %}
+                    <div class="ui list relaxed divided">
+                        {% for clarification in clarifications %}
+                            <div class="item">
+                                <i class="icon quote left"></i>
 
-                            <div class="content">
-                                <div class="header">{{ relative_time(clarification.date) }}</div>
-                                <div class="markdown-body">
-                                    {{ clarification.description|markdown('problem', MATH_ENGINE)|reference }}
+                                <div class="content">
+                                    <div class="header">{{ relative_time(clarification.date) }}</div>
+                                    <div class="markdown-body ui segment">
+                                        {{ clarification.description|markdown('problem', MATH_ENGINE)|reference }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="no-comments-message">{{ _('No clarifications have been made at this time.') }}</p>
-            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ _('No clarifications have been made at this time.') }}
+                {% endif %}
+            </div>
         </div>
     {% else %}
         {% include "comments/list.html" %}

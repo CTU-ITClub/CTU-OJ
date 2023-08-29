@@ -34,8 +34,13 @@
 
 {% block user_content %}
     {% if pp_breakdown %}
-        <h3 class="pp-breakdown-header">{{ _('Points breakdown') }}</h3>
-        <table id="submissions-table" class="ui table definition striped">
+        <div class="ui header block attached top">
+            <i class="icon trophy"></i>
+            <div class="content">
+                {{ _('Points breakdown') }}
+            </div>
+        </div>
+        <table id="submissions-table" class="ui table striped celled segment attached bottom">
             {% include "user/pp-table-body.html" %}
         </table>
         {% if pp_has_more %}
@@ -48,12 +53,12 @@
     {% endif %}
 
     {% if authored %}
-        <div class="ui styled fluid accordion">
-            <div class="title active">
+        <div class="ui styled fluid accordion segment">
+            <div class="title">
                 <i class="dropdown icon"></i>
                 {{ _('Authored problems') }} ({{ authored|length }})
             </div>
-            <div class="content active">
+            <div class="content">
                 <table class="ui table striped">
                     <thead>
                     <tr>
@@ -97,7 +102,7 @@
     {% endif %}
 
     {% for group in best_submissions %}
-        <div class="ui styled fluid accordion">
+        <div class="ui styled fluid accordion segment">
             <div class="title">
                 <i class="dropdown icon"></i>
                 {%- with points_str=group.points|floatformat(-3) -%}
@@ -131,8 +136,6 @@
                 </table>
             </div>
         </div>
-
-        <hr class="ui divider"/>
     {% endfor %}
 {% endblock %}
 

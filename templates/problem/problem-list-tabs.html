@@ -2,16 +2,16 @@
 
 {% block tabs %}
     {% if request.user.has_perm('judge.add_problem') %}
-        {{ make_tab('create', 'fa-plus', url('problem_create'), _('Create new problem')) }}
+        {{ make_tab('create', 'plus', url('problem_create'), _('Create new problem')) }}
     {% elif request.user.has_perm('judge.suggest_new_problem') %}
-        {{ make_tab('suggest', 'fa-plus', url('problem_suggest'), _('Suggest new problem')) }}
+        {{ make_tab('suggest', 'plus', url('problem_suggest'), _('Suggest new problem')) }}
     {% endif %}
-    {{ make_tab('list', 'fa-list', url('problem_list'), _('List')) }}
+    {{ make_tab('list', 'list', url('problem_list'), _('List')) }}
 
     {% if perms.judge.edit_all_problem or perms.judge.edit_public_problem or perms.judge.edit_own_problem %}
-        {{ make_tab('suggest', 'fa-list', url('problem_suggest_list'), _('Suggest')) }}
+        {{ make_tab('suggest', 'list', url('problem_suggest_list'), _('Suggest')) }}
     {% endif %}
     {% if request.user.is_superuser %}
-        {{ make_tab('admin', 'fa-edit', url('admin:judge_problem_changelist'), _('Admin')) }}
+        {{ make_tab('admin', 'edit', url('admin:judge_problem_changelist'), _('Admin')) }}
     {% endif %}
 {% endblock %}

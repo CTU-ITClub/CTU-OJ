@@ -8,6 +8,8 @@ $(function () {
         var preview_url = $preview.attr('data-preview-url');
         var $textarea = $('#' + $preview.attr('data-textarea-id'));
 
+        $textarea[0].required = false;
+
         // Submit the form if Ctrl+Enter is pressed in pagedown textarea.
         $textarea.keydown(function (ev) {
             // Ctrl+Enter pressed (metaKey used to support command key on mac).
@@ -19,6 +21,7 @@ $(function () {
         CkEditor.create($form.find('.ck-editor')[0]).then(editor => {
             let lastText;
             let timeout;
+
 
             editor.model.document.on('change:data', async () => {
                 $content.val(editor.getData())

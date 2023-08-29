@@ -171,8 +171,9 @@
             $(function () {
                 $('#filter-by-organization-button').click(function () {
                     $('#org-check-list-wrapper').toggle();
-                    $('#org-check-list').select2('open');
                 });
+
+                $('#filter-by-organization-button').click();
             })
 
             if (localStorage.getItem(`filter-cleared-${contest_key}`) === null) {
@@ -356,7 +357,7 @@
 
                         if ($col.hasClass('rating-column')) {
                             // Skip rating
-                            return;
+
                         } else if ($col.hasClass('rank')) {
                             // Rank
                             header.push(clean_text($col.text()));
@@ -388,7 +389,7 @@
 
                         if ($col.hasClass('rating-column')) {
                             // Skip rating
-                            return;
+
                         } else if ($col.hasClass('user-name')) {
                             // Username and Full name
                             row_data.push(clean_text($col.find('.rating').first().text()));
@@ -497,7 +498,7 @@
     {% endif %}
     {{ super() }}
     {% if is_ICPC_format %}
-        <table id="cell_legend" class="ui table striped" style="width: 10em; margin-left: 0">
+        <table id="cell_legend" class="ui table striped celled" style="width: 10em; margin-left: 0">
             <thead>
             <tr>
                 <th scope="col">{{ _('Cell colours') }}</th>

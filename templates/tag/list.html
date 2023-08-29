@@ -7,18 +7,6 @@
 
 {% block media %}
     <style>
-        .row-selected {
-            background: #dff0d8;
-        }
-
-        #judges {
-            width: 100%;
-        }
-
-        label[for="judge"] {
-            padding-bottom: 0.25em;
-            display: block;
-        }
     </style>
 {% endblock %}
 
@@ -66,7 +54,7 @@
     <div id="common-content" class="ui grid stackable">
         {% block before_table %}{% endblock %}
         <div id="content-left" class="problems h-scrollable-table column eleven wide">
-            <table id="tagproblem-table" class="ui table striped">
+            <table id="tagproblem-table" class="ui table striped celled fixed">
                 <thead>
                 <tr>
                     <th class="problem-code">{{ _('Problem code') }}</th>

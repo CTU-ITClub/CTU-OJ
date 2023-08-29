@@ -1,33 +1,33 @@
 {% extends "tabs-base.html" %}
 
 {% block tabs %}
-    {{ make_tab('detail', 'fa-info-circle', url('contest_view', contest.key), _('Info')) }}
+    {{ make_tab('detail', 'info circle', url('contest_view', contest.key), _('Info')) }}
     {% if contest.can_see_full_submission_list(request.user) %}
-        {{ make_tab('stats', 'fa-pie-chart', url('contest_stats', contest.key), _('Statistics')) }}
+        {{ make_tab('stats', 'pie chart', url('contest_stats', contest.key), _('Statistics')) }}
     {% endif %}
 
     {% if contest.start_time <= now or perms.judge.see_private_contest %}
         {% if contest.can_see_own_scoreboard(request.user) %}
-            {{ make_tab('ranking', 'fa-bar-chart', url('contest_ranking', contest.key), _('Rankings')) }}
+            {{ make_tab('ranking', 'bar chart', url('contest_ranking', contest.key), _('Rankings')) }}
             {% if contest.csv_ranking %}
-                {{ make_tab('official_ranking', 'fa-bar-chart', url('contest_official_ranking', contest.key), _('Official Rankings')) }}
+                {{ make_tab('official_ranking', 'bar chart', url('contest_official_ranking', contest.key), _('Official Rankings')) }}
             {% endif %}
             {% if request.user.is_authenticated %}
-                {{ make_tab('participation', 'fa-users', url('contest_participation_own', contest.key), _('Participation')) }}
+                {{ make_tab('participation', 'users', url('contest_participation_own', contest.key), _('Participation')) }}
             {% endif %}
         {% else %}
-            {{ make_tab('ranking', 'fa-bar-chart', None, _('Hidden Rankings')) }}
+            {{ make_tab('ranking', 'bar chart', None, _('Hidden Rankings')) }}
         {% endif %}
-        {{ make_tab('submissions', 'fa-bar-chart', url('contest_all_submissions', contest.key), _('Submissions')) }}
+        {{ make_tab('submissions', 'bar chart', url('contest_all_submissions', contest.key), _('Submissions')) }}
     {% endif %}
     {% if can_edit %}
         {% if perms.judge.moss_contest and has_moss_api_key %}
-            {{ make_tab('moss', 'fa-gavel', url('contest_moss', contest.key), _('MOSS')) }}
+            {{ make_tab('moss', 'gavel', url('contest_moss', contest.key), _('MOSS')) }}
         {% endif %}
-        {{ make_tab('edit', 'fa-edit', url('contest_edit', contest.key), _('Edit')) }}
+        {{ make_tab('edit', 'edit', url('contest_edit', contest.key), _('Edit')) }}
     {% endif %}
     {% if perms.judge.clone_contest and can_edit %}
-        {{ make_tab('clone', 'fa-copy', url('contest_clone', contest.key), _('Clone')) }}
+        {{ make_tab('clone', 'copy', url('contest_clone', contest.key), _('Clone')) }}
     {% endif %}
 
     {% if request.user.is_authenticated %}
