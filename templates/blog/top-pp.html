@@ -1,39 +1,43 @@
-<div class="item">
+<div class="ui header block attached top">
     <i class="icon trophy"></i>
     <div class="content">
-        <div class="header">{{ _('Top users') }}</div>
-        <table class="users-table ui table striped" style="margin-bottom: unset;">
-            <thead>
-            <tr>
-                <th> #</th>
-                <th>{{ _('Username') }}</th>
-                <th> {{ _('Points') }} </th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for user in top_pp_users %}
-                <tr id="user-{{ loop.index }}">
-                    <td>{{ loop.index }}</td>
-                    <td class="user-name">
-                        <div style="float:left">
-                            {{ link_user(user) }}
-                        </div>
-                    </td>
-
-                    <td class="user-points">
-                        {{ user.performance_points|floatformat(2) }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <hr class="ui divider"/>
-        <a href="{{ url('organization_list') }}" class="ui button mini">
-            {{ _('Organizations') }}
-        </a>
-        <a href="{{ url('user_list') }}" class="ui button mini primary icon">
-            {{ _('View all') }}
-            <i class="icon angle right"></i>
-        </a>
+        {{ _('Top users') }}
     </div>
 </div>
+<table class="users-table ui table striped attached bottom" style="margin-bottom: unset;">
+    <thead>
+    <tr>
+        <th> #</th>
+        <th>{{ _('Username') }}</th>
+        <th> {{ _('Points') }} </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in top_pp_users %}
+        <tr id="user-{{ loop.index }}">
+            <td>{{ loop.index }}</td>
+            <td class="user-name">
+                <div style="float:left">
+                    {{ link_user(user) }}
+                </div>
+            </td>
+
+            <td class="user-points">
+                {{ user.performance_points|floatformat(2) }}
+            </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="3">
+            <a href="{{ url('organization_list') }}" class="ui button mini">
+                {{ _('Organizations') }}
+            </a>
+            <a href="{{ url('user_list') }}" class="ui button mini primary icon">
+                {{ _('View all') }}
+                <i class="icon angle right"></i>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+
+</table>

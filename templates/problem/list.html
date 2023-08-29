@@ -230,29 +230,30 @@
             </table>
         </div>
 
-        <div id="content-right" class="four wide column ui segment">
+        <div id="content-right" class="four wide column">
             <div class="info-float card" style="position: sticky; top: 80px">
                 {% include "problem/search-form.html" %}
                 {% if hot_problems %}
-                    <hr class="ui divider"/>
-                    <div class="ui list relaxed divided">
-                        <h3 class="ui header">
-                            <i class="icon fire"></i>
-                            <div class="content">
-                                {{ _('Hot problems') }}
-                            </div>
-                        </h3>
-                        {% for problem in hot_problems %}
-                            <div class="item">
-                                <i class="icon puzzle"></i>
+                    <h3 class="ui header block attached top">
+                        <i class="icon fire"></i>
+                        <div class="content">
+                            {{ _('Hot problems') }}
+                        </div>
+                    </h3>
+                    <div class="ui segment attached bottom">
+                        <div class="ui list relaxed divided">
+                            {% for problem in hot_problems %}
+                                <div class="item">
+                                    <i class="icon puzzle"></i>
 
-                                <div class="content">
-                                    <a href="{{ url('problem_detail', problem.code) }}" class="header">
-                                        {{ problem.name }}
-                                    </a>
+                                    <div class="content">
+                                        <a href="{{ url('problem_detail', problem.code) }}" class="header">
+                                            {{ problem.name }}
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
                 {% endif %}
             </div>

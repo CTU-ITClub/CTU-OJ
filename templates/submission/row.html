@@ -3,9 +3,9 @@
     <div class="score" style="text-align: center;">
         {%- if submission.is_graded -%}
             {%- if submission.status in ('IE', 'CE', 'AB') -%}
-                ---
+                {#                ---#}
             {%- else -%}
-                {{ submission.case_points|floatformat(-3) }} / {{ submission.case_total|floatformat(0) }}
+                {#                {{ submission.case_points|floatformat(-3) }} / {{ submission.case_total|floatformat(0) }}#}
             {%- endif -%}
         {%- else -%}
             <i class="fa fa-spinner fa-pulse grading-spinner"></i>
@@ -13,8 +13,10 @@
     </div>
 
     <div class="state" style="display: flex; justify-content: center">
-        <span title="{{ submission.long_status }}" class="status ui label basic">{{ submission.short_status }}</span> |
-        <span class="language ui label basic">{{ submission.language.short_display_name }}</span>
+        {#        <span title="{{ submission.long_status }}" class="status ui mini label basic">#}
+        {{ submission.short_status }}
+        {#        </span>#}
+        {#        <span class="language ui label mini basic">{{ submission.language.short_display_name }}</span>#}
     </div>
 </td>
 {% set can_view_testcase_status = request.user.is_superuser or submission.problem.testcase_result_visibility_mode == 'A' %}

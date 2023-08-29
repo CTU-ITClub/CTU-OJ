@@ -266,6 +266,22 @@
     </script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        @font-face {
+            font-family: 'Monaco';
+            src: url('{{ static('fonts/Monaco 400.ttf') }}');
+            font-weight: 400;
+        }
+
+        .markdown-body code {
+            font-family: 'Monaco', monospace;
+        }
+
+        .ui {
+            font-family: 'Roboto', sans-serif !important;
+        }
+
         pre.line {
             margin: 0;
         }
@@ -508,11 +524,12 @@
 
 <div id="page-container" class="ui pusher">
     <nav class="ui menu main fixed borderless top {% if request.user.is_impersonate %} inverted{% endif %}">
-        <div class="ui container fluid">
+        <div class="ui container">
 
             <a href="{{ url('home') }}" class="header item">{% include "site-logo-fragment.html" %}</a>
 
-            <div class="ui menu container fluid {% if request.user.is_impersonate %} inverted{% endif %}" style="border: none; border-radius: 0" id="hide-on-mobile">
+            <div class="ui menu container fluid {% if request.user.is_impersonate %} inverted{% endif %}"
+                 style="border: none; border-radius: 0" id="hide-on-mobile">
                 <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
 
                 {% for node in mptt_tree(nav_bar) recursive %}
@@ -606,7 +623,8 @@
                         </a>
 
                         {% if misc_config.registration %}
-                            <a class="ui button primary" style="margin-left: 10px;" href="{{ url('registration_register') }}">
+                            <a class="ui button primary" style="margin-left: 10px;"
+                               href="{{ url('registration_register') }}">
                                 {{ _('Register') }}
                             </a>
                         {% endif %}
@@ -627,7 +645,7 @@
         <div id="noscript">{{ _('This site works best with JavaScript enabled.') }}</div>
     </noscript>
 
-    <main id="content" class="ui container fluid" style="padding: 0 20px">
+    <main id="content" class="ui container" style="padding: 0 20px">
         {% if misc_config.top_notification %}
             {{ render_django(misc_config.top_notification) }}
         {% endif %}

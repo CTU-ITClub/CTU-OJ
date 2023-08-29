@@ -1,36 +1,40 @@
-<div class="item">
+<div class="ui header block attached top">
     <i class="icon trophy"></i>
     <div class="content">
-        <div class="header">{{ _('Top contributors') }}</div>
-        <table class="ui table striped">
-            <thead>
-            <tr>
-                <th> #</th>
-                <th>{{ _('Username') }}</th>
-                <th> {{ _('Contrib.') }} </th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for user in top_contrib %}
-                <tr id="user-{{ loop.index }}">
-                    <td>{{ loop.index }}</td>
-                    <td class="user-name">
-                        <div style="float:left">
-                            {{ link_user(user) }}
-                        </div>
-                    </td>
-
-                    <td class="user-contrib">
-                        {{ user.contribution_points }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <hr class="ui divider"/>
-        <a class="ui button icon link primary mini" href="{{ url('contributors_list') }}">
-            {{ _('View all') }}
-            <i class="icon angle right"></i>
-        </a>
+        {{ _('Top contributors') }}
     </div>
 </div>
+<table class="ui table striped attached bottom">
+    <thead>
+    <tr>
+        <th> #</th>
+        <th>{{ _('Username') }}</th>
+        <th> {{ _('Contrib.') }} </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in top_contrib %}
+        <tr id="user-{{ loop.index }}">
+            <td>{{ loop.index }}</td>
+            <td class="user-name">
+                <div style="float:left">
+                    {{ link_user(user) }}
+                </div>
+            </td>
+
+            <td class="user-contrib">
+                {{ user.contribution_points }}
+            </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="3">
+            <a class="ui button icon link primary mini" href="{{ url('contributors_list') }}">
+                {{ _('View all') }}
+                <i class="icon angle right"></i>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+

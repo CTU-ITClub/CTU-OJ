@@ -14,13 +14,14 @@
             {% if orgs %}
                 <h4 class="ui header">{{ _('From') }}</h4>
                 {% for org in orgs -%}
-                    <a href="{{ org.get_absolute_url() }}" class="ui label image black">
+                    <a href="{{ org.get_absolute_url() }}" class="ui label black">
                         {% if org.logo_override_image %}
-                            <img src="{{ org.logo_override_image }}" alt="{{ org.name }}"/>
+                            <img src="{{ org.logo_override_image }}" class="ui image spaced" alt="{{ org.name }}"/>
                         {% endif %}
                         {{ org.name }}
                     </a>
                 {% endfor %}
+                <hr class="ui divider"/>
             {% endif %}
         {% endwith %}
         {% if perms.judge.change_profile %}
@@ -28,9 +29,11 @@
                 {% if notes %}
                     <b>{{ _('Admin notes:') }}</b>
                     <pre style="margin-top: 0">{{ notes }}</pre>
+                    <hr class="ui divider"/>
                 {% endif %}
             {% endwith %}
         {% endif %}
+
 
         {% if user.about %}
             <h4 class="ui header">{{ _('About') }}</h4>
@@ -40,13 +43,13 @@
                 {% endcache %}
             </div>
         {% else %}
-            <i>
+            <div>
                 {% if user.user == request.user %}
                     {{ _('You have not shared any information.') }}
                 {% else %}
                     {{ _('This user has not shared any information.') }}
                 {% endif %}
-            </i>
+            </div>
             <br>
         {% endif %}
 
@@ -71,7 +74,10 @@
             {% endfor %}
         </div>
 
+        <hr class="ui divider"/>
+
         <h4 id="submission-activity-header" class="ui header"></h4>
+
         <div id="submission-activity" style="display: none;">
             <div id="submission-activity-actions" class="ui buttons icon">
                 <a href="javascript:void(0)" id="prev-year-action" class="ui button">
