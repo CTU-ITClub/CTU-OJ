@@ -597,7 +597,7 @@ class ProposeContestProblemFormSet(
         ContestProblem,
         form=ProposeContestProblemForm,
         can_delete=True,
-    )
+    ),
 ):
 
     def clean(self) -> None:
