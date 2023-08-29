@@ -89,13 +89,13 @@ def prepare_contest_data(self, contest_id, options):
         p.done = 0
         contest = Contest.objects.get(id=contest_id)
         queryset = ContestSubmission.objects.filter(participation__contest=contest, participation__virtual=0) \
-                                    .order_by('-points', 'id') \
-                                    .select_related('problem__problem', 'submission__user__user',
-                                                    'submission__source', 'submission__language') \
-                                    .values_list('submission__user__user__id', 'submission__user__user__username',
-                                                 'problem__problem__code', 'submission__source__source',
-                                                 'submission__language__extension', 'submission__id',
-                                                 'submission__language__file_only')
+            .order_by('-points', 'id') \
+            .select_related('problem__problem', 'submission__user__user',
+                            'submission__source', 'submission__language') \
+            .values_list('submission__user__user__id', 'submission__user__user__username',
+                         'problem__problem__code', 'submission__source__source',
+                         'submission__language__extension', 'submission__id',
+                         'submission__language__file_only')
 
         if options['submission_results']:
             queryset = queryset.filter(result__in=options['submission_results'])
@@ -127,7 +127,7 @@ def prepare_contest_data(self, contest_id, options):
                 filename = os.path.basename(source)
                 data_file.write(
                     default_storage.path(os.path.join(settings.SUBMISSION_FILE_UPLOAD_MEDIA_DIR,
-                                         problem, str(user_id), filename)),
+                                                      problem, str(user_id), filename)),
                     path,
                 )
                 pass

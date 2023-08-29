@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+
+
 {% block js_media %}
     <script type="text/javascript" src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
     <script>
@@ -30,6 +32,8 @@
                 value: $('#id_source').val(),
                 theme: 'vs-dark',
                 automaticLayout: true,
+                fontFamily: "'Monaco', monospace",
+                fontLigatures: true,
             });
 
             window.$_editor.onDidChangeModelContent(() => {
@@ -264,6 +268,10 @@
             #problem_submit.fullscreen .monaco-editor-container {
                 height: 100vh !important;
             }
+
+            #problem_submit.fullscreen #right {
+                padding-top: 20px;
+            }
         </style>
     {% endcompress %}
 {% endblock %}
@@ -302,9 +310,8 @@
                 </div>
             </div>
 
-            <div class="column five wide">
-                <div style="height: 10px"></div>
-                <div class="ui segment">
+            <div id="right" class="column five wide">
+                <div>
                     {% if not no_judges %}
                         {% if default_lang not in form.fields.language.queryset %}
                             <div class="ui message warning icon">

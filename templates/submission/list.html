@@ -318,7 +318,7 @@
                 </a>
             </div>
 
-            <table id="submissions-table" class="ui table striped definition">
+            <table id="submissions-table" class="ui table striped definition celled">
                 <tbody>
                 {% set profile_id = request.profile.id if request.user.is_authenticated else 0 %}
                 {% for submission in submissions %}
@@ -333,15 +333,15 @@
         </div>
 
         <div id="content-right" class="submission column four wide ui">
-            <div class="ui segment" style="position: sticky; top: 80px">
+            <div style="position: sticky; top: 80px">
                 <div class="sidebox">
-                    <h3 class="ui header">
+                    <h3 class="ui header block attached top">
                         <i class="icon search"></i>
                         <div class="content">
                             {{ _('Filter submissions') }}
                         </div>
                     </h3>
-                    <div class="sidebox-content">
+                    <div class="sidebox-content ui segment attached bottom">
                         <form id="filter-form" name="form" action="{{ first_page_href }}" method="get" class="ui form">
                             <div class="filter-form-group field">
                                 <label for="status">
@@ -393,22 +393,18 @@
                         </form>
                     </div>
 
-                    <hr class="ui divider">
-
-                    <div id="statistics-table">
-                        <h3 class="ui header">
-                            <i class="icon pie chart"></i>
-                            <span class="content">
+                    <h3 class="ui header block attached top">
+                        <i class="icon pie chart"></i>
+                        <span class="content">
                             {{ _('Statistics') }}
                             </span>
-                        </h3>
-                        <div class="sidebox-content">
-                            <div id="status-graph">
-                                <canvas width="230" height="170"></canvas>
-                            </div>
-                            <div class="total">
-                                {{ _('Total:') }} <span id="total-submission-count"></span>
-                            </div>
+                    </h3>
+                    <div class="sidebox-content ui segment attached bottom">
+                        <div id="status-graph">
+                            <canvas width="230" height="170"></canvas>
+                        </div>
+                        <div class="total">
+                            {{ _('Total:') }} <span id="total-submission-count"></span>
                         </div>
                     </div>
                 </div>

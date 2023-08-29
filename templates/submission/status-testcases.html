@@ -83,7 +83,7 @@
                     <div class="batch-cases">
                 {% endif %}
             {% if can_view_testcase_status %}
-                <table class="submissions-status-table ui table striped">
+                <table class="submissions-status-table ui table">
                     {% for case in batch.cases %}
                         {% set current_test_case_count = test_case_counter() %}
                         {% set print_case_output = can_view_test and case.output %}
@@ -133,7 +133,7 @@
                         {% if has_extended_data %}
                             <tr id="{{ case.id }}-output" style="display:none" class="case-feedback toggled">
                                 <td colspan="5" class="case-output">
-                                    <div class="case-info">
+                                    <div class="markdown-body">
                                         {% if can_view_test and curr_data %}
                                             <strong>{{ _('Input:') }}</strong>
                                             <pre class="case-output">{{ curr_data['input']|linebreaksbr }}</pre>

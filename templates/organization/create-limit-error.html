@@ -5,8 +5,8 @@
     <br><br>
     {{ _('Below are a list of organizations in which you are the administrator:') }}
     {% for org in admin_of %}
-        <ui>
+        <ul>
             <li><a href="{{org.get_absolute_url()}}">{{org.name}}</a></li>
-        </ui>
+        </ul>
     {% endfor %}
 {% endblock %}
