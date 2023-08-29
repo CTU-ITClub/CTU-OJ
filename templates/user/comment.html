@@ -39,22 +39,21 @@
                     <div class="content">
                         <div class="author"
                              style="position: sticky; top: 50px; background: #fff; z-index: 1; padding: 20px 0">
-                                <span>
-                                    {{ link_user(comment.author) }}&nbsp;
-                                </span>
+                            {{ link_user(comment.author) }}&nbsp;
                             {% with abs=_('commented on {time}'), rel=_('commented {time}') %}
                                 {{ relative_time(comment.time, abs=abs, rel=rel) }}
-                                →
+                                <i class="icon arrow right"></i>
                                 <a href="{{ comment.link }}#comment-{{ comment.id }}">
                                     {{ comment.page_title }}
                                 </a>
                             {% endwith %}
-                            <span class="comment-spacer"></span>
                             <span class="comment-operation">
                                 {% if comment.revisions > 1 %}
                                     <span class="comment-edits">
                                         <a href="javascript:show_revision({{ comment.id }}, -1)"
-                                           class="previous-revision">&larr;</a>
+                                           class="previous-revision">
+                                            <i class="icon angle left"></i>
+                                        </a>
                                         <span class="comment-edit-text">
                                             {% if comment.revisions > 2 %}
                                                 {% trans edits=comment.revisions - 1 %}edit {{ edits }}{% endtrans %}
@@ -64,14 +63,16 @@
                                         </span>
                                         <a href="javascript:show_revision({{ comment.id }}, 1)"
                                            style="visibility: hidden"
-                                           class="next-revision">&rarr;</a>
+                                           class="next-revision">
+                                            <i class="icon angle right"></i>
+                                        </a>
                                     </span>
                                 {% else %}
                                     <span class="comment-edits"></span>
                                 {% endif %}
                                 <a href="{{ comment.link }}#comment-{{ comment.id }}" title="{{ _('Link') }}"
                                    class="comment-link">
-                                    <i class="fa fa-link fa-fw"></i>
+                                    <i class="icon linkify"></i>
                                 </a>
                             </span>
                         </div>
