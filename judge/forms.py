@@ -24,7 +24,7 @@ from judge.models import BlogPost, Contest, ContestAnnouncement, ContestProblem,
 from judge.utils.subscription import newsletter_id
 from judge.widgets import HeavyPreviewPageDownWidget, HeavySelect2MultipleWidget, HeavySelect2Widget, MartorWidget, \
     Select2MultipleWidget
-from judge.widgets.dropdown import DropdownWidget, DropdownMultipleWidget, HeavyDropdownMultipleWidget
+from judge.widgets.dropdown import DropdownMultipleWidget, DropdownWidget, HeavyDropdownMultipleWidget
 
 TOTP_CODE_LENGTH = 6
 
@@ -596,8 +596,9 @@ class ProposeContestProblemFormSet(
         Contest,
         ContestProblem,
         form=ProposeContestProblemForm,
-        can_delete=True,
-    )):
+        can_delete=True
+    )
+):
 
     def clean(self) -> None:
         """Checks that no Contest problems have the same order."""
