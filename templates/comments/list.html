@@ -19,7 +19,6 @@
                     </div>
                 </div>
 
-                <hr class="ui divider">
             {% else %}
                 <div class="ui message icon">
                     <i class="icon lock"></i>
@@ -33,21 +32,19 @@
             {% endif %}
         </div>
 
-        <div>
-            {% if not comment_lock and not has_comments %}
+        {% if not comment_lock and not has_comments %}
+            <div style="margin-top: 10px;">
                 <div class="ui message icon">
                     <i class="icon inbox"></i>
                     <div class="content">
                         <p>{{ _('There are no comments at the moment.') }}</p>
                     </div>
                 </div>
-            {% else %}
-                <div class="comment-header-space"></div>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
 
         {% if has_comments %}
-            <div class="panel-block">
+            <div class="ui segment">
                 <div class="ui threaded comments">
                     {% set logged_in = request.user.is_authenticated %}
                     {% set profile = request.profile if logged_in else None %}
@@ -205,14 +202,17 @@
         {% if request.user.is_authenticated and comment_form and not comment_lock %}
             <div id="new-comment">
                 {% block comment_submit_title %}
-                    <h3 class="ui header" style="margin-top: 10px">{{ _('New comment') }}</h3>
+                    <div class="ui header " style="margin-top: 20px;">
+                        <i class="icon edit"></i>
+                        {{ _('New comment') }}
+                    </div>
                 {% endblock %}
                 {% if is_new_user %}
-                    <div style="margin-bottom: 0" class="alert alert-info">
+                    <div style="margin-bottom: 0" class="ui message info attached bottom">
                         {{ interact_min_problem_count_msg }}
                     </div>
                 {% else %}
-                    <form class="comment-submit-form p-2" action="" method="post">
+                    <form class="comment-submit-form ui attached bottom" action="" method="post">
                         {% csrf_token %}
                         {% if comment_form.errors %}
                             <div id="form-errors">
