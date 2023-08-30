@@ -4,12 +4,14 @@
     {% block users_js_media %}{% endblock %}
     <script>
         $(function () {
-            $('#search-handle').replaceWith($('<select>').attr({
+            $('#search-handle').replaceWith($('<select class="ui search dropdown">').attr({
                 id: 'search-handle',
                 name: 'handle',
                 onchange: 'form.submit()'
             }));
+
             var in_user_redirect = false;
+
             $('#search-handle').select2({
                 theme: '{{ DMOJ_SELECT2_THEME }}',
                 placeholder: '{{ _('Search by handle...') }}',
@@ -33,10 +35,10 @@
             $(window).on('hashchange', function () {
                 var hash = window.location.hash;
                 if (hash.startsWith('#!')) {
-                    var $user = $('#user-' + hash.substring(2)).addClass('highlight');
+                    var $user = $('#user-' + hash.substring(2)).addClass('positive');
                     if ($user) {
                         $(document).scrollTop($user.position().top - 50);
-                        if ($last !== null) $last.removeClass('highlight');
+                        if ($last !== null) $last.removeClass('positive');
                         $last = $user;
                     }
                 }
@@ -51,10 +53,11 @@
 
 {% block body %}
     {% if page_obj and page_obj.has_other_pages() %}
-        <div class="top-pagination-bar">
+        <div class="top-pagination-bar" style="display: flex; justify-content: space-between">
             {% include "list-pages.html" %}
             {% if not organization %}
-                <form id="search-form" name="form" action="{{ url('user_ranking_redirect') }}" method="get">
+                <form id="search-form" name="form" action="{{ url('user_ranking_redirect') }}" class="ui form"
+                      method="get">
                     <input id="search-handle" type="text" name="search"
                            placeholder="{{ _('Search by handle...') }}">
                 </form>
