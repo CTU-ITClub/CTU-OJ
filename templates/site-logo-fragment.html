@@ -1,8 +1,17 @@
-{% if request.in_contest and request.participation.contest.logo_override_image %}
-    <img src="{{ request.participation.contest.logo_override_image|camo }}" alt="{{ SITE_NAME }}" height="30">
+{% if request.in_contest and request.participation.contest.logo_override_image
+%}
+<img
+  src="{{ request.participation.contest.logo_override_image|camo }}"
+  alt="{{ SITE_NAME }}"
+  height="30"
+/>
 {% elif logo_override_image is defined and logo_override_image %}
-    <img src="{{ logo_override_image|camo }}" alt="{{ SITE_NAME }}" height="30">
+<img src="{{ logo_override_image|camo }}" alt="{{ SITE_NAME }}" height="30" />
 {% else %}
-    <img src="{{ static('icons/logo.svg') }}" alt="{{ SITE_NAME }}" height="30"
-         onerror="this.src='{{ static('icons/logo.png') }}'; this.onerror=null">
+<img
+  src="{{ static('icons/logo.svg') }}"
+  alt="{{ SITE_NAME }}"
+  height="30"
+  onerror="this.src='{{ static('icons/logo.png') }}'; this.onerror=null"
+/>
 {% endif %}

@@ -67,7 +67,7 @@ VNOJ_HOMEPAGE_TOP_USERS_COUNT = 5
 VNOJ_DISPLAY_RANKS = (
     ('user', _('Normal User')),
     ('setter', _('Problem Setter')),
-    ('daor', _('Bedao Team')),
+    ('daor', _('CICT IT Club')),
     ('staff', _('Staff')),
     ('banned', _('Banned User')),
     ('admin', _('Admin')),
@@ -134,6 +134,11 @@ OJ_PROBLEM_PRESET = [
         'codename': 'CFGYM_%s_%s',
         'judge': 'CodeforcesGym',
     },
+    {
+        'regex': r'^https://dmoj\.ctu\.edu\.vn/problem/(?P<codename>\w+)$',
+        'codename': 'CTUOJ_%s',
+        'judge': 'CTUOJ',
+    },
 ]
 
 OJ_LIST = [
@@ -142,6 +147,7 @@ OJ_LIST = [
     ('CodeforcesGym', 'Codeforces (Gym)'),
     ('Kattis', 'Kattis'),
     ('VNOJ', 'VNOJ'),
+    ('CTUOJ', 'CTUOJ'),
 ]
 
 OJ_REQUESTS_TIMEOUT = 5  # in seconds
@@ -274,7 +280,8 @@ INLINE_JQUERY = True
 INLINE_FONTAWESOME = True
 JQUERY_JS = '//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'
 FONTAWESOME_CSS = '//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'
-DMOJ_CANONICAL = 'oj.vnoi.info'
+FONTAWESOME_CSS = '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'
+DMOJ_CANONICAL = 'dmoj.ctu.edu.vn'
 
 # Application definition
 
