@@ -33,12 +33,11 @@
 
     {% block meta %}{% endblock %}
     <link rel="stylesheet" href="{{ FONTAWESOME_CSS }}">
+    <link rel="stylesheet" href="{{ GITHUB_CSS }}">
+    <link rel="stylesheet" type="text/css" href="{{ TOASTIFY_CSS }}">
     {% compress css %}
         <link rel="stylesheet" href="{{ static('semantic.min.css') }}">
         <link rel="stylesheet" href="{{ static('github-markdown.css') }}">
-        <link rel="stylesheet" href="{{ static('github.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ static('toastify.min.css') }}">
-
         {# TODO: once dark mode support is better, enable for all users by deleting the else branch #}
         {% if perms.judge.test_site %}
             {% if PREFERRED_STYLE_CSS is not none %}
@@ -67,7 +66,7 @@
     <script src="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    
+
     {% compress js %}
         <script>{{ inlinei18n(LANGUAGE_CODE)|safe }}</script>
         {% if INLINE_JQUERY %}
