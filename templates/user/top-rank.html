@@ -99,6 +99,18 @@
         width: fit-content;
     }
 
+    .top-item.rank-1 {
+        animation: top_rank_item 2s ease forwards;
+    }
+
+    .top-item.rank-2 {
+        animation: top_rank_item 3s ease forwards;
+    }
+
+    .top-item.rank-3 {
+        animation: top_rank_item 4s ease forwards;
+    }
+
     .top-item.rank-1 .point {
         background: linear-gradient(#ffd607, #ffae00);
     }
@@ -171,6 +183,15 @@
         }
         to {
             transform: rotate(45deg);
+        }
+    }
+
+    @keyframes top_rank_item {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
         }
     }
 </style>
