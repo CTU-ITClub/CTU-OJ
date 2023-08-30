@@ -1,33 +1,44 @@
 {% extends "user/base-users-table.html" %}
 
 {% block user_name_display scoped %}
-    {% if user.virtual > 0 %}
-        {{ link_user(user) }}<sup class="virtual-participation"
-                                  title="{{ _("%(cnt)s virtual participation of this user", cnt=ordinal(user.virtual)) }}">[{{ user.virtual }}]</sup>
-    {% else %}
-        {{ link_user(user) }}
-    {% endif %}
+    <div style="position: relative">
+        {% if user.virtual > 0 %}
+            {{ link_user(user) }}
+            <span class="ui label left pointing mini blue basic"
+                  title="{{ _("%(cnt)s virtual participation of this user", cnt=ordinal(user.virtual)) }}">
+            {{ user.virtual }}
+        </span>
+        {% else %}
+            {{ link_user(user) }}
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block admin_operations %}
     {% if can_edit %}
-        <span class="contest-participation-operation">
+        <div class="contest-participation-operation" style="float:right; margin-bottom: 10px;">
             <form action="{{ url('contest_participation_disqualify', contest.key) }}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="participation" value="{{ user.participation.id }}">
                 {% if user.participation.is_disqualified %}
                     <a href="#" title="{{ _('Un-Disqualify') }}"
-                       class="un-disqualify-participation"><i class="fa fa-undo fa-fw"></i></a>
+                       class="un-disqualify-participation ui button basic mini icon circular">
+                        <i class="icon undo blue"></i>
+                    </a>
                 {% else %}
                     <a href="#" title="{{ _('Disqualify') }}"
-                       class="disqualify-participation"><i class="fa fa-trash fa-fw"></i></a>
+                       class="disqualify-participation ui button basic mini circular icon">
+                        <i class="icon trash red"></i>
+                    </a>
                 {% endif %}
             </form>
             {% if perms.judge.change_contestparticipation %}
                 <a href="{{ url('admin:judge_contestparticipation_change', user.participation.id) }}"
-                   title="{{ _('Admin') }}" class="edit-participation"><i class="fa fa-cog fa-fw"></i></a>
+                   title="{{ _('Admin') }}" class="edit-participation ui button basic mini icon circular">
+                    <i class="icon cog"></i>
+                </a>
             {% endif %}
-        </span>
+        </div>
     {% endif %}
 {% endblock %}
 
@@ -47,9 +58,9 @@
 
 {% block personal_info_data scoped %}
     {% if user.organization %}
-        <span class="organization"><a href="{{ user.organization.get_absolute_url() }}">
+        <a class="ui label black" href="{{ user.organization.get_absolute_url() }}">
             {{- user.organization.short_name -}}
-        </a></span>
+        </a>
     {% endif %}
 {% endblock %}
 

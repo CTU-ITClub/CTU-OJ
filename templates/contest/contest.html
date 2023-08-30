@@ -236,21 +236,20 @@
             {% set in_contest = contest.is_in_contest(request.user) %}
             {% if in_contest or contest.ended or request.user.is_superuser or is_editor or is_tester %}
                 <div class="contest-problems">
-                    <h2 class="ui header" style="float:left;">
+                    <h2 class="ui header block attached top" style="display:flex;">
                         <i class="icon question circle outline"></i>
-                        <div class="content">
+                        <div class="content" style="flex: 1">
                             {{ _('Problems') }}
                         </div>
+                        {% if can_edit and can_download_data %}
+                            <a class="ui button green" href="{{ url('contest_prepare_data', contest.key) }}">
+                                <i class="icon download"></i>
+                                {{ _('Download data') }}
+                            </a>
+                        {% endif %}
                     </h2>
-                    {% if can_edit and can_download_data %}
-                        <a class="ui button green" style="float:right;"
-                           href="{{ url('contest_prepare_data', contest.key) }}">
-                            <i class="icon download"></i>
-                            {{ _('Download data') }}
-                        </a>
-                    {% endif %}
 
-                    <table class="ui table celled fixed">
+                    <table class="ui table celled fixed attached bottom">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -321,17 +320,14 @@
                             </tr>
                         {% endfor %}
 
-                        <tr>
-                            <td colspan="{% if metadata.has_public_editorials %}5{% else %}4{% endif %} ">
-                                <a class="ui button success" href="{{ url('contest_all_problems', contest.key) }}">
-                                    <i class="icon list"></i>
-                                    {{ _('All problems') }}
-                                </a>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
 
+                    <a class="ui button success" href="{{ url('contest_all_problems', contest.key) }}"
+                       style="margin-top: 10px;">
+                        <i class="icon list"></i>
+                        {{ _('All problems') }}
+                    </a>
 
                 </div>
 
@@ -339,13 +335,13 @@
 
                 {% if has_announcements or can_edit %}
                     <div class="contest-clartifications">
-                        <h2 class="ui header">
+                        <h2 class="ui header block attached top">
                             <i class="icon bell outline"></i>
                             <div class="content">
                                 {{ _('Announcements') }}
                             </div>
                         </h2>
-                        <table id="contest-clartifications" class="ui table celled fixed">
+                        <table id="contest-clartifications" class="ui table celled fixed attached bottom">
                             <thead>
                             <tr>
                                 <th>{{ _('When') }}</th>
@@ -367,19 +363,16 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-                            {% if can_edit %}
-                                <tr>
-                                    <td colspan="3">
-                                        <a class="ui button"
-                                           href="{{ url('contest_announce', contest.key) }}">
-                                            <i class="icon paper plane"></i>
-                                            {{ _('Add an announcement') }}
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endif %}
+
                             </tbody>
                         </table>
+                        {% if can_edit %}
+                            <a class="ui button"
+                               href="{{ url('contest_announce', contest.key) }}" style="margin-top: 10px;">
+                                <i class="icon paper plane"></i>
+                                {{ _('Add an announcement') }}
+                            </a>
+                        {% endif %}
                     </div>
                     <hr class="ui divider"/>
                 {% endif %}
@@ -387,11 +380,11 @@
 
                 {% if has_clarifications %}
                     <div class="contest-clartifications">
-                        <h2 class="ui header">
+                        <h2 class="ui header block attached top">
                             <i class="icon file outline"></i>
                             {{ _('Clarifications') }}
                         </h2>
-                        <table id="contest-clartifications" class="ui table striped celled">
+                        <table id="contest-clartifications" class="ui table striped celled attached bottom">
                             <thead>
                             <tr>
                                 <th>{{ _('When') }}</th>
