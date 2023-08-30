@@ -26,7 +26,7 @@
         {% if show_problem %}
             <a class="content" href="{{ url('problem_detail', submission.problem.code) }}">{{ problem_name }}</a>
         {% endif %}
-        <div class="sub header">
+        <div class="sub header" style="display: flex; align-items: center">
             {{ link_user(submission.user) }}
             <span class="time">{{ relative_time(submission.date) }}</span>
             {% if not request.in_contest and submission.contest_object_id %}

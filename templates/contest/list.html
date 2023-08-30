@@ -331,9 +331,10 @@
             {{ _('Past contests') }}
         </h4>
         {% if page_obj or search_query %}
-            <div class="ui segment attached bottom top">
+            <div class="ui segment attached bottom top"
+                 style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap">
                 {% include "list-pages.html" %}
-                <div style="display: flex; align-items: center; float:right;">
+                <div style="display: flex; align-items: center;">
                     <form id="search-form" name="form" action="" method="get" class="ui form">
                         <input id="search" type="text" name="search" value="{{ search_query or '' }}"
                                placeholder="{{ _('Search contest...') }}">

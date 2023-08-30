@@ -113,11 +113,15 @@
 {% block body %}
     {% include "messages.html" %}
 
-    <div class="panes">
+    <div class="ui grid stackable">
         {% if request.user.has_perm('judge.rejudge_submission_lot') %}
-            <div class="pane">
-                <h3>{{ _('Rejudge Submissions') }}</h3>
-                <form action="{{ url('problem_submissions_rejudge', problem.code) }}" method="post" class="ui form">
+            <div class="column six wide">
+                <h3 class="ui header block attached top">
+                    <i class="icon refresh"></i>
+                    {{ _('Rejudge Submissions') }}
+                </h3>
+                <form action="{{ url('problem_submissions_rejudge', problem.code) }}" method="post"
+                      class="ui form attached bottom segment">
                     {% csrf_token %}
                     <div class="control-group">
                         <div class="field">
@@ -163,35 +167,50 @@
             </div>
         {% endif %}
 
-        <div class="pane">
-            <h3>{{ _('Rescore Everything') }}</h3>
-            <p id="rescore-warning">{% trans trimmed count=submission_count %}
-                This will rescore {{ count }} submission.
-                {% pluralize %}
-                This will rescore {{ count }} submissions.
-            {% endtrans %}</p>
-            <form action="{{ url('problem_submissions_rescore_all', problem.code) }}" method="post" class="ui form">
-                {% csrf_token %}
-                <a id="rescore-all" class="ui button primary" href="#"
-                   data-warning="{% trans trimmed count=submission_count %}
+        <div class="column five wide">
+            <h3 class="ui header block attached top">
+                <i class="icon refresh"></i>
+                {{ _('Rescore Everything') }}
+            </h3>
+            <div class="ui segment attached bottom">
+                <div class="ui message warning" id="rescore-warning">
+                    <div class="content">
+                        {% trans trimmed count=submission_count %}
+                            This will rescore {{ count }} submission.
+                            {% pluralize %}
+                            This will rescore {{ count }} submissions.
+                        {% endtrans %}
+                    </div>
+                </div>
+                <form action="{{ url('problem_submissions_rescore_all', problem.code) }}" method="post" class="ui form">
+                    {% csrf_token %}
+                    <a id="rescore-all" class="ui button primary" href="#"
+                       data-warning="{% trans trimmed count=submission_count %}
                                     Are you sure you want to rescore {{ count }} submission?
                                  {% pluralize %}
                                     Are you sure you want to rescore {{ count }} submissions?
                                  {% endtrans %}">
-                    {{ _('Rescore all submissions') }}
-                </a>
-            </form>
+                        {{ _('Rescore all submissions') }}
+                    </a>
+                </form>
+            </div>
         </div>
 
-        <div class="pane">
-            <h3>{{ _('Compare Submissions') }}</h3>
-            <div class="field">
-                <label for="id_user">{{ _('Filter by user:') }}</label>
-                {{ form_compare.user }}
+        <div class="column five wide">
+            <h3 class="ui header block attached top">
+                <i class="icon search"></i>
+                {{ _('Compare Submissions') }}
+            </h3>
+            <div class="ui segment attached bottom">
+                <div class="field">
+                    <label for="id_user">{{ _('Filter by user:') }}</label>
+                    {{ form_compare.user }}
+                </div>
+                <hr class="ui divider"/>
+                <a id="compare" class="ui button primary" href="#">
+                    {{ _('Compare submissions') }}
+                </a>
             </div>
-            <a id="compare" class="ui button primary" href="#">
-                {{ _('Compare submissions') }}
-            </a>
         </div>
     </div>
 {% endblock %}

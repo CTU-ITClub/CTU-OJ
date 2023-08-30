@@ -1,0 +1,210 @@
+<script type="module">
+    import confetti from 'https://cdn.skypack.dev/canvas-confetti';
+
+    confetti()
+</script>
+
+<style>
+    .top-rank {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: end;
+        background: linear-gradient(180deg, rgb(13, 239, 98), rgb(2, 150, 49));
+        padding-top: 40px;
+        padding-right: 20px;
+        padding-left: 20px;
+        overflow: hidden;
+        border-radius: 5px;
+        user-select: none;
+    }
+
+    .top-item {
+        width: 30%;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 150px;
+    }
+
+    .top-item h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-top: 20px;
+        margin-bottom: 50px;
+        text-align: center;
+    }
+
+    .top-item h3 img {
+        display: none !important;
+    }
+
+    .top-item h3 a {
+        color: #fff !important;
+    }
+
+    .top-item .avt {
+        width: 96px;
+        height: 96px;
+        border-radius: 100px;
+        border: 4px solid #ddd;
+    }
+
+    .top-item .point {
+        position: relative;
+        background: #ccc;
+        width: 100%;
+        height: 200px;
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .top-item .point::after {
+        content: '';
+        z-index: 1;
+        width: 100%;
+        height: 30px;
+        position: absolute;
+        bottom: calc(100%);
+        left: 0;
+        background: #ddd;
+        clip-path: polygon(
+                20% 0,
+                80% 0,
+                100% 100%,
+                0 100%
+        );
+        z-index: -1;
+    }
+
+    .top-item .point span {
+        display: block;
+        font-weight: 900;
+        text-shadow: 0 4px 2px #00000020;
+        font-size: 20px;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .top-item .point .label {
+        background: #aaa;
+        color: #fff;
+        padding: 7px 10px 5px 10px;
+        border-radius: 5px;
+        font-weight: 700;
+        width: fit-content;
+    }
+
+    .top-item.rank-1 .point {
+        background: linear-gradient(#ffd607, #ffae00);
+    }
+
+    .top-item.rank-1 .point::after {
+        background: #ffe367;
+    }
+
+    .top-item.rank-1 .point .label {
+        background: #9f6f00;
+    }
+
+    .top-item.rank-2 .avt {
+        border-color: #ffffff !important;
+    }
+
+    .top-item.rank-2 .point {
+        background: linear-gradient(#9fd4d9, #85a7ab);
+        height: 150px;
+    }
+
+    .top-item.rank-2 .point::after {
+        background: #c4faff;
+        clip-path: polygon(
+                20% 0,
+                100% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .top-item.rank-2 .point .label {
+        background: rgba(0, 0, 0, 0.22);
+    }
+
+    .top-item.rank-3 .point {
+        background: linear-gradient(#ccac69, #c99f39);
+        height: 100px;
+    }
+
+    .top-item.rank-3 .point::after {
+        background: #f6d490;
+        clip-path: polygon(
+                0 0,
+                80% 0,
+                100% 100%,
+                0 100%
+        );
+    }
+
+    .top-item.rank-3 .point .label {
+        background: rgba(0, 0, 0, 0.22);
+    }
+
+    .top-rank::before {
+        content: '';
+        position: absolute;
+        width: 150px;
+        background: linear-gradient(#ffffff00, #ffffff);
+        height: 100%;
+        top: 0;
+        clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+        animation: top_rank_light 5s alternate infinite ease;
+        transform-origin: bottom;
+    }
+
+    @keyframes top_rank_light {
+        from {
+            transform: rotate(-45deg);
+        }
+        to {
+            transform: rotate(45deg);
+        }
+    }
+</style>
+
+{% macro top_item(item, rank, rank_text) %}
+    <div class="top-item rank-{{ rank }}">
+        {% if item %}
+            <img src="{{ gravatar(item.user, 512) }}" class="avt"/>
+            <h3>
+                {{ link_user(item.user) }}
+            </h3>
+        {% endif %}
+        <div class="point">
+                <span>
+                    {{ rank_text }}
+                </span>
+            <div class="label">
+                <i class="icon trophy"></i>
+                {% if item %}
+                    {% if item.rating %}
+                        {{ item.rating }}
+                    {% else %}
+                        0
+                    {% endif %}
+                {% else %}
+                    ---
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+<div class="top-rank">
+    {{ top_item(object_list[1], 2, '2nd') }}
+    {{ top_item(object_list[0], 1, '1st') }}
+    {{ top_item(object_list[2], 3, '3rd') }}
+</div>

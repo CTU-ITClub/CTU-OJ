@@ -1,21 +1,7 @@
 {% spaceless %}
-    {#    <div class="ui cards">#}
-    {#        {% for rank, user in users %}#}
-    {#            <div class="ui card">#}
-    {#                <div class="image">#}
-    {#                    <img src="{{ gravatar(user.user, 512) }}">#}
-    {#                </div>#}
-    {#                <div class="content">#}
-    {#                    <div class="header">#}
-    {#                        {{ user.user }}#}
-    {#                    </div>#}
-    {#                </div>#}
-    {#            </div>#}
-    {#        {% endfor %}#}
-    {#    </div>#}
-    <table {% if table_id %}id="{{ table_id }}"{% endif %} class="ui table celled striped">
+    <table {% if table_id %}id="{{ table_id }}"{% endif %} class="ui table celled striped aligned centered">
         <thead>
-        <tr>
+        <tr class="center aligned">
             <th class="header rank" style="width: 5%;">{{ rank_header or _("Rank") }}</th>
             {% block after_rank_head %}{% endblock %}
             <th class="header username">{{ _('Username') }}</th>
@@ -34,27 +20,27 @@
         <tbody>
         {% for rank, user in users %}
             <tr id="user-{{ user.user.username }}" {% block row_extra scoped %}{% endblock %}>
-                <td>
+                <td class="center aligned">
                     {{ rank }}
                 </td>
                 {% block after_rank scoped %}{% endblock %}
                 <td class="user-name">
-                    <div>
-                        <div style="float:left">
+                    <div style="display: flex; align-items: center; justify-content: space-between">
+                        <div style="float:left; margin-top: 5px;">
                             {% block user_name_display scoped %} {{ link_user(user) }} {% endblock %}
                             <div class="personal-info">
                                 {% block personal_info_display scoped %}
-                                    <span>{{ user.user.first_name }}</span>
+                                    <strong>{{ user.user.first_name }}</strong>
                                 {% endblock %}
                             </div>
                         </div>
-                        <div style="float:right">
+                        <div style="float: right;">
                             {% block user_name_data scoped %}{% endblock %}
                             {% block admin_operations scoped %}{% endblock %}
-                            <div class="personal-info" style="text-align: right;">
+                            <div class="personal-info" style="text-align: right; margin-right: 5px;">
                                 {% block personal_info_data scoped %}
                                     {% for organization in user.organizations.all() %}
-                                        <a href="{{ organization.get_absolute_url() }}" class="ui mini black label">
+                                        <a href="{{ organization.get_absolute_url() }}" class="ui label mini black">
                                             {% if organization.logo_override_image %}
                                                 <img alt="{{ organization.name }}"
                                                      src="{{ organization.logo_override_image }}"
@@ -69,7 +55,7 @@
                     </div>
                     {% block before_point scoped %}{% endblock %}
                     {% block point scoped %}
-                        <td title="{{ user.performance_points|floatformat(2) }}" class="user-points">
+                        <td title="{{ user.performance_points|floatformat(2) }}" class="user-points center aligned">
                             {{ user.performance_points|floatformat(2) }}
                         </td>
                     {% endblock %}

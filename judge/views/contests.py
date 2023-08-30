@@ -74,7 +74,7 @@ class ContestListMixin(object):
         if self.hide_private_contests is not None:
             if 'hide_private_contests' in self.request.GET:
                 self.hide_private_contests = self.request.session['hide_private_contests'] \
-                                           = self.request.GET.get('hide_private_contests').lower() == 'true'
+                    = self.request.GET.get('hide_private_contests').lower() == 'true'
             else:
                 self.hide_private_contests = self.request.session.get('hide_private_contests', False)
 
@@ -288,8 +288,7 @@ class ContestDetail(ContestMixin, TitleMixin, CommentedDetailView):
                 When(solution__is_public=True, solution__publish_on__lte=timezone.now(), then=True),
                 default=False,
                 output_field=BooleanField(),
-            )) \
-            .add_i18n_name(self.request.LANGUAGE_CODE)
+            )).add_i18n_name(self.request.LANGUAGE_CODE)
 
         # convert to problem points in contest instead of actual points
         points_list = list(self.object.contest_problems.values_list('points').order_by('order'))
@@ -775,7 +774,7 @@ class ContestStats(TitleMixin, ContestMixin, DetailView):
 
         status_count_queryset = list(
             queryset.values('problem__code', 'result').annotate(count=Count('result'))
-                    .values_list('problem__code', 'result', 'count'),
+            .values_list('problem__code', 'result', 'count'),
         )
         labels, codes = [], []
         contest_problems = self.object.contest_problems.order_by('order').values_list('problem__name', 'problem__code')
@@ -798,15 +797,15 @@ class ContestStats(TitleMixin, ContestMixin, DetailView):
             ),
             'problem_ac_rate': get_bar_chart(
                 queryset.values('contest__problem__order', 'problem__name').annotate(ac_rate=ac_rate)
-                        .order_by('contest__problem__order').values_list('problem__name', 'ac_rate'),
+                .order_by('contest__problem__order').values_list('problem__name', 'ac_rate'),
             ),
             'language_count': get_pie_chart(
                 queryset.values('language__name').annotate(count=Count('language__name'))
-                        .filter(count__gt=0).order_by('-count').values_list('language__name', 'count'),
+                .filter(count__gt=0).order_by('-count').values_list('language__name', 'count'),
             ),
             'language_ac_rate': get_bar_chart(
                 queryset.values('language__name').annotate(ac_rate=ac_rate)
-                        .filter(ac_rate__gt=0).values_list('language__name', 'ac_rate'),
+                .filter(ac_rate__gt=0).values_list('language__name', 'ac_rate'),
             ),
         }
 
@@ -912,7 +911,6 @@ class ContestRankingBase(ContestMixin, TitleMixin, DetailView):
 
     def get_rendered_ranking_table(self):
         users, problems, total_ac = self.get_ranking_list()
-
         return self.ranking_table_template.render(request=self.request, context={
             'table_id': 'ranking-table',
             'users': users,
@@ -933,6 +931,7 @@ class ContestRankingBase(ContestMixin, TitleMixin, DetailView):
 
         context['rendered_ranking_table'] = self.get_rendered_ranking_table()
         context['tab'] = self.tab
+
         return context
 
     def get(self, request, *args, **kwargs):
@@ -979,7 +978,7 @@ class ContestRanking(ContestRankingBase):
     def get_full_ranking_list(self):
         if 'show_virtual' in self.request.GET:
             self.show_virtual = self.request.session['show_virtual'] \
-                              = self.request.GET.get('show_virtual').lower() == 'true'
+                = self.request.GET.get('show_virtual').lower() == 'true'
         else:
             self.show_virtual = self.request.session.get('show_virtual', False)
 
@@ -1159,7 +1158,7 @@ class ContestMossView(ContestMossMixin, TitleMixin, DetailView):
         context = super().get_context_data(**kwargs)
 
         problems = list(map(attrgetter('problem'), self.object.contest_problems.order_by('order')
-                                                              .select_related('problem')))
+                            .select_related('problem')))
         languages = list(map(itemgetter(0), ContestMoss.LANG_MAPPING))
 
         results = ContestMoss.objects.filter(contest=self.object)
@@ -1350,17 +1349,19 @@ class ContestPrepareData(ContestDataMixin, TitleMixin, SingleObjectMixin, FormVi
     template_name = 'contest/prepare-data.html'
     form_class = ContestDownloadDataForm
 
+    def __init__(self, **kwargs):
+        super().__init__(kwargs)
+        self.object = None
+
     @cached_property
     def _now(self):
         return timezone.now()
 
     @cached_property
     def can_prepare_data(self):
-        return (
-            self.object.data_last_downloaded is None or
-            self.object.data_last_downloaded + settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT < self._now or
-            not os.path.exists(self.data_path)
-        )
+        return (self.object.data_last_downloaded is None or
+                self.object.data_last_downloaded + settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT < self._now or
+                not os.path.exists(self.data_path))
 
     @cached_property
     def data_cache_key(self):
@@ -1398,9 +1399,8 @@ class ContestPrepareData(ContestDataMixin, TitleMixin, SingleObjectMixin, FormVi
         context['ratelimit'] = settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT
 
         if not self.can_prepare_data:
-            context['time_until_can_prepare'] = (
-                settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT - (self._now - self.object.data_last_downloaded)
-            )
+            context['time_until_can_prepare'] = (settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT -
+                                                 (self._now - self.object.data_last_downloaded))
         return context
 
     def get(self, request, *args, **kwargs):
