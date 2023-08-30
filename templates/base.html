@@ -77,8 +77,6 @@
 
         <script src="{{ static('semantic/semantic.js') }}"></script>
 
-        <script src="{{ static('dmmd-preview.js') }}" type="module"></script>
-
         <script src="{{ static('libs/jquery-taphold.js') }}"></script>
         <script src="{{ static('libs/jquery.unveil.js') }}"></script>
         <script src="{{ static('libs/moment.js') }}"></script>
@@ -116,6 +114,7 @@
             });
         </script>
     {% endcompress %}
+    <script src="{{ static('dmmd-preview.js') }}" type="module"></script>
     {% block js_media %}{% endblock %}
     {% if EVENT_LAST_MSG %}
         <script>
