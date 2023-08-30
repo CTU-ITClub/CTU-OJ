@@ -14,7 +14,7 @@
 {% block body %}
     {% block before_comments %}{% endblock %}
 
-    <div class="ui grid">
+    <div class="ui grid stackable">
         <form action="{{ url('user_comment', user.username) }}" method="post" class="column four wide">
             {% csrf_token %}
             <button type="submit" class="ui button red" style="width: 100%; position: sticky; top: 80px">

@@ -157,7 +157,7 @@ def link_user(user):
     if isinstance(profile, Profile) and profile.display_badge:
         display_badge_img = f'<img src="{escape(profile.display_badge.mini)}"' \
                             f' title="{escape(profile.display_badge.name)}"' \
-                            f' style="height: 24px; width: auto; margin: 0.25em;" />'
+                            f' style="height: 15px; width: auto; margin: 0.25em;" />'
     else:
         display_badge_img = ''
 
@@ -165,7 +165,7 @@ def link_user(user):
                      f'<a href="{escape(reverse("user_page", args=[user.username]))}"'
                      f' style="display: inline-flex; align-items: center; gap: 5px">'
                      f'<img class="ui avatar image" '
-                     f'style="border-radius: 200px !important; width: 24px; height: 24px"'
+                     f'style="border-radius: 200px !important; width: 24px; height: 24px; margin: 0"'
                      f'src="{gravatar(profile.user, 64)}" />'
                      f'{escape(profile.display_name)}</a>{display_badge_img}</div>')
 

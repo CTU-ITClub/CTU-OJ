@@ -24,7 +24,7 @@ from judge.models import BlogPost, Contest, ContestAnnouncement, ContestProblem,
 from judge.utils.subscription import newsletter_id
 from judge.widgets import HeavyPreviewPageDownWidget, HeavySelect2MultipleWidget, HeavySelect2Widget, MartorWidget, \
     Select2MultipleWidget
-from judge.widgets.dropdown import DropdownMultipleWidget, DropdownWidget, HeavyDropdownMultipleWidget
+from judge.widgets.dropdown import DropdownMultipleWidget, DropdownWidget
 
 TOTP_CODE_LENGTH = 6
 
@@ -229,7 +229,7 @@ class ProblemEditForm(ModelForm):
             'group': DropdownWidget,
             'testcase_visibility_mode': DropdownWidget,
             'description': MartorWidget(attrs={'data-markdownfy-url': reverse_lazy('problem_preview')}),
-            'testers': HeavyDropdownMultipleWidget(
+            'testers': HeavySelect2MultipleWidget(
                 data_view='profile_select2',
                 attrs={'style': 'width: 100%'},
             ),

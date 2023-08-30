@@ -32,9 +32,9 @@
         </div>
     </div>
 
-    <div class="content" style="flex: 1">
-        <div class="summary" style="position:sticky; top: 58px; background: #fff; z-index: 1;">
-            <h2 class="ui header" style="margin-bottom: 5px;">
+    <div class="content" style="flex: 1; overflow: hidden">
+        <div class="summary" style="background: #fff; z-index: 1;">
+            <h2 class="ui header" style="margin-bottom: 5px; position: sticky;">
                 {% if not post.visible %}
                     <i class="icon lock"></i>
                 {% endif %}
@@ -60,7 +60,6 @@
             <hr class="ui divider"/>
         </div>
 
-
         <div class="extra markdown-body">
             {% cache 86400 'post_summary' post.id %}
                 {{ post.summary|default(post.content, true)|markdown('blog', 'svg', lazy_load=True)|reference|str|safe }}
@@ -71,12 +70,14 @@
         </div>
         <hr class="ui divider"/>
 
-        <i class="icon pencil"></i>
-        {% with authors=post.authors.all() %}
-            {%- if authors -%}
-                {{ link_users(authors) }}
-            {%- endif -%}
-        {% endwith %}
+        <div style="display:flex; align-items: center">
+            <i class="icon pencil"></i>
+            {% with authors=post.authors.all() %}
+                {%- if authors -%}
+                    {{ link_users(authors) }}
+                {%- endif -%}
+            {% endwith %}
+        </div>
 
         <hr class="ui divider"/>
 
