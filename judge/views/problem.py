@@ -1,7 +1,6 @@
 import logging
 import os
 import re
-import zipfile
 from datetime import timedelta
 from operator import itemgetter
 from random import randrange
@@ -273,7 +272,7 @@ class ProblemPdfView(ProblemMixin, SingleObjectMixin, View):
                 except ProblemTranslation.DoesNotExist:
                     trans = None
 
-                problem_name = trans.problem_name if trans else problem.name
+                problem_name = trans.name if trans else problem.name
                 return render_pdf(
                     html=get_template('problem/raw.html').render({
                         'problem': problem,
@@ -384,8 +383,9 @@ class ProblemList(QueryStringSortMixin, TitleMixin, SolvedProblemMixin, ListView
         queryset = Problem.objects.filter(_filter).select_related('group').defer('description', 'summary')
 
         if self.profile is not None and self.hide_solved:
-            queryset = queryset.exclude(id__in=Submission.objects.filter(user=self.profile, points=F('problem__points'))
-                                        .values_list('problem__id', flat=True))
+            queryset = queryset.exclude(id__in=Submission.objects
+                                        .filter(user=self.profile, result='AC', case_points__gte=F('case_total'))
+                                        .values_list('problem_id', flat=True))
         if self.show_types:
             queryset = queryset.prefetch_related('types')
         queryset = queryset.annotate(has_public_editorial=Case(
@@ -670,22 +670,11 @@ class ProblemSubmit(LoginRequiredMixin, ProblemMixin, TitleMixin, SingleObjectFo
                 self.new_submission.save()
 
             submission_file = form.files.get('submission_file', None)
-            if submission_file is not None:
-                if self.new_submission.language.key == 'SCRATCH':
-                    try:
-                        archive = zipfile.ZipFile(submission_file.file)
-                        submission_file.file = archive.open('project.json')
-                        submission_file.name = 'dummy.json'
-                    except (zipfile.BadZipFile, KeyError):
-                        pass
-
-                source_url = submission_uploader(
-                    submission_file=submission_file,
-                    problem_code=self.new_submission.problem.code,
-                    user_id=self.new_submission.user.user.id,
-                )
-            else:
-                source_url = ''
+            source_url = submission_uploader(
+                submission_file=submission_file,
+                problem_code=self.new_submission.problem.code,
+                user_id=self.new_submission.user.user.id,
+            ) if submission_file else ''
 
             source = SubmissionSource(submission=self.new_submission, source=form.cleaned_data['source'] + source_url)
             source.save()
