@@ -1,3 +1,5 @@
 {% for user in users -%}
-    {{ link_user(user) }}{% if not loop.last %}, {% endif %}
+    {{ link_user(user) }}{% if not loop.last %}
+        <i class="icon angle right grey"></i>
+    {% endif %}
 {%- endfor %}
