@@ -59,7 +59,7 @@
             <div class="ui container">
                 {% include "blog/blog-list-tabs.html" %}
             </div>
-            <div class="sidebox-content ui feed container">
+            <div class="sidebox-content ui feed">
                 {% for post in posts %}
                     {% include "blog/blog-post.html" %}
                 {% endfor %}
@@ -109,9 +109,11 @@
                                     <div class="header">
                                         <a href="{{ url('ticket', ticket.id) }}">{{ ticket.title }}</a>
                                     </div>
+
                                     <a href="{{ ticket.linked_item.get_absolute_url() }}">
                                         {{ ticket.linked_item|item_title|truncatechars_html(30) }}</a>
-                                    <div class="author">{{ link_user(ticket.user) }}</div>
+
+                                    <div class="author" style="margin-top: 5px;">{{ link_user(ticket.user) }}</div>
                                 </div>
                             </div>
                         {% endfor %}

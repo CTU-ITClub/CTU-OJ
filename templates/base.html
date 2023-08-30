@@ -288,6 +288,7 @@
 
         pre.line {
             margin: 0;
+            display: block;
         }
 
         .codehilite {
@@ -477,7 +478,7 @@
             #page-header::before {
                 content: '';
                 width: 100px;
-                height: 200px;
+                height: 100%;
                 background: #ffffff20;
                 position: absolute;
                 top: 0;
@@ -740,7 +741,7 @@
         <div id="noscript">{{ _('This site works best with JavaScript enabled.') }}</div>
     </noscript>
 
-    <main id="content" class="ui container" style="padding: 0 20px; min-height: calc(100vh - 410px)">
+    <main id="content" class="ui container" style="min-height: calc(100vh - 410px)">
         {% if misc_config.top_notification %}
             {{ render_django(misc_config.top_notification) }}
         {% endif %}
@@ -765,7 +766,8 @@
         <div id="announcement">{{ misc_config.announcement|safe }}</div>
     {% endif %}
 
-    <footer class="ui footer segment inverted" style="border-radius: 0; padding: 50px 0; margin-top: 50px;">
+    <footer class="ui footer segment inverted"
+            style="border-radius: 0; padding: 50px 0; margin-top: 50px; margin-bottom: 0;">
         <div id="footer-content" class="ui container aligned">
             <div class="ui stackable grid">
                 <div class="column eight wide">
@@ -899,32 +901,31 @@
                     {% if request.participation.spectate %}
                         {{ _('spectating') }}
                     {% elif request.participation.end_time %}
-                        <div id="contest-time-remaining" data-secs="{{ request.participation.time_remaining|seconds }}"
-                        ">
-                        {{ request.participation.time_remaining|timedelta("localized") }}
+                        <div id="contest-time-remaining" data-secs="{{ request.participation.time_remaining|seconds }}">
+                            {{ request.participation.time_remaining|timedelta("localized") }}
                         </div>
                     {% else %}
                         {{ _('virtual') }}
                     {% endif %}
-            </a>
-
-            {% if current_contest.can_see_own_scoreboard(request.user) %}
-                <a href="{{ url('contest_ranking', current_contest.key) }}" class="ui button green">
-                    {{ _('Go to Rankings') }}
                 </a>
-            {% endif %}
-        </div>
+
+                {% if current_contest.can_see_own_scoreboard(request.user) %}
+                    <a href="{{ url('contest_ranking', current_contest.key) }}" class="ui button green">
+                        {{ _('Go to Rankings') }}
+                    </a>
+                {% endif %}
+            </div>
         </div>
     {% endif %}
 
-<script>
-    $('select.dropdown').dropdown();
-    $('.ui.accordion').accordion();
+    <script>
+        $('select.dropdown').dropdown();
+        $('.ui.accordion').accordion();
 
-    $('#show-on-mobile').click(() => {
-        $('#mobile-nav').sidebar('toggle');
-    })
-</script>
+        $('#show-on-mobile').click(() => {
+            $('#mobile-nav').sidebar('toggle');
+        })
+    </script>
 </div>
 </body>
 </html>
