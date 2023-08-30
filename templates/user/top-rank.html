@@ -1,0 +1,67 @@
+<div class="ui cards link compact three" style="max-width: 800px; margin: 0 auto">
+    {% if object_list[2] %}
+        <div class="ui card">
+            <div class="image rounded">
+                <img src="{{ gravatar(object_list[2].user, 512) }}">
+            </div>
+            <div class="content">
+                <div class="header">
+                    {{ link_user(object_list[2].user) }}
+                </div>
+            </div>
+
+            <button class="ui button attached bottom brown large">
+                <i class="icon trophy"></i>
+                {% if object_list[2].rating %}
+                    {{ object_list[2].rating }}
+                {% else %}
+                    0
+                {% endif %}
+            </button>
+        </div>
+    {% endif %}
+
+    {% if object_list[0] %}
+        <div class="ui card">
+            <div class="image rounded">
+                <img src="{{ gravatar(object_list[0].user, 512) }}">
+            </div>
+            <div class="content">
+                <div class="header">
+                    {{ link_user(object_list[0].user) }}
+                </div>
+            </div>
+
+            <button class="ui button attached bottom yellow large">
+                <i class="icon trophy"></i>
+                {% if object_list[0].rating %}
+                    {{ object_list[0].rating }}
+                {% else %}
+                    0
+                {% endif %}
+            </button>
+        </div>
+    {% endif %}
+
+    {% if object_list[1] %}
+        <div class="ui card">
+            <div class="image rounded">
+                <img src="{{ gravatar(object_list[1].user, 512) }}">
+            </div>
+            <div class="content">
+                <div class="header">
+                    {{ link_user(object_list[1].user) }}
+                </div>
+            </div>
+
+            <button class="ui button attached bottom large">
+                <i class="icon trophy"></i>
+                {% if object_list[1].rating %}
+                    {{ object_list[1].rating }}
+                {% else %}
+                    0
+                {% endif %}
+            </button>
+        </div>
+    {% endif %}
+</div>
