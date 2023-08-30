@@ -1349,6 +1349,10 @@ class ContestPrepareData(ContestDataMixin, TitleMixin, SingleObjectMixin, FormVi
     template_name = 'contest/prepare-data.html'
     form_class = ContestDownloadDataForm
 
+    def __init__(self, **kwargs):
+        super().__init__(kwargs)
+        self.object = None
+
     @cached_property
     def _now(self):
         return timezone.now()
