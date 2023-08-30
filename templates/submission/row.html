@@ -39,7 +39,7 @@
     </div>
 
     {% if submission.status == 'G' and can_view_testcase_status %}
-        <div class="sub-testcase">
+        <div class="sub-testcase ui label" style="margin-bottom: 5px;">
             {%- if submission.current_testcase > 0 -%}
                 {{ _('Case #%(case)s', case=submission.current_testcase) }}
             {%- else -%}
