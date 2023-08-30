@@ -35,6 +35,7 @@
 
             var $table = $('#case-table');
             $table.on('add-row', function (e, $tr) {
+                $tr.find('select').select2()
                 $tr.find('input').filter('[id$=file]').each(function () {
                     var $select, val = $(this).replaceWith($select = $('<select>').attr({
                         id: $(this).attr('id'),
@@ -689,7 +690,7 @@
         {% if cases_formset._non_form_errors %}
             {{ cases_formset._non_form_errors }}
         {% endif %}
-        <table id="case-table" class="ui table striped">
+        <table id="case-table" class="ui table celled">
             <thead>
             <tr>
                 <th>
