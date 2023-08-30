@@ -449,16 +449,18 @@
         {% endif %}
         {% if tab != 'official_ranking' %}
             <div class="ui checkbox">
-                <input id="show-personal-info-checkbox" type="checkbox" style="vertical-align: bottom">
-                <label for="show-personal-info-checkbox"
-                       style="vertical-align: bottom">{{ _('Show full name/organization') }}</label>
+                <input id="show-personal-info-checkbox" type="checkbox">
+                <label for="show-personal-info-checkbox">
+                    {{ _('Show full name/organization') }}
+                </label>
             </div>
         {% endif %}
         {% if tab == 'ranking' %}
             <div class="ui checkbox">
-                <input id="show-virtual-participations-checkbox" type="checkbox" style="vertical-align: bottom">
-                <label for="show-virtual-participations-checkbox"
-                       style="vertical-align: bottom">{{ _('Show virtual participations') }}</label>
+                <input id="show-virtual-participations-checkbox" type="checkbox">
+                <label for="show-virtual-participations-checkbox">
+                    {{ _('Show virtual participations') }}
+                </label>
             </div>
             {% if not is_ICPC_format %}
                 <a href="#" onclick="download_table_as_csv()" class="ui button green" style="float: right;">
