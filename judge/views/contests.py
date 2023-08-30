@@ -1359,11 +1359,9 @@ class ContestPrepareData(ContestDataMixin, TitleMixin, SingleObjectMixin, FormVi
 
     @cached_property
     def can_prepare_data(self):
-        return (
-                self.object.data_last_downloaded is None
-                or self.object.data_last_downloaded + settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT < self._now
-                or not os.path.exists(self.data_path)
-        )
+        return (self.object.data_last_downloaded is None or
+                self.object.data_last_downloaded + settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT < self._now or
+                not os.path.exists(self.data_path))
 
     @cached_property
     def data_cache_key(self):
@@ -1401,9 +1399,8 @@ class ContestPrepareData(ContestDataMixin, TitleMixin, SingleObjectMixin, FormVi
         context['ratelimit'] = settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT
 
         if not self.can_prepare_data:
-            context['time_until_can_prepare'] = (
-                    settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT - (self._now - self.object.data_last_downloaded)
-            )
+            context['time_until_can_prepare'] = (settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT -
+                                                 (self._now - self.object.data_last_downloaded))
         return context
 
     def get(self, request, *args, **kwargs):
