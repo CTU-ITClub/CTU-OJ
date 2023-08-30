@@ -16,10 +16,10 @@
 
 {% block body %}
     <div class="centered-form">
-        <form action="" method="post" class="form-area">
+        <form action="" method="post" class="form-area ui form">
             {% csrf_token %}
-            <table border="0" class="django-as-table">{{ form.as_table() }}</table>
-            <button class="submit-bar" type="submit">
+            <table class="django-as-table">{{ form.as_table() }}</table>
+            <button class="submit-bar ui button green" type="submit">
                 {% if request.resolver_match.url_name == 'organization_create' %}
                     {{ _('Create') }}
                 {% else %}

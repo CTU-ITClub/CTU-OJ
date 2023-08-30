@@ -8,16 +8,20 @@
 {% endblock %}
 
 {% block body %}
-    <table id="judge-versions" class="table">
+    <table class="ui table definition celled fixed">
+        <thead>
         <tr>
             <th></th>
             {% for judge in judges %}
                 <th>{{ judge }}</th>
             {% endfor %}
         </tr>
+        </thead>
+        <tbody>
+
         {% for language in languages %}
             <tr>
-                <th>{{ language.name }}</th>
+                <td>{{ language.name }}</td>
                 {% for judge in judges %}
                     {% set versions = matrix[judge][language.id] %}
                     <td class="version version-
@@ -27,7 +31,7 @@
                             latest
                         {%- else -%}
                             outdated
-                        {%- endif %}">
+                        {%- endif %} {% if versions %} positive {% else %} negative {% endif %}">
                         {%- for version in versions -%}
                             {{ version.name }}{% if version.version %}&nbsp;{{ version.version }}{% endif %}
                             {% if not loop.last %}<br>{% endif %}
@@ -38,5 +42,6 @@
                 {% endfor %}
             </tr>
         {% endfor %}
+        </tbody>
     </table>
 {% endblock %}

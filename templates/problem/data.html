@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% block js_media %}
-    {{data_form.media.js}}
+    {{ data_form.media.js }}
     {% include "leave-warning.html" %}
     <script type="text/javascript" src="{{ static('libs/jquery-sortable.js') }}"></script>
     <script type="text/javascript" src="{{ static('libs/featherlight/featherlight.min.js') }}"></script>
     <script type="text/javascript" src="{{ static('vnoj/jszip/jszip.min.js') }}"></script>
     <script type="text/javascript">
-        window.valid_files = {{valid_files_json}}.sort();
+        window.valid_files =
+        {{valid_files_json}}.sort();
         window.testcase_limit = {{testcase_limit}};
         window.testcase_soft_limit = {{testcase_soft_limit}};
 
@@ -34,14 +35,17 @@
 
             var $table = $('#case-table');
             $table.on('add-row', function (e, $tr) {
+                $tr.find('select').select2()
                 $tr.find('input').filter('[id$=file]').each(function () {
                     var $select, val = $(this).replaceWith($select = $('<select>').attr({
                         id: $(this).attr('id'),
                         name: $(this).attr('name'),
                         style: 'width: 100%'
                     })).val();
+
                     var option = new Option(val, val, true, true);
-                    $select.select2(select2_settings).append(option).change().on('change', function () {
+
+                    $select.addClass('ui search dropdown').select2(select2_settings).append(option).change().on('change', function () {
                         var val = $select.val();
                         if (val) {
                             if ($select.attr('id').endsWith('input_file'))
@@ -114,13 +118,16 @@
                             $file_name = $file_name.split('/').pop()
                             $file_ext = $file_name.split('.').pop()
                             if (!(['cpp', 'pas', 'java'].includes($file_ext))) {
-                                alert("{{ _('Expected checker\'s extension must be in [cpp, pas, java], found ') }}'" + $file_ext + "'");
-                            }
-                            else {
+                                _alert("{{ _('Expected checker\'s extension must be in [cpp, pas, java], found ') }}'" + $file_ext + "'");
+                            } else {
                                 $lang = $file_ext.toUpperCase();
                                 if ($lang == "CPP") $lang = "CPP17";
                                 if ($lang == "JAVA") $lang = "JAVA8";
-                                $args.val(JSON.stringify({files: $file_name, lang: $lang, type: $custom_checker_type.find(":selected").val()}));
+                                $args.val(JSON.stringify({
+                                    files: $file_name,
+                                    lang: $lang,
+                                    type: $custom_checker_type.find(":selected").val()
+                                }));
                                 if ($lang == "PY")
                                     $args.val('');
                             }
@@ -128,7 +135,7 @@
                     }
                 });
 
-                $custom_checker_type.change(function() {
+                $custom_checker_type.change(function () {
                     if (!$args.val() || init)
                         return;
                     var old_args = try_parse_json($args.val());
@@ -233,7 +240,7 @@
             }
 
             $td = $checker.parent();
-            var $sample = $("<a/>",{
+            var $sample = $("<a/>", {
                 text: "{{_('Instruction')}}",
                 style: "margin-left:3em;",
                 target: "_blank",
@@ -245,7 +252,7 @@
             $("<input/>", {
                 type: "submit",
                 value: "{{ _('Please press this button if you have just updated the zip data') }}",
-                class: "button",
+                class: "ui button",
                 style: "display: inherit",
                 id: "submit-button",
             }).appendTo($file_test.parent());
@@ -264,7 +271,7 @@
             $table.on('add-row', function (e, $tr) {
                 var $order = $tr.find('input').filter('[id$=order]').attr('type', 'hidden').val(++order);
                 $order.after($('<span>', {'class': 'order'}).text($order.val()))
-                    .after($('<i>', {'class': 'fa fa-fw fa-lg fa-ellipsis-v'}));
+                    .after($('<i>', {'class': 'icon bars'}));
 
                 var $opts = $tr.find('input').slice(2, 6);
                 var $files = $tr.find('select').slice(1, 3);
@@ -344,7 +351,9 @@
 
                 // Check all hidden "Clear" checkboxes
                 // so the corresponding files are cleaned up automatically by django-cleanup
-                $(':checkbox').filter(function() { return this.id.endsWith('clear_id') }).each(function () {
+                $(':checkbox').filter(function () {
+                    return this.id.endsWith('clear_id')
+                }).each(function () {
                     if ($(this).parent().is(':hidden')) {
                         $(this).attr('checked', true);
                     }
@@ -396,7 +405,7 @@
                 }
                 if (newIndex != oldIndex)
                     handle_table_reorder();
-            };
+            }
 
             $('a#add-case-first-row').click(function () {
                 var cntRow = parseInt($total.val());
@@ -437,7 +446,7 @@
                     }
                 }
                 if (inFiles.length == 0) {
-                    alert("{{_('No input/output files. Make sure your files are following themis/cms test format')}}");
+                    _alert("{{_('No input/output files. Make sure your files are following themis/cms test format')}}");
                     return false;
                 }
                 if (inFiles.length != outFiles.length) {
@@ -472,14 +481,14 @@
                     alert(s);
                 }
                 return false;
-            };
+            }
 
             var oldIndex;
             $table.sortable({
                 containerSelector: 'table',
                 itemPath: '> tbody:first',
                 itemSelector: 'tr',
-                handle: 'i.fa-ellipsis-v',
+                handle: 'i.icon.bars',
                 placeholder: '<tr class="placeholder">',
                 onDragStart: function ($item, container, _super) {
                     oldIndex = $item.index();
@@ -492,19 +501,17 @@
                 }
             });
 
-            $('input#delete-all').change(function() {
+            $('input#delete-all').change(function () {
                 if (this.checked) {
                     $("input[name$='DELETE']").attr('checked', true);
-                }
-                else {
+                } else {
                     $("input[name$='DELETE']").attr('checked', false);
                 }
             });
-            $('#problem-data-zipfile-clear_id').change(function(){
+            $('#problem-data-zipfile-clear_id').change(function () {
                 if (this.checked) {
                     $('input#delete-all').attr('checked', true);
-                }
-                else {
+                } else {
                     $('input#delete-all').attr('checked', false);
                 }
                 $('input#delete-all').change();
@@ -516,14 +523,14 @@
             $("#id_problem-data-zipfile").change((event) => {
                 let fileInput = event.target.files[0];
                 var reader = new FileReader();
-                reader.onload = function(ev) {
-                    JSZip.loadAsync(ev.target.result).then(function(zip) {
+                reader.onload = function (ev) {
+                    JSZip.loadAsync(ev.target.result).then(function (zip) {
                         window.valid_files = Object.keys(zip.files).sort();
                         fill_testcases();
-                    }).catch(function(err) {
+                    }).catch(function (err) {
                         console.log(err);
                         console.error("Failed to open as ZIP file");
-                        alert("{{ _('Test file must be a ZIP file') }}");
+                        _alert("{{ _('Test file must be a ZIP file') }}");
                         event.target.value = "";
                     })
                 };
@@ -535,7 +542,7 @@
 {% endblock %}
 
 {% block media %}
-    {{data_form.media.css}}
+    {{ data_form.media.css }}
     <style>
         #case-table .select2 {
             text-align: initial;
@@ -584,7 +591,7 @@
             border-right: none;
         }
 
-        i.fa-ellipsis-v {
+        i.icon.bars {
             cursor: move;
         }
 
@@ -626,48 +633,71 @@
     {% if problem.is_organization_private %}
         <span class="organization-tags">
             {% for org in problem.organizations.all() %}
-                <span class="organization-tag">
-                    <a href="{{ org.get_absolute_url() }}">
-                        <i class="fa fa-lock"></i> {{ org.name }}
-                    </a>
-                </span>
+                <a class="ui label" href="{{ org.get_absolute_url() }}">
+                    <i class="icon lock"></i>
+                    {{ org.name }}
+                </a>
             {% endfor %}
         </span>
+
+        <hr class="ui divider"/>
     {% endif %}
     {% if data_form.instance.has_yml() %}
         <div class="title-line-action">
-            [<a href="{{ url('problem_data_init', problem.code) }}">{{ _('View YAML') }}</a>]
+            <a class="ui button red very basic icon" href="{{ url('problem_data_init', problem.code) }}">
+                <i class="icon file code"></i>
+                {{ _('View YAML') }}
+            </a>
         </div>
+        <hr class="ui divider"/>
     {% endif %}
 {% endblock %}
 
 {% block body %}
     {% if data_form.instance.feedback %}
-        <ul class="errorlist">
-            <li>{{ data_form.instance.feedback }}</li>
-        </ul>
+        <div class="ui message red" style="margin-top: 10px;">
+            <div class="content">
+                <ul>
+                    <li>{{ data_form.instance.feedback }}</li>
+                </ul>
+            </div>
+        </div>
     {% endif %}
-    <form action="" method="POST" enctype="multipart/form-data">
+    <form action="" method="POST" enctype="multipart/form-data" class="ui form">
         {% csrf_token %}
         {{ cases_formset.management_form }}
         <table class="table">
             {{ data_form.as_table() }}
         </table>
-        <div class="alert alert-warning alert-dismissable" id="fill-test-case-noti" style="display: none;">
-            <a class="close">x</a>
-            <b>{{ _('Test cases have been filled automatically!') }}</b>
-            <br>
-            {{ (_('Test cases have been filled automatically and **not saved yet**!'))|markdown('default', strip_paragraphs=True) }}
-            <br>
-            {{ _('Please modify the table below if needed and press the `Apply` button to save!') }}
+        <div class="ui message success icon" id="fill-test-case-noti" style="display: none;">
+            <a class="icon close">
+                <i class="icon close"></i>
+            </a>
+
+            <i class="icon check circle"></i>
+
+            <div class="content">
+                <div class="header">
+                    {{ _('Test cases have been filled automatically!') }}
+                </div>
+                <p>
+                    {{ (_('Test cases have been filled automatically and **not saved yet**!'))|markdown('default', strip_paragraphs=True) }}
+                    <br>
+                    {{ _('Please modify the table below if needed and press the `Apply` button to save!') }}
+                </p>
+            </div>
         </div>
         {% if cases_formset._non_form_errors %}
             {{ cases_formset._non_form_errors }}
         {% endif %}
-        <table id="case-table" class="table">
+        <table id="case-table" class="ui table celled">
             <thead>
             <tr>
-                <th><a id="add-case-first-row" href="#"><i class="fa fa-plus"></i></a></th>
+                <th>
+                    <a id="add-case-first-row" href="#">
+                        <i class="icon plus"></i>
+                    </a>
+                </th>
                 <th class="order-column"></th>
                 <th class="type-column">{{ _('Type') }}</th>
                 <th>{{ _('Input file') }}</th>
@@ -676,9 +706,13 @@
                 <th>{{ _('Pretest?') }}</th>
                 <!-- <th class="generator-args">{{ _('Generator args') }}</th> -->
                 {% if cases_formset.can_delete %}
-                    <th>{{ _('Delete?') }}
-                        <br>
-                        <input type="checkbox" name="delete-all" id="delete-all">
+                    <th>
+                        <div class="field">
+                            <div class="ui checkbox">
+                                <input type="checkbox" name="delete-all" id="delete-all">
+                                <label>{{ _('Delete?') }}</label>
+                            </div>
+                        </div>
                     </th>
                 {% endif %}
             </tr>
@@ -695,7 +729,11 @@
                     <tbody class="extra-row-body" style="display: none">
                 {% endif %}
                 <tr data-type="{{ form['type'].value() }}">
-                    <td><a class="add-case-row-below" href="#"><i class="fa fa-plus"></i></a></td>
+                    <td>
+                        <a class="add-case-row-below" href="#">
+                            <i class="icon plus"></i>
+                        </a>
+                    </td>
                     <td>{{ form.id }}{{ form.order.errors }}{{ form.order }}</td>
                     <td class="type-column">{{ form.type.errors }}{{ form.type }}</td>
                     <td{% if not (form.empty_permitted or form['type'].value() != 'C' or
@@ -721,8 +759,9 @@
             {% endfor %}
             </tbody>
         </table>
-        <input type="submit" value="{{ _('Apply!') }}" class="button" id="submit-button">
+        <input type="submit" value="{{ _('Apply!') }}" class="ui button" id="submit-button">
         <a id="add-case-row" href="#" style="display: None;"><i class="fa fa-plus"></i> {{ _('Add new case') }}</a>
     </form>
-    <div style="display: none" class="generator-args-editor"><textarea></textarea><a class="button">{{ _('Save') }}</a></div>
+    <div style="display: none" class="generator-args-editor"><textarea></textarea><a class="button">{{ _('Save') }}</a>
+    </div>
 {% endblock %}

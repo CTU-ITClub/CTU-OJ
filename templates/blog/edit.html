@@ -24,24 +24,34 @@
 {% endblock %}
 
 {% block body %}
-<div>
-    {% if edit and request.user.is_staff %}
-        <div class="alert alert-warning alert-dismissable">
-            <a class="close">x</a>
-            <a href="{{ url('admin:judge_blogpost_change', object.id) }}">{{ _('Edit blog post in admin panel for more options') }}</a>
-        </div>
-    {% elif not edit %}
-        <div class="alert alert-warning">
-            {{ (_('Please read the [guidelines][0] before creating a new blog post.') + '\n\n  [0]: /about/blog/')|markdown('blog', strip_paragraphs=True) }}
-        </div>
-    {% endif %}
-    <form action="" method="post" class="form-area" style="display: flex; justify-content: center; flex-direction: column;">
-        {% csrf_token %}
-        <table class="django-as-table">{{ form.as_table() }}</table>
-        <hr>
-        <div style="display: flex; justify-content: flex-end;">
-            <input type="submit" value="{% if edit %} {{ _('Update') }} {% else %} {{ _('Create') }} {% endif %}" class="button">
-        </div>
-    </form>
-</div>
+    <div class="ui container">
+        {% if edit and request.user.is_staff %}
+            <div class="ui message icon info">
+                <i class="icon info circle"></i>
+                <a class="close icon">
+                    <i class="icon close"></i>
+                </a>
+                <div class="content">
+                    <a href="{{ url('admin:judge_blogpost_change', object.id) }}">{{ _('Edit blog post in admin panel for more options') }}</a>
+                </div>
+            </div>
+        {% elif not edit %}
+            <div class="ui message warning icon">
+                <i class="icon warning circle"></i>
+                <div class="content">
+                    {{ (_('Please read the [guidelines][0] before creating a new blog post.') + '\n\n  [0]: /about/blog/')|markdown('blog', strip_paragraphs=True) }}
+                </div>
+            </div>
+        {% endif %}
+        <form action="" method="post" class="ui form form-area"
+              style="display: flex; justify-content: center; flex-direction: column;">
+            {% csrf_token %}
+            <table class="django-as-table">{{ form.as_table() }}</table>
+            <hr>
+            <div style="display: flex; justify-content: flex-end;">
+                <input type="submit" value="{% if edit %} {{ _('Update') }} {% else %} {{ _('Create') }} {% endif %}"
+                       class="ui button green">
+            </div>
+        </form>
+    </div>
 {% endblock %}

@@ -1,11 +1,11 @@
-<table {% if table_id %}id="{{ table_id }}"{% endif %} class="users-table table striped">
+<table {% if table_id %}id="{{ table_id }}"{% endif %} class="users-table table striped celled">
     <thead>
     <tr>
         <th class="header rank">{{ rank_header or _("Rank") }}</th>
         <th class="header">{{ _('Username') }}</th>
         <th class="header">{{ _('Full Name') }}</th>
         {% for problem in problems %}
-            <th class="points header">
+            <th>
                 {{ problem }}
             </th>
         {% endfor %}

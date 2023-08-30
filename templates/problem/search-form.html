@@ -1,83 +1,121 @@
-<div class="sidebox">
-    <h3>{{ _('Problem search') }} <i class="fa fa-search"></i>
-    </h3>
-    <div class="sidebox-content">
-        <form id="filter-form" name="form" action="" method="get">
-            <div>
+<h3 class="ui header block attached top">
+    <i class="icon search"></i>
+    <span class="content">
+        {{ _('Problem search') }}
+    </span>
+</h3>
+<div class="sidebox-content card-content ui attached bottom segment">
+    <form id="filter-form" class="ui form" name="form" action="" method="get">
+        <div class="field">
+            <label for="search">
+                {{ _('Search') }}
+            </label>
+            <div class="ui icon input">
                 <input id="search" type="text" name="search" value="{{ search_query or '' }}"
                        placeholder="{{ _('Search problems...') }}">
+                <i class="icon search"></i>
             </div>
-            {% if has_fts %}
-                <div>
+        </div>
+
+        <div class="ui divider"></div>
+
+        {% if has_fts %}
+            <div class="field">
+                <div class="ui checkbox">
                     <input id="full_text" type="checkbox" name="full_text" value="1"
                            {% if full_text %}checked{% endif %}>
-                    <label for="full_text">{{ _('Full text search') }}</label>
+                    <label for="full_text">
+                        {{ _('Full text search') }}
+                    </label>
                 </div>
-            {% endif %}
-            {% if request.user.is_authenticated %}
-                <div>
+            </div>
+        {% endif %}
+        {% if request.user.is_authenticated %}
+            <div class="field">
+                <div class="ui checkbox">
                     <input id="hide_solved" type="checkbox" name="hide_solved" value="1"
                            {% if hide_solved %}checked{% endif %}>
-                    <label for="hide_solved">{{ _('Hide solved problems') }}</label>
+                    <label for="hide_solved">
+                        {{ _('Hide solved problems') }}
+                    </label>
                 </div>
-            {% endif %}
-            <div>
+            </div>
+        {% endif %}
+        <div class="field">
+            <div class="ui checkbox">
                 <input id="has_public_editorial" type="checkbox" name="has_public_editorial" value="1"
                         {% if has_public_editorial %} checked{% endif %}>
-                <label for="has_public_editorial">{{ _('Has editorial') }}</label>
+                <label for="has_public_editorial">
+                    {{ _('Has editorial') }}
+                </label>
             </div>
-            <div>
+        </div>
+        <div class="field">
+            <div class="ui checkbox">
                 <input id="show_types" type="checkbox" name="show_types" value="1"
                         {% if show_types %} checked{% endif %}>
-                <label for="show_types">{{ _('Show problem types') }}</label>
+                <label for="show_types">
+                    {{ _('Show problem types') }}
+                </label>
             </div>
-            <div class="filter-form-group">
-                <label for="category"><i>{{ _('Category') }}</i></label>
-                <select id="category" name="category">
-                    {% if category %}
-                        <option value="" selected="selected">{{ _('All') }}</option>
-                    {% else %}
-                        <option value="">{{ _('All') }}</option>{% endif %}
-                    <option disabled="disabled">---</option>
-                    {% for group in categories %}
-                        <option value="{{ group.id }}"{% if group.id == category %} selected{% endif %}>
-                            {{ group.full_name }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="filter-form-group">
-                <label for="type"><i>{{ _('Problem types') }}</i></label>
-                <select id="types" name="type" multiple>
-                    {% for type in problem_types %}
-                        <option value="{{ type.id }}"{% if type.id in selected_types %} selected{% endif %}>
-                            {{ user_trans(type.full_name) }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
-            {% if point_values %}
-                <div class="form-label">{{ _('Point range') }}</div>
-                <div id="point-slider"></div>
-            {% endif %}
-            <input id="point-start" type="hidden" name="point_start" {% if point_start and point_start != point_values.min %}value="{{ point_start }}"{% else %}disabled{% endif %}>
-            <input id="point-end" type="hidden" name="point_end" {% if point_end and point_end != point_values.max %}value="{{ point_end }}"{% else %}disabled{% endif %}>
-            <div class="form-submit-group">
-                <a id="go" class="button">{{ _('Go') }}</a>
-                <a id="random" class="button">{{ _('Random') }}</a>
-            </div>
-        </form>
+        </div>
 
-        <script>
-            var my_options = $("#types option");
-            var selected = $("#types").val();
+        <div class="field">
+            <label for="category">
+                {{ _('Category') }}
+            </label>
+            <select name="category" id="category" class="ui search dropdown">
+                {% if category %}
+                    <option value="" selected="selected">{{ _('All') }}</option>
+                {% else %}
+                    <option value="">{{ _('All') }}</option>{% endif %}
+                <option disabled="disabled">---</option>
+                {% for group in categories %}
+                    <option value="{{ group.id }}"{% if group.id == category %} selected{% endif %}>
+                        {{ group.full_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label for="type">
+                {{ _('Problem types') }}
+            </label>
+            <select name="type" id="type" multiple class="ui search dropdown">
+                <option value="">{{ _('All') }}</option>
+                {% for type in problem_types %}
+                    <option value="{{ type.id }}"{% if type.id in selected_types %} selected{% endif %}>
+                        {{ user_trans(type.full_name) }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
 
-            my_options.sort(function(a,b) {
-                return a.text.localeCompare(b.text, 'vi');
-            })
+        {#                {% if point_values %}#}
+        {#                    <div class="form-label">{{ _('Point range') }}</div>#}
+        {#                    <div id="point-slider" class="my-4"></div>#}
+        {#                {% endif %}#}
+        {#                <input id="point-start" type="hidden" name="point_start"#}
+        {#                       {% if point_start and point_start != point_values.min %}value="{{ point_start }}"#}
+        {#                       {% else %}disabled{% endif %}>#}
+        {#                <input id="point-end" type="hidden" name="point_end"#}
+        {#                       {% if point_end and point_end != point_values.max %}value="{{ point_end }}"{% else %}disabled{% endif %}>#}
+        <div class="form-submit-group" style="display: flex; gap: 5px; flex-wrap: wrap">
+            <a id="go" class="ui button primary">{{ _('Go') }}</a>
+            <a id="random" class="ui basic button">{{ _('Random') }}</a>
+        </div>
+    </form>
 
-            $("#types").empty().append(my_options);
-            $("#types").val(selected);
-        </script>
-    </div>
+    <script>
+        const $types = $('#type');
+        var my_options = $("#types option");
+        var selected = $types.val();
+
+        my_options.sort(function (a, b) {
+            return a.text.localeCompare(b.text, 'vi');
+        })
+
+        $("#types").empty().append(my_options);
+        $types.val(selected);
+    </script>
 </div>

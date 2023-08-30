@@ -1,4 +1,9 @@
 {% extends "base.html" %}
 {% block body %}
-    <p>{{ _('Your account has been successfully activated.') }}</p>
+    <div class="ui message green icon">
+        <i class="icon check circle"></i>
+        <div class="content">
+            <p>{{ _('Your account has been successfully activated.') }}</p>
+        </div>
+    </div>
 {% endblock %}

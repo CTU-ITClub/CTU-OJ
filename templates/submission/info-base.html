@@ -1,20 +1,29 @@
 {% extends "base.html" %}
 
 {% block header %}
-    <span class="submission-info">
-        <span class="submission-date">
+    <div class="submission-info">
+        <div class="submission-date">
             {% with date=submission.date|date(_('N j, Y, g:i a')), can_edit=submission.problem.is_editable_by(request.user) %}
+                <div>
                 {% if can_edit and submission.judged_on %}
                     {{ _('%(date)s on judge %(judge)s', date=date, judge=submission.judged_on.name) }}
                 {% else %}
                     {{ date }}
                 {% endif %}
-                <br>
-                <span>{{ submission.language }}</span>
+                </div>
+                <hr class="ui divider"/>
+                <div class="ui label large circular orange">
+                    <i class="icon code"></i>
+                    {{ submission.language }}
+                </div>
                 {% if can_edit %}
-                    [<a href="{{ url('admin:judge_submission_change', submission.id) }}">{{ _('Admin') }}</a>]
+                    <a href="{{ url('admin:judge_submission_change', submission.id) }}"
+                       class="ui button black circular mini icon">
+                        <i class="icon cog"></i>
+                        {{ _('Admin') }}
+                    </a>
                 {% endif %}
             {% endwith %}
-        </span>
-    </span>
+        </div>
+    </div>
 {% endblock %}

@@ -62,6 +62,7 @@
 
                 // Auto reload every 10 seconds
                 var ranking_outdated = false;
+
                 function update_ranking() {
                     if ($('body').hasClass('window-hidden')) {
                         return ranking_outdated = true;
@@ -84,6 +85,7 @@
                         setTimeout(update_ranking, 10000);
                     });
                 }
+
                 $(window).on('dmoj:window-visible', function () {
                     if (ranking_outdated) {
                         update_ranking();
@@ -96,32 +98,30 @@
     <script type="text/javascript">
         $(function () {
             var url = '{{ url('contest_participation', contest.key, '__username__') }}';
-            var placeholder = $('#search-contest').replaceWith($('<select>').attr({
-                id: 'search-contest'
-            })).attr('placeholder');
+            // var placeholder = $('#search-contest').replaceWith($('<select>').attr({
+            //    id: 'search-contest'
+            //})).attr('placeholder');
 
-            $('#search-contest').select2({
-                theme: '{{ DMOJ_SELECT2_THEME }}',
-                placeholder: placeholder,
-                ajax: {
-                    url: '{{ url('contest_user_search_select2_ajax', contest.key) }}'
-                },
-                minimumInputLength: 1,
-                templateResult: function (data) {
-                    return $('<span>')
-                        .append($('<img>', {
-                            class: 'user-search-image',
-                            src: data.gravatar_url,
-                            width: 24,
-                            height: 24,
-                        }))
-                        .append($('<span>', {
-                            class: data.display_rank + ' user-search-name',
-                        }).text(data.text));
+            $('#search-contest').search({
+                apiSettings: {
+                    actions: 'search',
+                    url: '{{ url('contest_user_search_select2_ajax', contest.key) }}',
+                    onResponse(res) {
+                        console.log(res)
+                        res.results = res.results.map(e => {
+                            return {
+                                title: e.text,
+                                description: e.text
+                            }
+                        })
+                        return res
+                    }
                 }
-            }).on('change', function () {
-                window.location.href = url.replace('__username__', $(this).val());
-            });
+            })
+                .on('change', function () {
+                    window.location.href = url.replace('__username__', $(this).val());
+                });
+
 
             $('#show-personal-info-checkbox').click(function () {
                 $('.personal-info').toggle();
@@ -168,60 +168,13 @@
             // hack to keep scroll position after selecting option
             // https://stackoverflow.com/questions/55045146/select2-do-not-scroll-on-selection
             // scrollAfterSelect is only available after v4.0.6
-            $(function() {
-                $('#org-check-list').select2({
-                    theme: '{{ DMOJ_SELECT2_THEME }}',
-                    multiple: true,
-                    closeOnSelect: false,
-                    placeholder: '{{ _('Search organizations') }}',
-                });
-
-                var selection = $('#org-check-list').data().select2.selection;
-                var results = $('#org-check-list').data().select2.results;
-
-                $('#org-check-list').on('select2:selecting', function(e) {
-                    let id = e.params.args.data.id;
-                    let val = $(e.target).val().concat([id]);
-                    $(e.target).val(val).trigger('change');
-
-                    if (selection.$search.val() != '') {
-                        selection.$search.val('');
-                        selection.trigger('query', {});
-                    } else {
-                        results.setClasses();
-                    }
-
-                    return false;
-                });
-
-                $('#org-check-list').on('select2:unselecting', function(e) {
-                    let id = e.params.args.data.id;
-                    let val = $(e.target).val().filter(function(v) { return v != id; });
-                    $(e.target).val(val).trigger('change');
-
-                    if (selection.$search.val() != '') {
-                        selection.$search.val('');
-                        selection.trigger('query', {});
-                    } else {
-                        results.setClasses();
-                    }
-
-                    return false;
-                });
-
-                $('#org-check-list').data().select2.toggleDropdown = function () {
-                    selection.$search.trigger('focus');
-
-                    if (!this.isOpen()) {
-                        this.open();
-                    }
-                }
-
+            $(function () {
                 $('#filter-by-organization-button').click(function () {
                     $('#org-check-list-wrapper').toggle();
-                    $('#org-check-list').select2('open');
                 });
-            });
+
+                $('#filter-by-organization-button').click();
+            })
 
             if (localStorage.getItem(`filter-cleared-${contest_key}`) === null) {
                 localStorage.setItem(`filter-cleared-${contest_key}`, 'true');
@@ -381,7 +334,7 @@
         });
 
         {% if tab == 'ranking' %}
-            $.fn.ignore = function(sel) {
+            $.fn.ignore = function (sel) {
                 return this.clone().find(sel || '>*').remove().end();
             };
 
@@ -404,7 +357,7 @@
 
                         if ($col.hasClass('rating-column')) {
                             // Skip rating
-                            return;
+
                         } else if ($col.hasClass('rank')) {
                             // Rank
                             header.push(clean_text($col.text()));
@@ -436,7 +389,7 @@
 
                         if ($col.hasClass('rating-column')) {
                             // Skip rating
-                            return;
+
                         } else if ($col.hasClass('user-name')) {
                             // Username and Full name
                             row_data.push(clean_text($col.find('.rating').first().text()));
@@ -466,37 +419,54 @@
 {% endblock %}
 
 {% block before_users_table %}
-    <div style="margin-bottom: 1.25em">
+    <div style="margin-bottom: 1.25em; display: flex; align-items: center; justify-content: space-between">
         {% if tab == 'participation' %}
             {% if contest.can_see_full_scoreboard(request.user) %}
-                <input id="search-contest" type="text" placeholder="{{ _('View user participation') }}">
+                <div class="ui search" id="search-contest">
+                    <div class="ui icon input">
+                        <input class="prompt" type="text" placeholder="{{ _('View user participation') }}">
+                        <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+                </div>
             {% endif %}
         {% endif %}
         {% if tab == 'ranking' %}
-            <div id="org-dropdown-check-list">
-                <button id="filter-by-organization-button" class="inline-button">
+            <div id="org-dropdown-check-list" style="margin: 10px 0">
+                <button id="filter-by-organization-button" class="inline-button ui button">
                     <i class="tab-icon fa fa-filter"></i>
                     <b>{{ _('Filter') }}</b>
                 </button>
 
-                <div id="org-check-list-wrapper">
-                    <div>
-                        <button id="apply-organization-filter" class="inline-button filter-checklist-button">{{ _('Apply') }}</button>
-                        <button id="clear-organization-filter" class="inline-button filter-checklist-button">{{ _('Clear') }}</button>
+                <div id="org-check-list-wrapper" style="display: flex; margin: 10px 0">
+                    <select id="org-check-list" class="ui search dropdown" name="orgs[]" multiple="multiple"></select>
+                    <div style="display: flex; margin-left: 10px">
+                        <button id="apply-organization-filter" class="ui button primary">{{ _('Apply') }}</button>
+                        <button id="clear-organization-filter" class="ui button">{{ _('Clear') }}</button>
                     </div>
-                    <select id="org-check-list" name="orgs[]" multiple="multiple"></select>
                 </div>
             </div>
         {% endif %}
         {% if tab != 'official_ranking' %}
-            <input id="show-personal-info-checkbox" type="checkbox" style="vertical-align: bottom">
-            <label for="show-personal-info-checkbox" style="vertical-align: bottom">{{ _('Show full name/organization') }}</label>
+            <div class="ui checkbox">
+                <input id="show-personal-info-checkbox" type="checkbox">
+                <label for="show-personal-info-checkbox">
+                    {{ _('Show full name/organization') }}
+                </label>
+            </div>
         {% endif %}
         {% if tab == 'ranking' %}
-            <input id="show-virtual-participations-checkbox" type="checkbox" style="vertical-align: bottom">
-            <label for="show-virtual-participations-checkbox" style="vertical-align: bottom">{{ _('Show virtual participations') }}</label>
+            <div class="ui checkbox">
+                <input id="show-virtual-participations-checkbox" type="checkbox">
+                <label for="show-virtual-participations-checkbox">
+                    {{ _('Show virtual participations') }}
+                </label>
+            </div>
             {% if not is_ICPC_format %}
-            <a href="#" onclick="download_table_as_csv()" style="float: right;">{{ _('Download as CSV') }}</a>
+                <a href="#" onclick="download_table_as_csv()" class="ui button green" style="float: right;">
+                    <i class="icon download"></i>
+                    {{ _('Download as CSV') }}
+                </a>
             {% endif %}
         {% endif %}
     </div>
@@ -508,49 +478,56 @@
 
 {% block body %}
     {% if is_frozen %}
-    <div class="alert-warning">
-        <p style="padding: 10px; text-align: center">
-        <a class="close" id="frozen_alert">x</a>
-        {%- trans frozen_minutes=contest.frozen_last_minutes -%}
-            The scoreboard was frozen with {{frozen_minutes}} minutes remaining - submissions in the last {{frozen_minutes}} minutes of the contest are still shown as pending.
-        {%- endtrans -%}
-    </p></div>
+        <div class="ui message warning">
+            <a class="icon close" id="frozen_alert">
+                <i class="icon close"></i>
+            </a>
+            <div class="content">
+                {%- trans frozen_minutes=contest.frozen_last_minutes -%}
+                    The scoreboard was frozen with {{ frozen_minutes }} minutes remaining - submissions in the last
+                    {{ frozen_minutes }} minutes of the contest are still shown as pending.
+                {%- endtrans -%}
+            </div>
+        </div>
     {% endif %}
     {% if not contest.ended and cache_timeout %}
-        <div class="alert-warning alert-dismissable">
-            <p style="padding: 10px; text-align: center">
-            <a class="close" id="cache_alert">x</a>
-            {%- trans -%}
-                The scoreboard is cached for {{cache_timeout}} seconds, your submission might take some time before it appears here.
-            {%- endtrans -%}
-            </p>
+        <div class="ui message warning">
+            <a class="icon close" id="cache_alert">
+                <i class="icon close"></i>
+            </a>
+            <div class="content">
+                {%- trans -%}
+                    The scoreboard is cached for {{ cache_timeout }} seconds, your submission might take some time
+                    before it appears here.
+                {%- endtrans -%}
+            </div>
         </div>
     {% endif %}
     {{ super() }}
     {% if is_ICPC_format %}
-    <table id="cell_legend" class="table" style="width: 10em; margin-left: 0">
-        <thead>
+        <table id="cell_legend" class="ui table celled" style="width: 10em; margin-left: 0">
+            <thead>
             <tr>
-                <th scope="col">{{_('Cell colours')}}</th>
+                <th scope="col">{{ _('Cell colours') }}</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr class="first-solve">
-                <td>{{_('Solved first')}}</td>
+                <td>{{ _('Solved first') }}</td>
             </tr>
             <tr class="full-score">
-                <td>{{_('Solved')}}</td>
+                <td>{{ _('Solved') }}</td>
             </tr>
             <tr class="failed-score">
-                <td>{{_('Tried, incorrect')}}</td>
+                <td>{{ _('Tried, incorrect') }}</td>
             </tr>
             <tr class="pending">
-                <td>{{_('Tried, pending')}}</td>
+                <td>{{ _('Tried, pending') }}</td>
             </tr>
             <tr>
-                <td>{{_('Untried')}}</td>
+                <td>{{ _('Untried') }}</td>
             </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
     {% endif %}
 {% endblock %}

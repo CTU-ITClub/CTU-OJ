@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <pre style="font-weight: 400; font-size: 1.4em;">{{ message }}</pre>
+    <div class="ui container">
+        <div class="ui message info icon">
+            <i class="icon info circle"></i>
+            <div class="content">
+                {{ message }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

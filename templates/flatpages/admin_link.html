@@ -1,5 +1,10 @@
 {% if perms.flatpages.change_flatpage %}
-    <div class="title-line-action">
-        [<a href="{{ url('admin:flatpages_flatpage_change', flatpage.id) }}">{{ _('Edit') }}</a>]
+    <div class="title-line-action ui container">
+        <a href="{{ url('admin:flatpages_flatpage_change', flatpage.id) }}" class="ui button icon green">
+            <i class="icon pencil"></i>
+            {{ _('Edit') }}
+        </a>
+
+        <hr class="ui divider"/>
     </div>
 {% endif %}

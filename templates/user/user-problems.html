@@ -34,10 +34,15 @@
 
 {% block user_content %}
     {% if pp_breakdown %}
-        <h3 class="pp-breakdown-header">{{ _('Points breakdown') }}</h3>
-        <div id="submissions-table" class="pp-table table">
-            {% include "user/pp-table-body.html" %}
+        <div class="ui header block attached top">
+            <i class="icon trophy"></i>
+            <div class="content">
+                {{ _('Points breakdown') }}
+            </div>
         </div>
+        <table id="submissions-table" class="ui table striped celled segment attached bottom">
+            {% include "user/pp-table-body.html" %}
+        </table>
         {% if pp_has_more %}
             <div id="pp-load-link-wrapper">
                 <a id="pp-load-more-link" href="javascript:load_more_pp()">{{ _('Load more...') }}</a>
@@ -48,78 +53,89 @@
     {% endif %}
 
     {% if authored %}
-        <div class="user-problem-group">
-            <h3 class="unselectable toggle closed">
-                <span class="fa fa-chevron-right fa-fw"></span>{{ _('Authored problems') }} ({{ authored|length }})
-            </h3>
-            <table style="display: none" class="table striped toggled">
-                <thead>
-                <tr>
-                    <th>{{ _('Problem') }}</th>
-                    <th>{{ _('Category') }}</th>
-                    <th>{{ _('Points') }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for problem in authored %}
+        <div class="ui styled fluid accordion segment">
+            <div class="title">
+                <i class="dropdown icon"></i>
+                {{ _('Authored problems') }} ({{ authored|length }})
+            </div>
+            <div class="content">
+                <table class="ui table striped">
+                    <thead>
                     <tr>
-                        <td>
-                            <a href="{{ url('problem_detail', problem.code) }}">{{ problem.name }}</a>
-                        </td>
-                        <td>{{ problem.group.full_name }}</td>
-                        <td><a href="{{ url('ranked_submissions', problem.code) }}">
-                            {{ problem.points|floatformat }}{% if problem.partial %}p{% endif %}
-                        </a></td>
+                        <th>{{ _('Problem') }}</th>
+                        <th>{{ _('Category') }}</th>
+                        <th>{{ _('Points') }}</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for problem in authored %}
+                        <tr>
+                            <td>
+                                <a href="{{ url('problem_detail', problem.code) }}">{{ problem.name }}</a>
+                            </td>
+                            <td>{{ problem.group.full_name }}</td>
+                            <td><a href="{{ url('ranked_submissions', problem.code) }}">
+                                {{ problem.points|floatformat }}{% if problem.partial %}p{% endif %}
+                            </a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     {% endif %}
 
     {% if request.user.is_authenticated and request.user != user.user %}
-        <div class="hide-solved-problems"><span>
+        <div class="ui divider horizontal">
             <form name="form" action="" method="get">
-                <input id="hide_solved" style="vertical-align:middle" onclick="form.submit()" type="checkbox"
-                       name="hide_solved"{% if hide_solved %} checked{% endif %} value="1">
-                <label style="vertical-align:middle" for="hide_solved">{{ _("Hide problems I've solved") }}</label>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input id="hide_solved" style="vertical-align:middle" onclick="form.submit()" type="checkbox"
+                               name="hide_solved"{% if hide_solved %} checked{% endif %} value="1">
+                        <label style="vertical-align:middle"
+                               for="hide_solved">{{ _("Hide problems I've solved") }}</label>
+                    </div>
+                </div>
             </form>
-        </span></div>
+        </div>
     {% else %}
-        <hr>
     {% endif %}
 
     {% for group in best_submissions %}
-        <div class="user-problem-group">
-            <h3 class="unselectable toggle closed"><span class="fa fa-chevron-right fa-fw"></span>
+        <div class="ui styled fluid accordion segment">
+            <div class="title">
+                <i class="dropdown icon"></i>
                 {%- with points_str=group.points|floatformat(-3) -%}
                     {{ _('%(group)s (%(val)s points)', group=group.name, val=points_str) }}
                 {%- endwith -%}
-            </h3>
-            <table style="display: none" class="table striped toggled">
-                <thead>
-                <tr>
-                    <th>{{ _('Problem') }}</th>
-                    <th>{{ _('Score') }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for entry in group.problems %}
+            </div>
+            <div class="content">
+                <table style="display: none" class="ui table striped toggled">
+                    <thead>
                     <tr>
-                        <td>
-                            <a href="{{ url('problem_detail', entry.code) }}">{{ entry.name }}</a>
-                        </td>
-                        <td>
-                            <a href="{{ url('user_submissions', entry.code, user.user.username) }}">
-                                {%- with points_str=entry.points|floatformat(-3), total_str=entry.total|floatformat(-3) -%}
-                                    {{ _('%(points)s / %(total)s', points=points_str, total=total_str) }}
-                                {%- endwith -%}
-                            </a>
-                        </td>
+                        <th>{{ _('Problem') }}</th>
+                        <th>{{ _('Score') }}</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for entry in group.problems %}
+                        <tr>
+                            <td>
+                                <a href="{{ url('problem_detail', entry.code) }}">{{ entry.name }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ url('user_submissions', entry.code, user.user.username) }}">
+                                    {%- with points_str=entry.points|floatformat(-3), total_str=entry.total|floatformat(-3) -%}
+                                        {{ _('%(points)s / %(total)s', points=points_str, total=total_str) }}
+                                    {%- endwith -%}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     {% endfor %}
 {% endblock %}
+

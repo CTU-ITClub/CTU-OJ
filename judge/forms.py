@@ -14,18 +14,18 @@ from django.core.validators import FileExtensionValidator, RegexValidator
 from django.db.models import Q
 from django.forms import BooleanField, CharField, ChoiceField, DateInput, Form, ModelForm, MultipleChoiceField, \
     inlineformset_factory
-from django.forms.widgets import DateTimeInput
+from django.forms.widgets import DateTimeInput, Textarea
 from django.template.defaultfilters import filesizeformat
 from django.urls import reverse, reverse_lazy
 from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _, ngettext_lazy
 
-from django_ace import AceWidget
 from judge.models import BlogPost, Contest, ContestAnnouncement, ContestProblem, Language, LanguageLimit, \
     Organization, Problem, Profile, Solution, Submission, Tag, WebAuthnCredential
 from judge.utils.subscription import newsletter_id
 from judge.widgets import HeavyPreviewPageDownWidget, HeavySelect2MultipleWidget, HeavySelect2Widget, MartorWidget, \
-    Select2MultipleWidget, Select2Widget
+    Select2MultipleWidget
+from judge.widgets.dropdown import DropdownMultipleWidget, DropdownWidget
 
 TOTP_CODE_LENGTH = 6
 
@@ -58,11 +58,11 @@ class ProfileForm(ModelForm):
         fields = ['about', 'display_badge', 'organizations', 'timezone', 'language', 'ace_theme',
                   'site_theme', 'user_script']
         widgets = {
-            'display_badge': Select2Widget(attrs={'style': 'width:200px'}),
-            'timezone': Select2Widget(attrs={'style': 'width:200px'}),
-            'language': Select2Widget(attrs={'style': 'width:200px'}),
-            'ace_theme': Select2Widget(attrs={'style': 'width:200px'}),
-            'site_theme': Select2Widget(attrs={'style': 'width:200px'}),
+            'display_badge': DropdownWidget(attrs={'style': 'width:200px'}),
+            'timezone': DropdownWidget(attrs={'style': 'width:200px'}),
+            'language': DropdownWidget(attrs={'style': 'width:200px'}),
+            'ace_theme': DropdownWidget(attrs={'style': 'width:200px'}),
+            'site_theme': DropdownWidget(attrs={'style': 'width:200px'}),
         }
 
         # Make sure that users cannot change their `about` in contest mode
@@ -73,7 +73,7 @@ class ProfileForm(ModelForm):
         has_math_config = bool(settings.MATHOID_URL)
         if has_math_config:
             fields.append('math_engine')
-            widgets['math_engine'] = Select2Widget(attrs={'style': 'width:200px'})
+            widgets['math_engine'] = DropdownWidget(attrs={'style': 'width:200px'})
 
         if HeavyPreviewPageDownWidget is not None:
             widgets['about'] = HeavyPreviewPageDownWidget(
@@ -154,7 +154,7 @@ class LanguageLimitForm(ModelForm):
         model = LanguageLimit
         fields = ('language', 'time_limit', 'memory_limit')
         widgets = {
-            'language': Select2Widget(attrs={'style': 'width:200px'}),
+            'language': DropdownWidget(attrs={'style': 'width:200px'}),
         }
 
 
@@ -181,7 +181,7 @@ class ProblemEditForm(ModelForm):
             self.fields['testers'].help_text = _('If private, only these users may see the problem.')
             self.fields['testers'].widget.data_view = None
             self.fields['testers'].widget.data_url = reverse('organization_profile_select2',
-                                                             args=(org_pk, ))
+                                                             args=(org_pk,))
 
         self.fields['testers'].help_text = \
             str(self.fields['testers'].help_text) + ' ' + \
@@ -194,7 +194,7 @@ class ProblemEditForm(ModelForm):
         org = Organization.objects.get(pk=self.org_pk)
         prefix = ''.join(x for x in org.slug.lower() if x.isalpha()) + '_'
         if not code.startswith(prefix):
-            raise forms.ValidationError(_('Problem id code must starts with `%s`') % (prefix, ),
+            raise forms.ValidationError(_('Problem id code must starts with `%s`') % (prefix,),
                                         'problem_id_invalid_prefix')
         return code
 
@@ -226,9 +226,9 @@ class ProblemEditForm(ModelForm):
                   'statement_file', 'source', 'types', 'group', 'testcase_visibility_mode',
                   'description', 'testers']
         widgets = {
-            'types': Select2MultipleWidget,
-            'group': Select2Widget,
-            'testcase_visibility_mode': Select2Widget,
+            'types': DropdownMultipleWidget,
+            'group': DropdownWidget,
+            'testcase_visibility_mode': DropdownWidget,
             'description': MartorWidget(attrs={'data-markdownfy-url': reverse_lazy('problem_preview')}),
             'testers': HeavySelect2MultipleWidget(
                 data_view='profile_select2',
@@ -268,7 +268,7 @@ class UserDownloadDataForm(Form):
     submission_problem_glob = CharField(initial='*', label=_('Filter by problem code glob:'), max_length=100)
     submission_results = MultipleChoiceField(
         required=False,
-        widget=Select2MultipleWidget(
+        widget=DropdownMultipleWidget(
             attrs={'style': 'width: 260px', 'data-placeholder': _('Leave empty to include all submissions')},
         ),
         choices=sorted(map(itemgetter(0, 0), Submission.RESULT)),
@@ -323,7 +323,7 @@ class ContestDownloadDataForm(Form):
 
 
 class ProblemSubmitForm(ModelForm):
-    source = CharField(max_length=65536, required=False, widget=AceWidget(theme='twilight', no_ace_media=True))
+    source = CharField(max_length=65536, required=False, widget=Textarea(attrs={'style': 'display:none;'}))
     submission_file = forms.FileField(
         label=_('Source file'),
         required=False,
@@ -377,7 +377,7 @@ class ProblemSubmitForm(ModelForm):
         self.fields['language'].queryset = Language.objects.filter(judges__online=True).distinct()
 
         if judge_choices:
-            self.fields['judge'].widget = Select2Widget(
+            self.fields['judge'].widget = DropdownWidget(
                 attrs={'style': 'width: 150px', 'data-placeholder': _('Any judge')},
             )
             self.fields['judge'].choices = judge_choices
@@ -402,7 +402,7 @@ class TagProblemCreateForm(Form):
 
 
 class TagProblemAssignForm(Form):
-    def get_choices():
+    def get_choices(self):
         return list(map(attrgetter('code', 'name'), Tag.objects.all()))
 
     tags = MultipleChoiceField(
@@ -605,12 +605,13 @@ class ProposeContestProblemForm(ModelForm):
 
 
 class ProposeContestProblemFormSet(
-        inlineformset_factory(
-            Contest,
-            ContestProblem,
-            form=ProposeContestProblemForm,
-            can_delete=True,
-        )):
+    inlineformset_factory(
+        Contest,
+        ContestProblem,
+        form=ProposeContestProblemForm,
+        can_delete=True,
+    ),
+):
 
     def clean(self) -> None:
         """Checks that no Contest problems have the same order."""
@@ -657,7 +658,7 @@ class ContestForm(ModelForm):
         if org_pk:
             self.fields['private_contestants'].widget.data_view = None
             self.fields['private_contestants'].widget.data_url = reverse('organization_profile_select2',
-                                                                         args=(org_pk, ))
+                                                                         args=(org_pk,))
 
         self.fields['private_contestants'].help_text = \
             str(self.fields['private_contestants'].help_text) + ' ' + \
@@ -670,7 +671,7 @@ class ContestForm(ModelForm):
 
         has_long_perm = self.user and self.user.has_perm('judge.long_contest_duration')
         if end_time and start_time and \
-           (end_time - start_time).days > settings.VNOJ_CONTEST_DURATION_LIMIT and not has_long_perm:
+                (end_time - start_time).days > settings.VNOJ_CONTEST_DURATION_LIMIT and not has_long_perm:
             raise forms.ValidationError(_('Contest duration cannot be longer than %d days')
                                         % settings.VNOJ_CONTEST_DURATION_LIMIT,
                                         'contest_duration_too_long')
@@ -683,7 +684,7 @@ class ContestForm(ModelForm):
         org = Organization.objects.get(pk=self.org_pk)
         prefix = ''.join(x for x in org.slug.lower() if x.isalpha()) + '_'
         if not key.startswith(prefix):
-            raise forms.ValidationError(_('Contest id must starts with `%s`') % (prefix, ),
+            raise forms.ValidationError(_('Contest id must starts with `%s`') % (prefix,),
                                         'contest_id_invalid_prefix')
         return key
 
@@ -705,7 +706,7 @@ class ContestForm(ModelForm):
             'start_time': DateTimeInput(format='%Y-%m-%d %H:%M:%S', attrs={'class': 'datetimefield'}),
             'end_time': DateTimeInput(format='%Y-%m-%d %H:%M:%S', attrs={'class': 'datetimefield'}),
             'description': MartorWidget(attrs={'data-markdownfy-url': reverse_lazy('contest_preview')}),
-            'scoreboard_visibility': Select2Widget(),
+            'scoreboard_visibility': DropdownWidget(),
             'private_contestants': HeavySelect2MultipleWidget(
                 data_view='profile_select2',
                 attrs={'style': 'width: 100%'},

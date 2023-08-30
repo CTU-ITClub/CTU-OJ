@@ -182,7 +182,7 @@ function count_down(label) {
         var time = Math.round(initial - (Date.now() - start) / 1000);
         if (time <= 0) {
             clearInterval(timer);
-            setTimeout(function() {
+            setTimeout(function () {
                 window.location.reload();
             }, 2000);
         }
@@ -322,5 +322,5 @@ $(function () {
     $(document).on('click', 'blockquote.spoiler', function (e) {
         $(this).addClass("is-visible");
         e.stopPropagation();
-    } );
+    });
 });

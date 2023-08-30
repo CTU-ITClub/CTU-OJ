@@ -1,33 +1,33 @@
 {% extends "tabs-base.html" %}
 
 {% block tabs %}
-    {{ make_tab('detail', 'fa-info-circle', url('contest_view', contest.key), _('Info')) }}
+    {{ make_tab('detail', 'info circle', url('contest_view', contest.key), _('Info')) }}
     {% if contest.can_see_full_submission_list(request.user) %}
-        {{ make_tab('stats', 'fa-pie-chart', url('contest_stats', contest.key), _('Statistics')) }}
+        {{ make_tab('stats', 'pie chart', url('contest_stats', contest.key), _('Statistics')) }}
     {% endif %}
 
     {% if contest.start_time <= now or perms.judge.see_private_contest %}
         {% if contest.can_see_own_scoreboard(request.user) %}
-            {{ make_tab('ranking', 'fa-bar-chart', url('contest_ranking', contest.key), _('Rankings')) }}
+            {{ make_tab('ranking', 'bar chart', url('contest_ranking', contest.key), _('Rankings')) }}
             {% if contest.csv_ranking %}
-                {{ make_tab('official_ranking', 'fa-bar-chart', url('contest_official_ranking', contest.key), _('Official Rankings')) }}
+                {{ make_tab('official_ranking', 'bar chart', url('contest_official_ranking', contest.key), _('Official Rankings')) }}
             {% endif %}
             {% if request.user.is_authenticated %}
-                {{ make_tab('participation', 'fa-users', url('contest_participation_own', contest.key), _('Participation')) }}
+                {{ make_tab('participation', 'users', url('contest_participation_own', contest.key), _('Participation')) }}
             {% endif %}
         {% else %}
-            {{ make_tab('ranking', 'fa-bar-chart', None, _('Hidden Rankings')) }}
+            {{ make_tab('ranking', 'bar chart', None, _('Hidden Rankings')) }}
         {% endif %}
-        {{ make_tab('submissions', 'fa-bar-chart', url('contest_all_submissions', contest.key), _('Submissions')) }}
+        {{ make_tab('submissions', 'bar chart', url('contest_all_submissions', contest.key), _('Submissions')) }}
     {% endif %}
     {% if can_edit %}
         {% if perms.judge.moss_contest and has_moss_api_key %}
-            {{ make_tab('moss', 'fa-gavel', url('contest_moss', contest.key), _('MOSS')) }}
+            {{ make_tab('moss', 'gavel', url('contest_moss', contest.key), _('MOSS')) }}
         {% endif %}
-        {{ make_tab('edit', 'fa-edit', url('contest_edit', contest.key), _('Edit')) }}
+        {{ make_tab('edit', 'edit', url('contest_edit', contest.key), _('Edit')) }}
     {% endif %}
     {% if perms.judge.clone_contest and can_edit %}
-        {{ make_tab('clone', 'fa-copy', url('contest_clone', contest.key), _('Clone')) }}
+        {{ make_tab('clone', 'copy', url('contest_clone', contest.key), _('Clone')) }}
     {% endif %}
 
     {% if request.user.is_authenticated %}
@@ -35,54 +35,55 @@
             {% set in_contest = contest.is_in_contest(request.user) %}
             {% if contest.ended %}
                 {# Allow users to leave the virtual contest #}
+                <div style="flex: 1"></div>
                 {% if in_contest %}
                     <form action="{{ url('contest_leave', contest.key) }}" method="post"
-                          class="contest-join-pseudotab unselectable button">
+                          class="contest-join-pseudotab unselectable">
                         {% csrf_token %}
-                        <input type="submit" class="leaving-forever" value="{{ _('Leave contest') }}">
+                        <input type="submit" class="leaving-forever ui button grey" value="{{ _('Leave contest') }}">
                     </form>
                 {% elif not contest.disallow_virtual %}
                     {# Allow users to virtual join #}
                     <form action="{{ url('contest_join', contest.key) }}" method="post"
-                          class="contest-join-pseudotab unselectable button">
+                          class="contest-join-pseudotab unselectable">
                         {% csrf_token %}
-                        <input type="submit" value="{{ _('Virtual join') }}" class="contest-join">
+                        <input type="submit" value="{{ _('Virtual join') }}" class="contest-join ui button primary">
                     </form>
                 {% endif %}
             {% else %}
                 {# Allow users to leave the contest #}
                 {% if in_contest %}
                     <form action="{{ url('contest_leave', contest.key) }}" method="post"
-                          class="contest-join-pseudotab unselectable button">
+                          class="contest-join-pseudotab unselectable">
                         {% csrf_token %}
                         <input type="submit" value="
                             {%- if request.participation.spectate %}
                                 {{- _('Stop spectating') -}}
                             {% else %}
                                 {{- _('Leave contest') -}}
-                            {% endif %}">
+                            {% endif %}" class="ui button red">
                     </form>
                 {% elif is_editor or is_tester or live_participation.ended %}
                     <form action="{{ url('contest_join', contest.key) }}" method="post"
-                          class="contest-join-pseudotab unselectable button">
+                          class="contest-join-pseudotab unselectable">
                         {% csrf_token %}
-                        <input type="submit" value="{{ _('Spectate contest') }}" class="contest-join">
+                        <input type="submit" value="{{ _('Spectate contest') }}" class="contest-join ui button green">
                     </form>
                 {% else %}
                     {% if contest.can_join and (has_joined or not contest.require_registration or contest.can_register) %}
                         <form action="{{ url('contest_join', contest.key) }}" method="post"
-                            class="contest-join-pseudotab unselectable button">
+                            class="contest-join-pseudotab unselectable">
                             {% csrf_token %}
                             <input type="submit"
-                                class="contest-join{% if not has_joined %} first-join{% endif %}"
+                                class="contest-join{% if not has_joined %} first-join{% endif %} ui button green"
                                 value="{{ _('Join contest') }}">
                         </form>
                     {% elif contest.can_register and not has_joined %}
                         <form action="{{ url('contest_register', contest.key) }}" method="post"
-                            class="contest-join-pseudotab unselectable button" style="background: linear-gradient(to bottom, #87ab69 0, #4b6043 100%) repeat-x">
+                            class="contest-join-pseudotab unselectable" style="background: linear-gradient(to bottom, #87ab69 0, #4b6043 100%) repeat-x">
                             {% csrf_token %}
                             <input type="submit"
-                                class="register-warning"
+                                class="register-warning ui button green"
                                 value="{{ _('Register') }}">
                         </form>
                     {% endif %}
@@ -91,9 +92,9 @@
         {% endif %}
     {% elif (contest.can_join and not contest.require_registration) or contest.can_register %}
         <form action="{{ url('auth_login') }}" method="get"
-              class="contest-join-pseudotab unselectable button">
+              class="contest-join-pseudotab">
             <input type="hidden" name="next" value="{{ LOGIN_RETURN_PATH|urlencode }}">
-            <input type="submit" value="{{ _('Log in to participate') }}">
+            <input type="submit" class="ui button" value="{{ _('Log in to participate') }}">
         </form>
     {% endif %}
 {% endblock %}

@@ -32,10 +32,13 @@
           content="{{ DMOJ_SCHEME }}://{{ DMOJ_CANONICAL|default(site.domain) }}{{ request.get_full_path() }}">
 
     {% block meta %}{% endblock %}
-    {% if not INLINE_FONTAWESOME %}
-        <link rel="stylesheet" href="{{ FONTAWESOME_CSS }}">
-    {% endif %}
+    <link rel="stylesheet" href="{{ FONTAWESOME_CSS }}">
     {% compress css %}
+        <link rel="stylesheet" href="{{ static('semantic.min.css') }}">
+        <link rel="stylesheet" href="{{ static('github-markdown.css') }}">
+        <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/styles/github.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
         {# TODO: once dark mode support is better, enable for all users by deleting the else branch #}
         {% if perms.judge.test_site %}
             {% if PREFERRED_STYLE_CSS is not none %}
@@ -47,32 +50,35 @@
         {% else %}
             <link rel="stylesheet" href="{{ static(LIGHT_STYLE_CSS) }}">
         {% endif %}
-        {% if INLINE_FONTAWESOME %}<link rel="stylesheet" href="{{ static('libs/fontawesome/font-awesome.css') }}">{% endif %}
+        <link rel="stylesheet" href="{{ static('libs/fontawesome/font-awesome.css') }}">
         <link rel="stylesheet" href="{{ static('source_sans_pro.css') }}">
         <link rel="stylesheet" href="{{ static('inconsolata.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ static('libs/clipboard/tooltip.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ static('libs/select2/select2.css') }}">
+
     {% endcompress %}
     <link rel="canonical"
           href="{{ DMOJ_SCHEME }}://{{ DMOJ_CANONICAL|default(site.domain) }}{{ request.get_full_path() }}">
-    {% if request.user.is_impersonate %}
-        <style>
-            #nav-container {
-                background: #893e89 !important;
-            }
-        </style>
-    {% endif %}
     {% block media %}{% endblock %}
     {% if not INLINE_JQUERY %}
         <script src="{{ JQUERY_JS }}"></script>
     {% endif %}
 
     {% compress js %}
+        <script src="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
         <script>{{ inlinei18n(LANGUAGE_CODE)|safe }}</script>
         {% if INLINE_JQUERY %}
             <script src="{{ static('libs/jquery-3.4.1.min.js') }}"></script>
         {% endif %}
         <script src="{{ static('libs/jquery-cookie.js') }}"></script>
+
+        <script src="{{ static('semantic.min.js') }}"></script>
+
+        <script src="{{ static('dmmd-preview.js') }}" type="module"></script>
+
         <script src="{{ static('libs/jquery-taphold.js') }}"></script>
         <script src="{{ static('libs/jquery.unveil.js') }}"></script>
         <script src="{{ static('libs/moment.js') }}"></script>
@@ -80,10 +86,33 @@
         {% include "extra_js.html" %}
         <script src="{{ static('common.js') }}"></script>
         <script src="{{ static('event.js') }}"></script>
+
         <script>
+            window._alert = function (text) {
+                Toastify({
+                    text,
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                }).showToast();
+            }
             moment.locale('{{ LANGUAGE_CODE }}');
             $(function () {
                 $('img.unveil').unveil(200);
+            });
+            $(document).ready(function () {
+
+                // Check for click events on the navbar burger icon
+                $(".navbar-burger").click(function () {
+
+                    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                    $(".navbar-burger").toggleClass("is-active");
+                    $(".navbar-menu").toggleClass("is-active");
+
+                });
             });
         </script>
     {% endcompress %}
@@ -150,7 +179,7 @@
                 $(function () {
                     event_dispatcher.auto_reconnect = true;
                     event_dispatcher.on('contest_{{ request.participation.contest.id_secret }}', function (data) {
-                        alert(data.title + '\n\n' + data.message);
+                        _alert(data.title + '\n\n' + data.message);
                     });
                 })
             {% endif %}
@@ -180,7 +209,7 @@
     {% endif %}
     <script>
         function submmit_language(lang) {
-            if (lang != "{{ LANGUAGE_CODE }}" ) {
+            if (lang != "{{ LANGUAGE_CODE }}") {
                 $("input[name=language]").val(lang)
                 $("#set_language").submit()
             }
@@ -199,173 +228,697 @@
     </noscript>
     <!-- Facebook Pixel Code -->
     <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '3854179708000474');
-    fbq('track', 'PageView');
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window,
+            document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '3854179708000474');
+        fbq('track', 'PageView');
     </script>
     <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=3854179708000474&ev=PageView&noscript=1"
+                   src="https://www.facebook.com/tr?id=3854179708000474&ev=PageView&noscript=1"
     /></noscript>
     <!-- DO NOT MODIFY -->
     <!-- End Facebook Pixel Code -->
+
+    <script defer>
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        @font-face {
+            font-family: 'Monaco';
+            src: url('{{ static('fonts/Monaco 400.ttf') }}');
+            font-weight: 400;
+        }
+
+        .markdown-body code {
+            font-family: 'Monaco', monospace;
+        }
+
+        html {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .ui {
+            font-family: 'Roboto', sans-serif !important;
+        }
+
+        pre.line {
+            margin: 0;
+            display: block;
+        }
+
+        .codehilite {
+            position: relative;
+        }
+
+        .copy-clipboard {
+            padding: 5px 10px;
+            width: fit-content;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: -45px;
+            margin-left: calc(100% - 70px);
+            position: relative;
+            background: #fff;
+        }
+
+        .codehilite .copy-clipboard {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            margin: 0;
+        }
+
+        .AB {
+            background-color: #cccccc50 !important;
+            color: black !important;
+        }
+
+        .AC {
+            background-color: #53f23f90 !important;
+            color: green !important;
+        }
+
+        ._AC {
+            background-color: #DFFF0090 !important;
+            color: green !important;
+        }
+
+        .WA {
+            background-color: #ef1b5320 !important;
+            color: #ef1b53 !important;
+        }
+
+        .TLE, .MLE {
+            background-color: #cccccc50 !important;
+            color: black !important;
+        }
+
+        .OLE, .IR, .RTE, .OTH {
+            background-color: #FAB62390 !important;
+            color: black !important;
+        }
+
+        .CE {
+            background-color: #cccccc50 !important;
+            color: black !important;
+        }
+
+        .IE {
+            background-color: #ef1b5320 !important;
+            color: #ef1b53 !important;
+        }
+
+        .QU, .G {
+            background: white !important;
+            color: black !important;
+        }
+
+        .case-AC {
+            color: green;
+            font-weight: bold;
+        }
+
+        .case-_AC {
+            color: #BBCC00;
+            font-weight: bold;
+        }
+
+        .case-WA {
+            color: red;
+            font-weight: bold;
+        }
+
+        .case-TLE, .case-SC {
+            color: grey;
+            font-weight: bold;
+        }
+
+        .case-MLE, .case-OLE, .case-RTE, .case-IR {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .points.header, .points.header * {
+            color: #000 !important;
+            text-align: center;
+        }
+
+        /*** Responsive header ***/
+
+        @media screen and (max-width: 1127px) {
+            #hide-on-mobile {
+                display: none;
+            }
+        }
+
+        @media screen and (min-width: 1128px) {
+            #show-on-mobile {
+                display: none;
+            }
+        }
+
+
+        /*** ZIT Label ***/
+        .zit-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 10px;
+            background: linear-gradient(45deg, #46d3ff30, #5eff8c30);
+            border-radius: 50px;
+            width: fit-content;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .zit-label::before {
+            content: '';
+            width: 40px;
+            height: 200px;
+            background: #ffffff10;
+            position: absolute;
+            top: 0;
+            transform: skew(-20deg);
+            animation: zit_label 4s infinite;
+        }
+
+        .zit-label::after {
+            content: '';
+            width: 10px;
+            height: 200px;
+            background: #ffffff10;
+            position: absolute;
+            top: 0;
+            transform: skew(-20deg);
+            animation: zit_label 5s infinite;
+        }
+
+        @keyframes zit_label {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        .zit-label div {
+            padding-right: 10px;
+            color: #fff;
+        }
+
+        .zit-label span {
+            font-weight: 900;
+            color: transparent;
+            background: linear-gradient(45deg, #46d3ff, #5eff8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dmoj-label img {
+            width: 200px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        /** Fix semantic message icon **/
+        .ui.message.icon .icon {
+            font-size: 1rem !important;
+        }
+
+        {%  if not misc_config.turn_off_header_animation %}
+            #page-header::before {
+                content: '';
+                width: 100px;
+                height: 100%;
+                background: #ffffff20;
+                position: absolute;
+                top: 0;
+                transform: skew(-20deg);
+                animation: zit_label 10s infinite;
+            }
+        {% endif %}
+    </style>
 </head>
 <body>
-    <script>
-        fbq('track', 'ViewContent');
-    </script>
+<script>
+    fbq('track', 'ViewContent');
+</script>
 <svg width="0" height="0" style="display: block">
     <defs>
-        <clipPath id="rating-clip"><circle cx="8" cy="8" r="7"/></clipPath>
+        <clipPath id="rating-clip">
+            <circle cx="8" cy="8" r="7"/>
+        </clipPath>
     </defs>
 </svg>
-<nav id="navigation" class="unselectable">
-    <div id="nav-container">
-        <a id="navicon" href="javascript:void(0)"><i class="fa fa-bars"></i></a>
-        <ul id="nav-list">
-            <li class="home-nav-element"><a href="{{ url('home') }}">{% include "site-logo-fragment.html" %}</a></li>
-            <li class="home-nav-element"><span class="nav-divider"></span></li>
-            <li class="home-menu-item"><a href="{{ url('home') }}" class="nav-home">{{ _('Home') }}</a></li>
-            {% for node in mptt_tree(nav_bar) recursive %}
-                <li>
-                    <a href="{{ node.path }}" class="nav-{{ node.key }}{% if node.key in nav_tab %} active{% endif %}">
-                        {{ _(node.label) }}
-                        {% if not node.is_leaf_node() %}
-                            <div class="nav-expand">&gt;</div>
-                        {% endif %}
-                    </a>
-                    {% with children=node.get_children() %}
-                        {% if children %}<ul>{{ loop(children) }}</ul>{% endif %}
-                    {% endwith %}
-                </li>
-            {% endfor %}
-        </ul>
 
-        <span id="user-links">
-            <a href=
-                {% if request.resolver_match.view_name == "problem_detail" and problem %}
-                    "{{ url('new_problem_ticket', problem.code) }}"
-                {% else %}
-                    "/tickets/new?issue_url={{ request.build_absolute_uri()|urlencode }}"
-                {% endif %}
-            style="margin-right: 5px;">
-                <span title="{{ _('Report issue') }}">
-                    <i class="fa fa-exclamation-triangle" style="color: yellow;"></i>
-                </span>
-            </a>
-            <a id="flag_vi" href="#" onclick="submmit_language('vi')" style="margin-right: 5px; margin-top: 4px;">
-                <img src="{{ static('icons/vi_flag.svg') }}" alt="VI" height="24">
-            </a>
-            <a id="flag_en" href="#" onclick="submmit_language('en')" style="margin-right: 5px; margin-top: 4px;">
-                <img src="{{ static('icons/gb_flag.svg') }}" alt="EN" height="24">
-            </a>
-            {% if request.user.is_authenticated %}
-                <ul>
-                    <li>
-                        <a href="{{ url('user_page') }}">
-                            <span>
-                                <img src="{{ gravatar(request.user, 32) }}" height="24" width="24">{# -#}
-                                <span>{{ _('Hello, %(username)s.', username=bold(request.user.first_name or request.profile.display_name)) }}</span>
-                            </span>
-                        </a>
-                        <ul style="width: 150px">
-                            {% if request.user.is_staff or request.user.is_superuser %}
-                                <li><a href="{{ url('admin:index') }}">{{ _('Admin') }}</a></li>
-                            {% endif %}
-                            <li><a href="{{ url('user_edit_profile') }}">{{ _('Edit profile') }}</a></li>
-                            {% if request.user.is_impersonate %}
-                                <li><a href="{{ url('impersonate-stop') }}">{{ _('Stop impersonating') }}</a></li>
-                            {% else %}
-                                <li>
-                                    <form action="{{ url('auth_logout') }}" method="POST">
-                                        {% csrf_token %}
-                                        <button type="submit">{{ _('Log out') }}</button>
-                                    </form>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                </ul>
-            {% else %}
-                <span class="anon">
-                    <a href="{{ url('auth_login') }}?next={{ LOGIN_RETURN_PATH|urlencode }}"><b>{{ _('Log in') }}</b></a>
-                    &nbsp;{{ _('or') }}&nbsp;
-                    <a href="{{ url('registration_register') }}"><b>{{ _('Sign up') }}</b></a>
-                </span>
-            {% endif %}
-        </span>
-    </div>
-    <div id="nav-shadow"></div>
-</nav>
-{% if request.in_contest %}
-    {% set current_contest = request.participation.contest %}
-    <div id="contest-info">
-        <a href="{{ url('contest_view', current_contest.key) }}">
-            {{ current_contest.name }} -
-            {% if request.participation.spectate %}
-                {{ _('spectating') }}
-            {% elif request.participation.end_time %}
-                <div id="contest-time-remaining" data-secs="{{ request.participation.time_remaining|seconds }}">
-                    {{ request.participation.time_remaining|timedelta("localized") }}
+<div class="ui sidebar bottom vertical menu" id="mobile-nav">
+    <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
+
+    {% for node in mptt_tree(nav_bar) recursive %}
+        {% if not node.is_leaf_node() %}
+            <div class="ui item accordion">
+                <div class="title">
+                    {{ user_trans(node.label) }}
+                    <i class="dropdown icon"></i>
                 </div>
-            {% else %}
-                {{ _('virtual') }}
-            {% endif %}
-        </a>
-        {% if current_contest.can_see_own_scoreboard(request.user) %}
-            <a href="{{ url('contest_ranking', current_contest.key) }}" style="text-align: center; font-size: 0.7em; color: #DCD427;">
-                {{ _('Go to Rankings') }}
+
+                {% with children=node.get_children() %}
+                    {% if children %}
+                        <div class="content">
+                            <a class="item" href="{{ node.path }}">
+                                {{ node.label }}
+                            </a>
+                            {{ loop(children) }}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+        {% else %}
+            <a href="{{ node.path }}" class="item{% if node.key in nav_tab %} active{% endif %}">
+                {{ node.label }}
             </a>
         {% endif %}
+    {% endfor %}
+
+    <a class="item right" href="{% if request.resolver_match.view_name == "problem_detail" and problem %}
+                {{ url('new_problem_ticket', problem.code) }}
+                {% else %}
+                /tickets/new?issue_url={{ request.build_absolute_uri()|urlencode }}
+                {% endif %}"
+       style="margin-right: 5px;">
+
+        <i class="bug icon"></i>
+        <span>
+                {{ _('Report issue') }}
+                </span>
+    </a>
+
+    <div class="ui item accordion">
+        <div class="title">
+            <i class="icon translate"></i>
+            {{ _('Language') }}
+        </div>
+
+        <div class="content">
+            <a id="flag_vi" class="item" href="#" onclick="submmit_language('vi')"
+               style="margin-right: 5px; margin-top: 4px;">
+                <i class="flag vn"></i>
+                Tiếng Việt
+            </a>
+
+            <a id="flag_en" class="item" href="#" onclick="submmit_language('en')"
+               style="margin-right: 5px; margin-top: 4px;">
+                <i class="flag us"></i>
+
+                English
+            </a>
+        </div>
     </div>
-{% endif %}
-<div id="page-container">
+
+    {% if request.user.is_authenticated %}
+
+        <div class="ui item accordion">
+            <div class="title">
+                <img class="ui image circular inline" src="{{ gravatar(request.user, 24) }}">
+                {{ _('Hello, %(username)s.', username=bold(request.profile.display_name)) }}
+            </div>
+
+            <div class="content">
+                {% if request.user.is_staff or request.user.is_superuser %}
+                    <a class="item has-icons-right" target="_blank" href="{{ url('admin:index') }}">
+                        {{ _('Admin') }}
+                    </a>
+                {% endif %}
+                <a class="item" href="{{ url('user_edit_profile') }}">{{ _('Edit profile') }}</a>
+                {% if request.user.is_impersonate %}
+                    <a class="item"
+                       href="{{ url('impersonate-stop') }}">{{ _('Stop impersonating') }}</a>
+                {% else %}
+                    <form action="{{ url('auth_logout') }}" method="POST" hidden>
+                        {% csrf_token %}
+                        <button id="logout-btn" type="submit" hidden>{{ _('Log out') }}</button>
+                    </form>
+                    <label for="logout-btn" class="item">{{ _('Log out') }}</label>
+                {% endif %}
+            </div>
+        </div>
+
+    {% else %}
+        <div class="item">
+
+            <a class="ui button " href="{{ url('auth_login') }}">
+                {{ _('Login') }}
+            </a>
+
+            {% if misc_config.registration %}
+                <a class="item button primary" href="{{ url('registration_register') }}">
+                    {{ _('Register') }}
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<div id="page-container" class="ui pusher">
+    <nav class="ui menu main fixed borderless top inverted {% if request.user.is_impersonate %} red compact {% endif %}"
+         id="page-header">
+        <div class="ui container">
+
+            <a href="{{ url('home') }}" class="header item">
+                <div style="display: flex; align-items: center; gap: 10px">
+                    {% include "site-logo-fragment.html" %}
+
+                    {% if request.user.is_impersonate %}
+                        <span class="ui label">{{ _('Impersonate') }}</span>
+                    {% endif %}
+                </div>
+            </a>
+
+            <div class="ui menu container fluid inverted {% if request.user.is_impersonate %} red compact{% endif %}"
+                 style="border: none; border-radius: 0" id="hide-on-mobile">
+                <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
+
+                {% for node in mptt_tree(nav_bar) recursive %}
+                    {% if not node.is_leaf_node() %}
+                        <div class="ui item simple dropdown">
+                            <a href="{{ node.path }}">
+                                {{ user_trans(node.label) }}
+                            </a>
+
+                            <i class="dropdown icon"></i>
+
+                            {% with children=node.get_children() %}
+                                {% if children %}
+                                    <div class="menu">{{ loop(children) }}</div>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+
+                    {% else %}
+                        <a href="{{ node.path }}" class="item{% if node.key in nav_tab %} active{% endif %}">
+                            {{ node.label }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+                <a class="item right" href="{% if request.resolver_match.view_name == "problem_detail" and problem %}
+                {{ url('new_problem_ticket', problem.code) }}
+                {% else %}
+                /tickets/new?issue_url={{ request.build_absolute_uri()|urlencode }}
+                {% endif %}"
+                   style="margin-right: 5px;">
+
+                    <i class="bug icon"></i>
+                    <span>
+                {{ _('Report issue') }}
+                </span>
+                </a>
+
+                <div class="ui item dropdown simple">
+                    <i class="icon translate"></i>
+
+                    {{ _('Language') }}
+
+                    <div class="menu">
+                        <a id="flag_vi" class="item" href="#" onclick="submmit_language('vi')"
+                           style="margin-right: 5px; margin-top: 4px;">
+                            <i class="flag vn"></i>
+                            Tiếng Việt
+                        </a>
+
+                        <a id="flag_en" class="item" href="#" onclick="submmit_language('en')"
+                           style="margin-right: 5px; margin-top: 4px;">
+                            <i class="flag us"></i>
+
+                            English
+                        </a>
+                    </div>
+                </div>
+
+                {% if request.user.is_authenticated %}
+
+                    <div class="ui item dropdown simple">
+                        <a href="{{ url('user_page') }}">
+                            <img class="ui image circular inline" src="{{ gravatar(request.user, 24) }}">
+
+                            <span class="ml-2">
+                        {{ _('Hello, %(username)s.', username=bold(request.profile.display_name)) }}
+                    </span>
+                        </a>
+
+                        <div class="menu">
+                            {% if request.user.is_staff or request.user.is_superuser %}
+                                <a class="item has-icons-right" target="_blank" href="{{ url('admin:index') }}">
+                                    {{ _('Admin') }}
+                                </a>
+                            {% endif %}
+                            <a class="item" href="{{ url('user_edit_profile') }}">{{ _('Edit profile') }}</a>
+                            {% if request.user.is_impersonate %}
+                                <a class="item"
+                                   href="{{ url('impersonate-stop') }}">{{ _('Stop impersonating') }}</a>
+                            {% else %}
+                                <label class="item" for="logout-btn">{{ _('Logout') }}</label>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                {% else %}
+                    <div class="item">
+                        <a class="ui button " href="{{ url('auth_login') }}">
+                            {{ _('Login') }}
+                        </a>
+
+                        {% if misc_config.registration %}
+                            <a class="ui button primary" style="margin-left: 10px;"
+                               href="{{ url('registration_register') }}">
+                                {{ _('Register') }}
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="item right" id="show-on-mobile">
+                <button class="ui button icon circular">
+                    <i class="icon bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div style="height: 80px"></div>
     <noscript>
         <div id="noscript">{{ _('This site works best with JavaScript enabled.') }}</div>
     </noscript>
-    <br>
-    <main id="content">
+
+    <main id="content" class="ui container" style="min-height: calc(100vh - 410px)">
         {% if misc_config.top_notification %}
             {{ render_django(misc_config.top_notification) }}
         {% endif %}
         {% block title_row %}
-            <h2 style="display:inline">
+            <h2 class="ui header">
                 {% block content_title %}
                     {% if content_title %}{{ content_title }}{% else %}{{ title }}{% endif %}
                 {% endblock %}
             </h2>
+
+            <div class="ui divider"></div>
         {% endblock %}
         {% block header %}{% endblock %}
         {% block title_ruler %}
-            <hr>
+            {#            <hr class="ui divider"/>#}
         {% endblock %}
         <div id="content-body">{% block body %}{% endblock %}</div>
+        {% block bodyend %}{% endblock %}
     </main>
 
     {% if misc_config.announcement %}
         <div id="announcement">{{ misc_config.announcement|safe }}</div>
     {% endif %}
 
-    {% block bodyend %}{% endblock %}
+    <footer class="ui footer segment inverted"
+            style="border-radius: 0; padding: 50px 0; margin-top: 50px; margin-bottom: 0;">
+        <div id="footer-content" class="ui container aligned">
+            <div class="ui stackable grid">
+                <div class="column eight wide">
+                    <div style="display: flex; align-items: center" class="dmoj-label">
+                        {% include 'site-logo-fragment.html' %}
+                    </div>
 
-    <footer>
-        <span id="footer-content">
-            <br>
-            {{_('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #808080" href="https://dmoj.ca"><b>DMOJ</b></a>'))}} |
-            {{_('follow us on %(github)s and %(facebook)s', github=safe('<a style="color: #808080" target="_blank" href="https://github.com/CTU-ITClub/CTU-OJ"><b>Github</b></a>'), facebook=safe('<a style="color: #808080" target="_blank" href="https://www.facebook.com/ctuit.club"><b>Facebook</b></a>'))}}
-            {% if misc_config.footer %}
-                {{ misc_config.footer|safe }} |
-            {% endif %}
-            <form id="set_language" action="{{ url('set_language') }}" method="post" style="display: inline">
-                {% csrf_token %}
-            <input name="next" type="hidden" value="{{ request.get_full_path() }}">
-            <input name="language" type="hidden" value="{{LANGUAGE_CODE}}">
-          </form>
-        </span>
+                    <a href="https://fb.com/zit.software" class="zit-label" target="_blank">
+                        <img src="https://github.com/zit-software.png" class="ui image avatar mini"/>
+
+                        <div>
+                            {{ _('Customized by ') }}
+                            <span>
+                                ZIT Software
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                <div class="four wide column">
+                    <div class="ui header inverted">
+                        <i class="icon building"></i>
+                        <div class="content">
+                            Đơn vị
+                        </div>
+                    </div>
+                    <hr class="ui divider"/>
+                    <div class="ui list link inverted relaxed divided">
+                        <a class="item" href="https://ctu.edu.vn" target="_blank">
+                            <i class="icon university"></i>
+                            <div class="content">
+                                Đại học Cần Thơ
+                            </div>
+                        </a>
+                        <a class="item" href="https://htql.ctu.edu.vn" target="_blank">
+                            <i class="icon server"></i>
+                            <div class="content">
+                                Hệ thống quản lý
+                            </div>
+                        </a>
+                        <a class="item" href="https://cit.ctu.edu.vn" target="_blank">
+                            <i class="icon building"></i>
+                            <div class="content">
+                                Trường CNTT&TT
+                            </div>
+                        </a>
+                        <a class="item" href="https://cit.ctu.edu.vn/doankhoa" target="_blank">
+                            <i class="icon users"></i>
+                            <div class="content">
+                                Đoàn Trường CNTT&TT
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="four wide column">
+                    <div class="ui header inverted">
+                        <i class="icon linkify"></i>
+                        <div class="content">
+                            Liên kết
+                        </div>
+                    </div>
+                    <hr class="ui divider"/>
+                    <div class="ui list link inverted relaxed divided">
+                        <a class="item" href="https://ctuit.club" target="_blank">
+                            <i class="icon computer"></i>
+                            <div class="content">
+                                Câu lạc bộ tin học
+                            </div>
+                        </a>
+                        <a class="item" href="https://www.facebook.com/ctuit.club/" target="_blank">
+                            <i class="icon facebook"></i>
+                            <div class="content">
+                                Facebook
+                            </div>
+                        </a>
+                        <a class="item" href="https://github.com/CTU-ITClub" target="_blank">
+                            <i class="icon github"></i>
+                            <div class="content">
+                                Github
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="ui divider"/>
+
+            <div>
+                {{ _('proudly powered by %(dmoj)s', dmoj=safe('<a style="color: #808080" href="https://dmoj.ca"><b>DMOJ</b></a>')) }}
+                |
+                {{ _('follow us on %(github)s and %(facebook)s', github=safe('<a style="color: #808080" href="https://github.com/CTU-ITClub/OJ" target="_blank"><b>Github</b></a>'), facebook=safe('<a style="color: #808080" href="https://www.facebook.com/ctuit.club" target="_blank"><b>Facebook</b></a>')) }}
+                {% if misc_config.footer %}
+                    {{ misc_config.footer|safe }} |
+                {% endif %}
+                <form id="set_language" action="{{ url('set_language') }}" method="post" style="display: none">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path() }}">
+                    <input name="language" type="hidden" value="{{ LANGUAGE_CODE }}">
+                </form>
+            </div>
+
+        </div>
     </footer>
+
+    {% if request.in_contest %}
+        <style>
+            .contest-board {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                background: #000;
+                left: 0;
+                z-index: 100;
+            }
+
+            .contest-board .container {
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+        </style>
+        {% set current_contest = request.participation.contest %}
+        <div style="height: 10px"></div>
+        <div class="contest-board">
+            <div class="ui container">
+                <a href="{{ url('contest_view', current_contest.key) }}"
+                   style="flex: 1; display: flex; align-items: center; color: #fff; font-size: 20px">
+                    <i class="icon fire red"></i>
+                    {{ current_contest.name }} <i class="icon angle right"></i>
+                    {% if request.participation.spectate %}
+                        {{ _('spectating') }}
+                    {% elif request.participation.end_time %}
+                        <div id="contest-time-remaining" data-secs="{{ request.participation.time_remaining|seconds }}">
+                            {{ request.participation.time_remaining|timedelta("localized") }}
+                        </div>
+                    {% else %}
+                        {{ _('virtual') }}
+                    {% endif %}
+                </a>
+
+                {% if current_contest.can_see_own_scoreboard(request.user) %}
+                    <a href="{{ url('contest_ranking', current_contest.key) }}" class="ui button green">
+                        {{ _('Go to Rankings') }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <script>
+        $('select.dropdown').dropdown();
+        $('.ui.accordion').accordion();
+
+        $('#show-on-mobile').click(() => {
+            $('#mobile-nav').sidebar('toggle');
+        })
+    </script>
 </div>
 </body>
 </html>

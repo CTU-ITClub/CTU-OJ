@@ -1,5 +1,10 @@
-<form id="edit-notes" action="{{ url('ticket_notes', ticket.id) }}" method="post">
+<form id="edit-notes" action="{{ url('ticket_notes', ticket.id) }}" method="post" class="ui form">
     {% csrf_token %}
     {{ form.notes }}
-    <button type="submit" class="submit">{{ _('Update') }}</button>
+
+    <hr class="ui divider"/>
+    <button type="submit" class="submit ui button yellow">
+        <i class="icon pencil"></i>
+        {{ _('Update') }}
+    </button>
 </form>

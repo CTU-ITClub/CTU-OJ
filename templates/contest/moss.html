@@ -14,6 +14,7 @@
             flex-wrap: wrap;
             justify-content: center;
         }
+
         .pane {
             padding: 20px;
         }
@@ -34,7 +35,7 @@
 {% endblock %}
 {% block body %}
     {% if has_results %}
-        <table class="table striped">
+        <table class="ui table striped celled">
             <thead>
             <tr>
                 <th class="header">{{ _('Problem') }}</th>
@@ -44,45 +45,47 @@
             </tr>
             </thead>
             <tbody>
-                {% for problem, results in moss_results %}
-                    <tr id="problem-{{ problem.code }}">
+            {% for problem, results in moss_results %}
+                <tr id="problem-{{ problem.code }}">
+                    <td>
+                        <a href="{{ url('problem_detail', problem.code) }}">{{ problem.name }}</a>
+                    </td>
+                    {% for result in results %}
                         <td>
-                            <a href="{{ url('problem_detail', problem.code) }}">{{ problem.name }}</a>
-                        </td>
-                        {% for result in results %}
-                            <td>
-                                {% if result.submission_count %}
-                                    <a href="{{ result.url }}">{% trans trimmed count=result.submission_count %}
+                            {% if result.submission_count %}
+                                <a class="ui label red icon very basic" href="{{ result.url }}">
+                                    <i class="icon warning"></i>
+                                    {% trans trimmed count=result.submission_count %}
                                         {{ count }} submission
-                                    {% pluralize %}
+                                        {% pluralize %}
                                         {{ count }} submissions
                                     {% endtrans %}</a>
-                                {% else %}
-                                    {{ _('No submissions') }}
-                                {% endif %}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
+                            {% else %}
+                                {{ _('No submissions') }}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     {% endif %}
     <div class="panes">
-        <div class="pane">
-            <form method="post" action="{{ url('contest_moss', contest.key) }}">
-                {% csrf_token %}
-                <input type="submit" class="unselectable button full contest-moss" style="padding: 10px;"
-                       value="{% if has_results %} {{ _('Re-MOSS contest') }} {% else %} {{ _('MOSS contest') }} {% endif %}">
-            </form>
-        </div>
+        <form method="post" action="{{ url('contest_moss', contest.key) }}">
+            {% csrf_token %}
+            <button type="submit" class="ui button black">
+                <i class="icon gavel"></i>
+                {% if has_results %} {{ _('Re-MOSS contest') }} {% else %} {{ _('MOSS contest') }} {% endif %}
+            </button>
+        </form>
         {% if has_results %}
-            <div class="pane">
-                <form method="post" action="{{ url('contest_moss_delete', contest.key) }}">
-                    {% csrf_token %}
-                    <input type="submit" class="unselectable button full contest-moss-delete" style="padding: 10px;"
-                           value="{{ _('Delete MOSS results') }}">
-                </form>
-            </div>
+            <form method="post" action="{{ url('contest_moss_delete', contest.key) }}">
+                {% csrf_token %}
+                <button type="submit" class="ui button red">
+                    <i class="icon trash"></i>
+                    {{ _('Delete MOSS results') }}
+                </button>
+            </form>
         {% endif %}
     </div>
 {% endblock %}

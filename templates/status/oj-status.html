@@ -89,7 +89,7 @@
                     }
                 }, cb);
 
-                $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+                $('#daterange').on('apply.daterangepicker', function (ev, picker) {
                     draw_charts(picker.startDate, picker.endDate);
                 });
             });
@@ -112,56 +112,78 @@
 {% endblock %}
 
 {% block body %}
-    <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
-        <i class="fa fa-calendar"></i>&nbsp;
-        <span></span> <i class="fa fa-caret-down"></i>
+    <div style="position: sticky; top: 50px; z-index: 1; padding-top: 20px; background:#fff;">
+        <div id="daterange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc;">
+            <i class="icon calendar"></i>&nbsp;
+            <span></span> <i class="icon dropdown"></i>
+        </div>
+        <hr class="ui divider"/>
     </div>
-    <table id="stats-table" class="table">
-        <tr>
-            <th colspan="2">{{ _('Submissions by Day') }}</th>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div id="by-day" style="height: 500px">
-                    <canvas></canvas>
+
+
+    <div class="ui grid stackable">
+        <div class="column eight wide">
+            <h3 class="ui header">
+                <i class="icon calendar outline"></i>
+                <div class="content">
+                    {{ _('Submissions by Day') }}
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <th>{{ _('Submissions by Language') }}</th>
-            <th>{{ _('Submissions Result') }}</th>
-        </tr>
-        <tr>
-            <td>
-                <div id="by-language" style="display: flex; justify-content: center;">
-                    <canvas width="400" height="300"></canvas>
+            </h3>
+
+            <div id="by-day" style="height: 500px" class="ui segment">
+                <canvas></canvas>
+            </div>
+        </div>
+        <div class="column eight wide">
+            <h3 class="ui header">
+                <i class="icon code"></i>
+                <div class="content">
+                    {{ _('Submissions by Language') }}
                 </div>
-            </td>
-            <td >
-                <div id="result" style="display: flex; justify-content: center;">
-                    <canvas width="550" height="300"></canvas>
+            </h3>
+
+            <div id="by-language" style="display: flex; justify-content: center;" class="ui segment">
+                <canvas width="400" height="300"></canvas>
+            </div>
+        </div>
+
+        <div class="column eight wide">
+            <h3 class="ui header">
+                <i class="icon check"></i>
+                <div class="content">
+                    {{ _('Submissions Result') }}
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <th colspan="2">{{ _('Queue Time') }}</th>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div id="queue-time">
-                    <canvas></canvas>
+            </h3>
+
+            <div id="result" style="display: flex; justify-content: center;" class="ui segment">
+                <canvas width="550" height="300"></canvas>
+            </div>
+        </div>
+
+        <div class="column eight wide">
+            <h3 class="ui header">
+                <i class="icon clock circle outline"></i>
+                <div class="content">
+                    {{ _('Queue Time') }}
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <th colspan="2">{{ _('Organization Submissions/New Problems by Day') }}</th>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div id="org-by-day" style="height: 500px">
-                    <canvas></canvas>
+            </h3>
+
+            <div id="queue-time" class="ui segment">
+                <canvas></canvas>
+            </div>
+        </div>
+
+        <div class="column sixteen wide">
+            <h3 class="ui header">
+                <i class="icon users"></i>
+                <div class="content">
+                    {{ _('Organization Submissions/New Problems by Day') }}
                 </div>
-            </td>
-        </tr>
-    </table>
+            </h3>
+
+            <div id="org-by-day" style="height: 500px" class="ui segment">
+                <canvas></canvas>
+            </div>
+        </div>
+    </div>
 {% endblock %}

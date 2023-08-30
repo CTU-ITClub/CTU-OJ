@@ -5,27 +5,6 @@
 {% endblock %}
 
 {% block media %}
-    <style>
-        .post {
-            margin: 0 0.5em;
-        }
-
-        .post:first-child {
-            margin-top: 0.6em;
-        }
-
-        .comment-count {
-            font-size: 12px;
-        }
-
-        .comment-icon {
-            padding: 0.1em 0.2em 0 0.5em;
-        }
-
-        .comment-count-link {
-            color: #555;
-        }
-    </style>
 {% endblock %}
 
 {% block title_row %}
@@ -37,17 +16,16 @@
 
 {% block body %}
     {% block before_posts %}{% endblock %}
-    <div id="blog-container">
-        <div class="blog-content sidebox">
-            <div class="sidebox-content" style="border: unset;">
-                {% for post in posts %}
-                    {% include "blog/blog-post.html" %}
-                {% endfor %}
-            </div>
-            {% if page_obj.has_other_pages() %}
-                <div class="bottom-pagination-bar">{% include "list-pages.html" %}</div>
-            {% endif %}
+    <div id="blog-container" class="ui container">
+        <div class="ui feed" style="border: unset;">
+            {% for post in posts %}
+                {% include "blog/blog-post.html" %}
+            {% endfor %}
         </div>
+        {% if page_obj.has_other_pages() %}
+            <div class="bottom-pagination-bar">{% include "list-pages.html" %}</div>
+        {% endif %}
+    </div>
     {% block after_posts %}{% endblock %}
 {% endblock %}
 

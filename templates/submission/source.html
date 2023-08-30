@@ -62,39 +62,75 @@
 {% endblock %}
 
 {% block body %}
-    <br>
-    <div><a href="{{ url('submission_status', submission.id) }}">{{ _('View status') }}</a></div>
-    <div><a href="{{ url('submission_source_raw', submission.id) }}">{{ _('View raw source') }}</a></div>
-    {% if (request.user == submission.user.user or perms.judge.resubmit_other) and not submission.language.file_only %}
-        <div><a href="{{ url('problem_submit', submission.problem.code, submission.id) }}">{{ _('Resubmit') }}</a></div>
-    {% endif %}
-    {% set can_edit = submission.problem.is_editable_by(request.user) %}
-    {% if perms.judge.rejudge_submission and can_edit and not submission.is_locked %}
-        <div>
-            <form action="{{ url('submission_rejudge') }}" method="post">
-                {% csrf_token %}
-                <a href="#" onclick="parentNode.submit()">{{ _('Rejudge') }}</a>
-                <input type="hidden" name="id" value="{{ submission.id }}">
-                <input type="hidden" name="path" value="{{ url('submission_status', submission.id) }}">
-            </form>
+    <hr class="ui divider"/>
+    <div class="ui grid stackable">
+        <div class="column four wide">
+            <div class="ui segment">
+                <div class="ui list relaxed divided">
+                    <a class="item" href="{{ url('submission_status', submission.id) }}">
+                        <i class="icon check"></i>
+                        <div class="content">
+                            <div class="header">
+                                {{ _('View status') }}
+                            </div>
+                        </div>
+                    </a>
+                    <a class="item" href="{{ url('submission_source_raw', submission.id) }}">
+                        <i class="icon file code outline"></i>
+                        <div class="content">
+                            <div class="header">
+                                {{ _('View raw source') }}
+                            </div>
+                        </div>
+                    </a>
+                    {% if (request.user == submission.user.user or perms.judge.resubmit_other) and not submission.language.file_only %}
+                        <a class="item" href="{{ url('problem_submit', submission.problem.code, submission.id) }}">
+                            <i class="icon upload"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{ _('Resubmit') }}
+                                </div>
+                            </div>
+                        </a>
+                    {% endif %}
+                    {% set can_edit = submission.problem.is_editable_by(request.user) %}
+                    {% if perms.judge.rejudge_submission and can_edit and not submission.is_locked %}
+                        <a href="#" onclick="$('#re-judge').submit()" class="item">
+                            <i class="icon refresh"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{ _('Rejudge') }}
+                                </div>
+                            </div>
+                        </a>
+                        <form action="{{ url('submission_rejudge') }}" method="post" id="re-judge">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ submission.id }}">
+                            <input type="hidden" name="path" value="{{ url('submission_status', submission.id) }}">
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    {% endif %}
-    <br>
-    <hr>
-    <div class="source-wrap">
-        <table>
-            <tr>
-                <td class="source-ln">
-                    <div>
-                        {% for line in raw_source.split('\n') %}
-                            <a href="#line-{{ loop.index }}" name="line-{{ loop.index }}">
-                                <pre class="line">{{ loop.index }}</pre>
-                            </a>
-                        {% endfor %}
-                    </div>
-                </td>
-                <td class="source-code">{{ highlighted_source }}</td>
-            </tr>
-        </table>
+        <div class="column twelve wide">
+            <div class="ui segment">
+                <div class="source-wrap">
+                    <table>
+                        <tr>
+                            <td class="source-ln">
+                                <div>
+                                    {% for line in raw_source.split('\n') %}
+                                        <a href="#line-{{ loop.index }}" name="line-{{ loop.index }}">
+                                            <pre class="line">{{ loop.index }}</pre>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td class="source-code">{{ highlighted_source }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

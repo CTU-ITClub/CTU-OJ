@@ -17,7 +17,7 @@ from sortedm2m.forms import SortedMultipleChoiceField
 from judge.models import Language, Organization, Profile, TIMEZONE
 from judge.utils.recaptcha import ReCaptchaField, ReCaptchaWidget
 from judge.utils.subscription import Subscription, newsletter_id
-from judge.widgets import Select2MultipleWidget, Select2Widget
+from judge.widgets.dropdown import DropdownMultipleWidget, DropdownWidget
 
 bad_mail_regex = list(map(re.compile, settings.BAD_MAIL_PROVIDER_REGEX))
 
@@ -27,13 +27,12 @@ class CustomRegistrationForm(RegistrationForm):
                                 error_messages={'invalid': _('A username must contain letters, '
                                                              'numbers, or underscores.')})
     full_name = forms.CharField(max_length=30, label=_('Full name'), required=False)
-    timezone = ChoiceField(label=_('Timezone'), choices=TIMEZONE,
-                           widget=Select2Widget(attrs={'style': 'width:100%'}))
+    timezone = ChoiceField(label=_('Timezone'), choices=TIMEZONE, widget=DropdownWidget(attrs={'style': 'width:100%'}))
     language = ModelChoiceField(queryset=Language.objects.all(), label=_('Preferred language'), empty_label=None,
-                                widget=Select2Widget(attrs={'style': 'width:100%'}))
+                                widget=DropdownWidget(attrs={'style': 'width:100%'}))
     organizations = SortedMultipleChoiceField(queryset=Organization.objects.filter(is_open=True),
                                               label=_('Organizations'), required=False,
-                                              widget=Select2MultipleWidget(attrs={'style': 'width:100%'}))
+                                              widget=DropdownMultipleWidget(attrs={'style': 'width:100%'}))
 
     if newsletter_id is not None:
         newsletter = forms.BooleanField(label=_('Subscribe to newsletter?'), initial=True, required=False)

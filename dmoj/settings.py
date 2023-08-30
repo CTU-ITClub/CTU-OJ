@@ -241,7 +241,7 @@ DMOJ_PASSWORD_RESET_LIMIT_COUNT = 10
 # At the bare minimum, dark and light theme CSS file locations must be declared
 DMOJ_THEME_CSS = {
     'light': 'style.css',
-    'dark': 'dark/style.css',
+    'dark': 'style.css',
 }
 # At the bare minimum, dark and light ace themes must be declared
 DMOJ_THEME_DEFAULT_ACE_THEME = {
@@ -279,6 +279,7 @@ DEFAULT_USER_LANGUAGE = 'CPP17'
 INLINE_JQUERY = True
 INLINE_FONTAWESOME = True
 JQUERY_JS = '//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'
+FONTAWESOME_CSS = '//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'
 FONTAWESOME_CSS = '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'
 DMOJ_CANONICAL = 'dmoj.ctu.edu.vn'
 

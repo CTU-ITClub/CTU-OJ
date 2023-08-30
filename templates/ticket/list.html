@@ -147,26 +147,33 @@
     {% if page_obj.has_other_pages() %}
         <div class="top-pagination-bar">{% include "list-pages.html" %}</div>
     {% endif %}
-    <div id="ticket-list-container">
+    <div id="ticket-list-container" class="ui container">
         <aside>
             <div>
-                <div id="notification-box">
-                    <input id="notification" type="checkbox">
-                    <label for="notification">{{ _('Use desktop notification') }}</label>
-                </div>
-
-                <form id="filter-form" name="form" action="" method="get">
-                    <div id="open-box" class="filter-check">
-                        <input id="open" type="checkbox" name="open"{% if filter_status.open %} checked{% endif %} value="1">
-                        <label for="open">{{ _('Hide closed tickets') }}</label>
+                <form id="filter-form" name="form" action="" method="get" class="ui form">
+                    <div class="field">
+                        <div id="notification-box" class="ui checkbox">
+                            <input id="notification" type="checkbox">
+                            <label for="notification">{{ _('Use desktop notification') }}</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div id="open-box" class="ui checkbox">
+                            <input id="open" type="checkbox" name="open"{% if filter_status.open %} checked{% endif %}
+                                   value="1">
+                            <label for="open">{{ _('Hide closed tickets') }}</label>
+                        </div>
                     </div>
 
-                    <div id="own-box" class="filter-check">
-                        <input id="own" type="checkbox" name="own"{% if filter_status.own %} checked{% endif %} value="1">
-                        <label for="own">{{ _('Show my tickets only') }}</label>
+                    <div class="field">
+                        <div id="own-box" class="ui checkbox">
+                            <input id="own" type="checkbox" name="own"{% if filter_status.own %} checked{% endif %}
+                                   value="1">
+                            <label for="own">{{ _('Show my tickets only') }}</label>
+                        </div>
                     </div>
 
-                    <div id="user-box" class="filter-select2">
+                    <div class="field">
                         <label for="filter-user">{{ _('Filing user') }}</label>
                         <select id="filter-user" style="width: 100%" multiple name="user">
                             {% for username in filter_status.user %}
@@ -175,23 +182,25 @@
                         </select>
                     </div>
 
-                    <div id="assignee-box" class="filter-select2">
+                    <div id="assignee-box" class="field">
                         <label for="filter-user">{{ _('Assignee') }}</label>
-                        <select id="filter-assignee" style="width: 100%" multiple name="assignee">
+                        <select id="filter-assignee" style="width: 100%" multiple class="ui search" name="assignee">
                             {% for username in filter_status.assignee %}
                                 <option value="{{ username }}" selected>{{ username }}</option>
                             {% endfor %}
                         </select>
                     </div>
 
-                    <button type="submit" style="margin-left: auto" class="submit">{{ _('Go') }}</button>
+                    <button type="submit" class="ui button primary">{{ _('Go') }}</button>
                 </form>
             </div>
         </aside>
 
+        <hr class="ui divider"/>
+
         <main>
             <div class="h-scrollable-table">
-                <table id="ticket-list" class="table striped">
+                <table id="ticket-list" class="ui table striped">
                     <thead>
                     <tr>
                         <th></th>

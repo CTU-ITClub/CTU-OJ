@@ -10,7 +10,7 @@
     {% include "flatpages/admin_link.html" %}
 {% endblock %}
 {% block body %}
-    <div class="body content-description">
+    <div class="ui markdown-body container">
         {% cache 86400 'flatpage' flatpage.url %}
             {{ flatpage.content|markdown('flatpage', jax)|reference|str|safe}}
         {% endcache %}

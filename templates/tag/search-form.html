@@ -1,15 +1,21 @@
 <div class="sidebox">
-    <h3>{{ _('Problem search') }} <i class="fa fa-search"></i></h3>
-    <div class="sidebox-content">
-        <form id="filter-form" name="form" action="" method="get">
+    <h3 class="ui header block attached top">
+        <i class="icon search"></i>
+        <div class="content">
+            {{ _('Problem search') }}
+        </div>
+    </h3>
+    <div class="sidebox-content ui segment attached top">
+        <form id="filter-form" name="form" action="" method="get" class="ui form">
             {% if selected_tag %}<input type="hidden" name="tag_id" value="{{ selected_tag }}">{% endif %}
-            <div>
+            <div class="field">
+                <label for="search">{{ _('Search') }}</label>
                 <input id="search" type="text" name="search" value="{{ search_query or '' }}"
-                        placeholder="{{ _('Search problems...') }}">
+                       placeholder="{{ _('Search problems...') }}">
             </div>
-            <div class="filter-form-group">
-                <label for="judge"><i>{{ _('Online judges') }}</i></label>
-                <select id="judges" name="judge" multiple>
+            <div class="field">
+                <label for="judge">{{ _('Online judges') }}</label>
+                <select name="judge" class="ui search dropdown" multiple>
                     {% for id, full_name in judges %}
                         <option value="{{ id }}"{% if id in selected_judges %} selected{% endif %}>
                             {{ full_name }}
@@ -18,9 +24,9 @@
                 </select>
             </div>
             <div class="form-submit-group">
-                <a id="go" class="button">{{ _('Go') }}</a>
-                <a id="random" class="button">{{ _('Random') }}</a>
-                <a class="button" href="{{url('tagproblem_list')}}">{{ _('Clear search') }}</a>
+                <a id="go" class="ui button green">{{ _('Go') }}</a>
+                <a id="random" class="ui button">{{ _('Random') }}</a>
+                <a class="ui button basic" href="{{ url('tagproblem_list') }}">{{ _('Clear search') }}</a>
             </div>
         </form>
     </div>

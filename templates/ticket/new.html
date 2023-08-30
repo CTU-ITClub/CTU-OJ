@@ -5,12 +5,12 @@
 {% block js_media %}{{ form.media.js }}{% endblock %}
 
 {% block body %}
-    <form id="ticket-form" action="" method="POST" class="form-area" style="overflow:hidden;">
+    <form id="ticket-form" action="" method="POST" class="form-area ui form container" style="overflow:hidden;">
         {% block guideline_message %}{% endblock %}
         {% csrf_token %}
         {% if form.non_field_errors() or form.title.errors %}
             <div class="form-errors">
-                {{form.non_field_errors()}}
+                {{ form.non_field_errors() }}
                 {{ form.title.errors }}
             </div>
         {% endif %}
@@ -24,11 +24,13 @@
         {% block issue_url %}{% endblock %}
 
         {% if form.body.errors %}
-            <div class="form-errors">
-                {{ form.body.errors }}
+            <div class="ui message red">
+                <div class="content">
+                    {{ form.body.errors }}
+                </div>
             </div>
         {% endif %}
         <div class="body-block">{{ form.body }}</div>
-        <input style="float:right" type="submit" value="{{ _('Create!') }}" class="button">
+        <input style="margin-top: 10px;" type="submit" value="{{ _('Create!') }}" class="ui button black">
     </form>
 {% endblock %}

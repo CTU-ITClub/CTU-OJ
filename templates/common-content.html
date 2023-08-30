@@ -57,19 +57,22 @@
 {% endblock %}
 
 {% block body %}
-    <div id="common-content">
-        <div id="content-right">
-            <div class="info-float">{% block info_float %}{% endblock %}</div>
-        </div>
-        <div id="content-left" class="split-common-content">
-            <div class="content-description screen">
-                {% block description %}{% endblock %}
+    <div id="common-content" class="ui grid stackable">
+        <div id="content-left" class="column twelve wide">
+            <div>
+                <div class="markdown-body">
+                    {% block description %}{% endblock %}
+                </div>
                 {% block description_end %}
-                    <hr>
+                    <hr class="ui divider">
                 {% endblock %}
                 {% block post_description_end %}{% endblock %}
             </div>
             {% block comments %}{% endblock %}
+        </div>
+
+        <div class="column four wide">
+            <div class="info-float" style="position: sticky; top: 80px">{% block info_float %}{% endblock %}</div>
         </div>
     </div>
 {% endblock %}

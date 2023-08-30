@@ -1,5 +1,5 @@
 <div class="comment-submit">
-    <form id="comment-edit" action="{{ request.get_full_path() }}" method="post">
+    <form id="comment-edit" action="{{ request.get_full_path() }}" method="post" class="ui form">
         <span style="display: none" class="comment-id">{{ comment.id }}</span>
         <span style="display: none" class="read-back">{{ url('comment_content', comment.id) }}</span>
         {% csrf_token %}
@@ -12,7 +12,7 @@
         <div class="comment-post-wrapper">
             <div id="comment-form-body">{{ form.body }}</div>
         </div>
-        <hr>
-        <input style="float: right" type="submit" value="{{ _('Post!') }}" class="button">
+        <hr class="ui divider">
+        <input style="float: right" type="submit" value="{{ _('Post!') }}" class="ui button primary">
     </form>
 </div>

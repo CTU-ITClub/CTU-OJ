@@ -1,14 +1,23 @@
-<div id="{{ id|safe }}-wmd-wrapper" class="wmd-wrapper">
-    <div class="wmd-panel">
+<div id="{{ id|safe }}-wmd-wrapper" class="wmd-wrapper" style="margin: 10px 0">
+    <div class="wmd-panel" style="visibility: hidden; height: 0; overflow: hidden">
         <div id="{{ id|safe }}_wmd_button_bar"></div>
-        <textarea{{ attrs|safe }}>{{ body }}</textarea>
+        <textarea{{ attrs|safe }} class="input">{{ body }}</textarea>
+    </div>
+
+    <div class="markdown-body">
+        <div class="ck-editor">{{ body }}</div>
     </div>
 
     {% if show_preview %}
         <div id="{{ id|safe }}-preview" data-preview-url="{{ preview_url }}" data-textarea-id="{{ id }}"
-             data-timeout="{{ preview_timeout or '' }}" class="wmd-panel wmd-preview dmmd-preview {{ extra_classes }}">
-            <div class="dmmd-preview-update"><i class="fa fa-refresh"></i> {{ _('Update preview') }}</div>
-            <div class="dmmd-preview-content content-description"></div>
+             data-timeout="{{ preview_timeout or '' }}"
+             class="wmd-panel p-2 wmd-preview dmmd-preview {{ extra_classes }}">
+            <button class="ui button" style="width: 100%; margin: 10px 0;">
+                <i class="icon refresh"></i>
+                {{ _('Update preview') }}
+            </button>
+            <div class="content markdown-body ui segment"></div>
         </div>
     {% endif %}
 </div>
+

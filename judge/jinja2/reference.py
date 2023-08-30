@@ -13,6 +13,7 @@ from judge import lxml_tree
 from judge.models import Contest, GeneralIssue, Problem, Profile
 from judge.ratings import rating_class, rating_progress
 from . import registry
+from .gravatar import gravatar
 
 rereference = re.compile(r'\[(r?user):(\w+)\]')
 
@@ -54,7 +55,7 @@ def get_user_rating(username, data):
 def get_user_info(usernames):
     return {name: (rank, rating) for name, rank, rating in
             Profile.objects.filter(user__username__in=usernames)
-                   .values_list('user__username', 'display_rank', 'rating')}
+            .values_list('user__username', 'display_rank', 'rating')}
 
 
 reference_map = {
@@ -156,14 +157,17 @@ def link_user(user):
     if isinstance(profile, Profile) and profile.display_badge:
         display_badge_img = f'<img src="{escape(profile.display_badge.mini)}"' \
                             f' title="{escape(profile.display_badge.name)}"' \
-                            f' style="height: 1em; width: auto; margin-left: 0.25em;" />'
+                            f' style="height: 15px; width: auto; margin: 0.25em;" />'
     else:
         display_badge_img = ''
 
-    return mark_safe(f'<span class="{profile.css_class}">'
+    return mark_safe(f'<div class="{profile.css_class}" style="display: inline-flex; align-items: center">'
                      f'<a href="{escape(reverse("user_page", args=[user.username]))}"'
-                     f' style="display: inline-block;">'
-                     f'{escape(profile.display_name)}</a>{display_badge_img}</span>')
+                     f' style="display: inline-flex; align-items: center; gap: 5px">'
+                     f'<img class="ui avatar image" '
+                     f'style="border-radius: 200px !important; width: 24px; height: 24px; margin: 0 5px 0 0;"'
+                     f'src="{gravatar(profile.user, 64)}" />'
+                     f'<span>{escape(profile.display_name)}</span></a>{display_badge_img}</div>')
 
 
 @registry.function

@@ -1,6 +1,7 @@
 {% extends "common-content.html" %}
 {% block meta %}
-    <meta name="description" property="og:description" content={% trans %}"The {{ SITE_NAME }}'s contest list - past, present, and future."{% endtrans %}>
+    <meta name="description" property="og:description"
+          content={% trans %}"The {{ SITE_NAME }}'s contest list - past, present, and future."{% endtrans %}>
 {% endblock %}
 
 {% block js_media %}
@@ -70,48 +71,47 @@
 
 {% macro contest_head(contest) %}
     {% spaceless %}
-        <a href="{{ url('contest_view', contest.key) }}" class="contest-list-title">
-            {{- contest.name -}}
-        </a>
-        <span class="contest-tags">
+        <div class="ui header">
+            <a href="{{ url('contest_view', contest.key) }}" class="content">
+                {{- contest.name -}}
+            </a>
+        </div>
+
+        <div>
             {% if not contest.is_visible %}
-                <span style="background-color: #000000; color: #ffffff" class="contest-tag">
-                    <i class="fa fa-eye-slash"></i> {{ _('hidden') }}
-                </span>
+                <div class="ui label icon black">
+                    <i class="icon eye slash"></i> {{ _('hidden') }}
+                </div>
             {% endif %}
             {% if contest.is_organization_private %}
                 {% for org in contest.organizations.all() %}
-                    <span style="background-color: #cccccc" class="contest-tag">
-                        <a href="{{ org.get_absolute_url() }}" style="color: #000000">
-                            <i class="fa fa-lock"></i> {{ org.name }}
-                        </a>
-                    </span>
+                    <a href="{{ org.get_absolute_url() }}" class="ui label icon">
+                        <i class="icon lock"></i> {{ org.name }}
+                    </a>
                 {% endfor %}
             {% elif contest.is_private %}
-                <span style="background-color: #666666; color: #ffffff" class="contest-tag">
-                    <i class="fa fa-lock"></i> {{ _('private') }}
-                </span>
+                <div class="ui label icon">
+                    <i class="icon lock"></i> {{ _('private') }}
+                </div>
             {% endif %}
             {% if contest.is_rated %}
-                <span style="background-color: #e54c14; color: #ffffff" class="contest-tag">
-                    <i class="fa fa-bar-chart"></i> {{ _('rated') }}
-                </span>
+                <div class="ui label icon red">
+                    <i class="icon chart bar"></i> {{ _('rated') }}
+                </div>
             {% endif %}
             {% for tag in contest.tags.all() %}
-                <span style="background-color: {{ tag.color }}" class="contest-tag">
-                    <a href="{{ url('contest_tag', tag.name) }}"
-                       style="color: {{ tag.text_color }}"
-                       data-featherlight="{{ url('contest_tag_ajax', tag.name) }}">
-                        {{- tag.name -}}
-                    </a>
-                </span>
+                <a href="{{ url('contest_tag', tag.name) }}"
+                   style="color: {{ tag.text_color }}; background-color: {{ tag.color }}"
+                   data-featherlight="{{ url('contest_tag_ajax', tag.name) }}" class="ui label">
+                    {{- tag.name -}}
+                </a>
             {% endfor %}
-        </span>
+        </div>
     {% endspaceless %}
 {% endmacro %}
 
 {% macro time_left(contest) %}
-    <div class="time time-left">
+    <div class="ui sub header">
         {% if contest.time_limit %}
             {{ contest.start_time|date(_("M j, Y, G:i")) }} -
             {{ contest.end_time|date(_("M j, Y, G:i")) }}
@@ -136,11 +136,11 @@
         {{ contest.user_count }}
     {% endif %}
     <span title="{%- trans count=contest.virtual_count -%}
-        This contest has {{count}} virtual participation
+        This contest has {{ count }} virtual participation
         {%- pluralize -%}
-        This contest has {{count}} virtual participations
+        This contest has {{ count }} virtual participations
         {%- endtrans -%}"
-        style="opacity: 50%;">({{ contest.virtual_count }})</span>
+          style="opacity: 50%;">({{ contest.virtual_count }})</span>
 {% endmacro %}
 
 {% macro contest_join(contest, request, finished_contests) %}
@@ -151,14 +151,14 @@
             {% if contest.key in finished_contests or request.profile in contest.authors.all() or request.profile in contest.curators.all() or request.profile in contest.testers.all() %}
                 <form action="{{ url('contest_join', contest.key) }}" method="post">
                     {% csrf_token %}
-                    <input type="submit" class="unselectable button full participate-button spectate-warning"
+                    <input type="submit" class="ui green button full participate-button spectate-warning"
                            value="{{ _('Spectate') }}">
                 </form>
             {% else %}
                 <form action="{{ url('contest_join', contest.key) }}" method="post">
                     {% csrf_token %}
-                    <input type="submit" class="unselectable button full participate-button join-warning"
-                        value="{{ _('Join') }}">
+                    <input type="submit" class="ui button full participate-button join-warning"
+                           value="{{ _('Join') }}">
                 </form>
             {% endif %}
         </td>
@@ -179,8 +179,9 @@
             {% else %}
                 <form action="{{ url('contest_register', contest.key) }}" method="post">
                     {% csrf_token %}
-                    <input type="submit" class="unselectable button full participate-button register-warning" style="background: linear-gradient(to bottom, #87ab69 0, #4b6043 100%) repeat-x"
-                            value="{{ _('Register') }}">
+                    <input type="submit" class="unselectable button full participate-button register-warning"
+                           style="background: linear-gradient(to bottom, #87ab69 0, #4b6043 100%) repeat-x"
+                           value="{{ _('Register') }}">
                 </form>
             {% endif %}
         {% endif %}
@@ -196,8 +197,13 @@
 {% block body %}
     <div class="content-description">
         {% if active_participations %}
-            <h4>{{ _('Active contests') }}</h4>
-            <table class="contest-list table striped">
+            <h4 class="ui header block attached top">
+                <i class="icon user"></i>
+                <div class="content">
+                    {{ _('Active contests') }}
+                </div>
+            </h4>
+            <table class="ui table striped celled attached bottom">
                 <thead>
                 <tr>
                     <th style="width:80%">{{ _('Contest') }}</th>
@@ -232,12 +238,16 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <br>
         {% endif %}
 
         {% if current_contests %}
-            <h4>{{ _('Ongoing contests') }}</h4>
-            <table class="contest-list table striped">
+            <h4 class="ui header block attached top">
+                <i class="icon clock"></i>
+                <div class="content">
+                    {{ _('Ongoing contests') }}
+                </div>
+            </h4>
+            <table class="ui table striped attached bottom">
                 <thead>
                 <tr>
                     <th style="width:80%">{{ _('Contest') }}</th>
@@ -272,12 +282,16 @@
                 {% endfor %}
                 </tbody>
             </table>
-            <br>
         {% endif %}
 
-        <h4>{{ _('Upcoming contests') }}</h4>
+        <h4 class="ui header block attached top">
+            <i class="icon calendar alternate outline"></i>
+            <div class="content">
+                {{ _('Upcoming contests') }}
+            </div>
+        </h4>
         {% if future_contests %}
-            <table class="contest-list table striped">
+            <table class="ui table striped attached bottom">
                 <thead>
                 <tr>
                     <th>{{ _('Contest') }}</th>
@@ -309,32 +323,36 @@
                 </tbody>
             </table>
         {% else %}
-            <i>{{ _('There are no scheduled contests at this time.') }}</i>
-            <br>
+            <div class="ui segment attached bottom">{{ _('There are no scheduled contests at this time.') }}</div>
         {% endif %}
-        <br>
 
-        <h4 id="past-contests">{{ _('Past contests') }}</h4>
+        <h4 class="ui header attached top block">
+            <i class="icon history"></i>
+            {{ _('Past contests') }}
+        </h4>
         {% if page_obj or search_query %}
-            <div class="top-pagination-bar">
+            <div class="ui segment attached bottom top"
+                 style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap">
                 {% include "list-pages.html" %}
                 <div style="display: flex; align-items: center;">
-                    <form id="search-form" name="form" action="" method="get">
+                    <form id="search-form" name="form" action="" method="get" class="ui form">
                         <input id="search" type="text" name="search" value="{{ search_query or '' }}"
-                            placeholder="{{ _('Search contest...') }}">
+                               placeholder="{{ _('Search contest...') }}">
                     </form>
                 </div>
             </div>
         {% endif %}
         {% if past_contests %}
-            <table class="contest-list table striped">
+            <table class="ui table striped celled attached bottom">
                 <thead>
                 <tr>
                     <th style="width:80%">
-                        <a href="{{ sort_links.name }}" class="contest-sort-link">{{ _('Contest') }}{{ sort_order.name }}</a>
+                        <a href="{{ sort_links.name }}" class="contest-sort-link">
+                            {{ _('Contest') }}{{ sort_order.name }}</a>
                     </th>
                     <th>
-                        <a href="{{ sort_links.user_count }}" class="contest-sort-link">{{ _('Users') }}{{ sort_order.user_count }}</a>
+                        <a href="{{ sort_links.user_count }}" class="contest-sort-link">
+                            {{ _('Users') }}{{ sort_order.user_count }}</a>
                     </th>
                     {% if not request.in_contest %}
                         <th style="width:15%"></th>
@@ -355,11 +373,13 @@
                         </td>
                         {% if not request.in_contest %}
                             {% if not contest.disallow_virtual %}
-                                <td><form action="{{ url('contest_join', contest.key) }}" method="post">
-                                    {% csrf_token %}
-                                    <input type="submit" class="unselectable button full participate-button"
-                                           value="{{ _('Virtual join') }}">
-                                </form></td>
+                                <td>
+                                    <form action="{{ url('contest_join', contest.key) }}" method="post">
+                                        {% csrf_token %}
+                                        <input type="submit" class="ui button full participate-button"
+                                               value="{{ _('Virtual join') }}">
+                                    </form>
+                                </td>
                             {% else %}
                                 <td></td>
                             {% endif %}
