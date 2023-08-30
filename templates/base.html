@@ -34,10 +34,10 @@
     {% block meta %}{% endblock %}
     <link rel="stylesheet" href="{{ FONTAWESOME_CSS }}">
     {% compress css %}
-        <link rel="stylesheet" href="{{ static('semantic.min.css') }}">
+        <link rel="stylesheet" href="{{ static('libs/semantic/semantic.css') }}">
         <link rel="stylesheet" href="{{ static('github-markdown.css') }}">
-        <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/styles/github.min.css">
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+        <link rel="stylesheet" href="{{ static('github.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ static('toastify.min.css') }}">
 
         {# TODO: once dark mode support is better, enable for all users by deleting the else branch #}
         {% if perms.judge.test_site %}
@@ -64,18 +64,18 @@
         <script src="{{ JQUERY_JS }}"></script>
     {% endif %}
 
-    {% compress js %}
-        <script src="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/highlight.min.js"></script>
-        <script>hljs.highlightAll();</script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
+    {% compress js %}
         <script>{{ inlinei18n(LANGUAGE_CODE)|safe }}</script>
         {% if INLINE_JQUERY %}
             <script src="{{ static('libs/jquery-3.4.1.min.js') }}"></script>
         {% endif %}
         <script src="{{ static('libs/jquery-cookie.js') }}"></script>
 
-        <script src="{{ static('semantic.min.js') }}"></script>
+        <script src="{{ static('libs/semantic/semantic.js') }}"></script>
 
         <script src="{{ static('dmmd-preview.js') }}" type="module"></script>
 
@@ -259,8 +259,6 @@
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-
         @font-face {
             font-family: 'Monaco';
             src: url('{{ static('fonts/Monaco 400.ttf') }}');
@@ -768,7 +766,7 @@
                         {% include 'site-logo-fragment.html' %}
                     </div>
 
-                    <a href="https://fb.com/zit.software" class="zit-label">
+                    <a href="https://fb.com/zit.software" class="zit-label" target="_blank">
                         <img src="https://github.com/zit-software.png" class="ui image avatar mini"/>
 
                         <div>

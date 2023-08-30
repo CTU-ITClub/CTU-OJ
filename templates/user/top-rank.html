@@ -200,7 +200,7 @@
 {% macro top_item(item, rank, rank_text) %}
     <div class="top-item rank-{{ rank }}">
         {% if item %}
-            <img src="{{ gravatar(item.user, 512) }}" class="avt"/>
+            <img src="{{ gravatar(item.user, 128) }}" class="avt"/>
             <h3>
                 {{ link_user(item.user) }}
             </h3>

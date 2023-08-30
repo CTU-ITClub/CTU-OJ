@@ -280,7 +280,6 @@ INLINE_JQUERY = True
 INLINE_FONTAWESOME = True
 JQUERY_JS = '//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'
 FONTAWESOME_CSS = '//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'
-FONTAWESOME_CSS = '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'
 DMOJ_CANONICAL = 'dmoj.ctu.edu.vn'
 
 # Application definition
