@@ -41,16 +41,10 @@
                         name: $(this).attr('name'),
                         style: 'width: 100%'
                     })).val();
+
                     var option = new Option(val, val, true, true);
 
-                    if ($select.attr('id').endsWith('input_file')) {
-                        for (const option of valid_files_options) {
-                            const opt = new Option(option.text, option.id, true, true);
-
-                            $select.append(opt)
-                        }
-                    }
-                    $select.addClass('ui search dropdown').append(option).change().on('change', function () {
+                    $select.addClass('ui search dropdown').select2(select2_settings).append(option).change().on('change', function () {
                         var val = $select.val();
                         if (val) {
                             if ($select.attr('id').endsWith('input_file'))
@@ -60,7 +54,6 @@
                         }
                     });
                 });
-                $tr.find('select').dropdown()
             });
 
             var order = 0;

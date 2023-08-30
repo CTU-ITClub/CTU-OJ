@@ -25,6 +25,7 @@ from judge.utils.problem_data import ProblemDataCompiler
 from judge.utils.unicode import utf8text
 from judge.utils.views import TitleMixin, add_file_response, generic_message
 from judge.views.problem import ProblemMixin
+from judge.widgets import Select2Widget
 from judge.widgets.dropdown import DropdownWidget
 
 mimetypes.init()
@@ -99,7 +100,7 @@ class ProblemCaseForm(ModelForm):
                   'checker', 'checker_args', 'generator_args')
         widgets = {
             'generator_args': HiddenInput,
-            'type': DropdownWidget(attrs={'style': 'width: 100%'}),
+            'type': Select2Widget(attrs={'style': 'width: 100%'}),
             'points': NumberInput(attrs={'style': 'width: 4em'}),
             # 'output_prefix': NumberInput(attrs={'style': 'width: 4.5em'}),
             # 'output_limit': NumberInput(attrs={'style': 'width: 6em'}),
