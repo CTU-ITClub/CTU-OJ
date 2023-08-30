@@ -675,7 +675,7 @@ class ProblemSubmit(LoginRequiredMixin, ProblemMixin, TitleMixin, SingleObjectFo
                 problem_code=self.new_submission.problem.code,
                 user_id=self.new_submission.user.user.id,
             ) if submission_file else ''
-            
+
             source = SubmissionSource(submission=self.new_submission, source=form.cleaned_data['source'] + source_url)
             source.save()
 
