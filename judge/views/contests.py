@@ -1360,9 +1360,9 @@ class ContestPrepareData(ContestDataMixin, TitleMixin, SingleObjectMixin, FormVi
     @cached_property
     def can_prepare_data(self):
         return (
-                self.object.data_last_downloaded is None or
-                self.object.data_last_downloaded + settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT < self._now or
-                not os.path.exists(self.data_path)
+                self.object.data_last_downloaded is None
+                or self.object.data_last_downloaded + settings.DMOJ_CONTEST_DATA_DOWNLOAD_RATELIMIT < self._now
+                or not os.path.exists(self.data_path)
         )
 
     @cached_property
