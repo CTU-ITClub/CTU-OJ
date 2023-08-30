@@ -142,14 +142,14 @@
                 {% endif %}
 
                 {% if future_contests %}
-                    <div class="header block attached top">
+                    <div class="ui header block attached top">
                         <i class="icon trophy"></i>
                         <div class="content">
                             {{ _('Ongoing contests') }}
                         </div>
                     </div>
 
-                    <div class="ui list relaxed attached bottom">
+                    <div class="ui list relaxed attached bottom segment divided">
                         {% for contest in future_contests %}
                             <div class="item">
                                 <div class="content">
