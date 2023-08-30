@@ -34,7 +34,7 @@
 
     <div class="content" style="flex: 1">
         <div class="summary" style="position:sticky; top: 58px; background: #fff; z-index: 1;">
-            <h2 class="ui header">
+            <h2 class="ui header" style="margin-bottom: 5px;">
                 {% if not post.visible %}
                     <i class="icon lock"></i>
                 {% endif %}
@@ -43,23 +43,20 @@
                     {{ post.title }}
                 </a>
             </h2>
-            <div>
-                <div>
-                    {%- if post.sticky %}<i title="Sticky" class="icon star"></i>{% endif -%}
-                    {% with authors=post.authors.all() %}
-                        {%- if authors -%}
-                            <span class="user">{{ link_users(authors) }}</span>
-                        {%- endif -%}
-                    {% endwith %}
-                </div>
-
-                <span class="date">
-                        {% with abs=_('posted on {time}'), rel=_('posted {time}') %}
-                            {{ relative_time(post.publish_on, abs=abs, rel=rel) }}
-                        {% endwith %}
-                    </span>
+            <div style="display: flex; align-items: center; gap: 5px">
+                {%- if post.sticky %}<i title="Sticky" class="icon star"></i>{% endif -%}
+                {% with authors=post.authors.all() %}
+                    {%- if authors -%}
+                        {{ link_users(authors) }}
+                    {%- endif -%}
+                {% endwith %}
             </div>
 
+            <div class="date">
+                {% with abs=_('posted on {time}'), rel=_('posted {time}') %}
+                    {{ relative_time(post.publish_on, abs=abs, rel=rel) }}
+                {% endwith %}
+            </div>
             <hr class="ui divider"/>
         </div>
 

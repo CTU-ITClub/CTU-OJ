@@ -1,5 +1,7 @@
-{% for user in users -%}
-    {{ link_user(user) }}{% if not loop.last %}
-        <i class="icon angle right grey"></i>
-    {% endif %}
-{%- endfor %}
+<div style="display: inline-flex; align-items: center; gap: 2px">
+    {% for user in users -%}
+        {{ link_user(user) }}{% if not loop.last %}
+            <i class="icon angle right grey"></i>
+        {% endif %}
+    {%- endfor %}
+</div>

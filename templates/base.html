@@ -618,16 +618,20 @@
 </div>
 
 <div id="page-container" class="ui pusher">
-    <nav class="ui menu main fixed borderless top inverted {% if request.user.is_impersonate %} blue compact {% endif %}">
+    <nav class="ui menu main fixed borderless top inverted {% if request.user.is_impersonate %} red compact {% endif %}">
         <div class="ui container">
 
             <a href="{{ url('home') }}" class="header item">
-                <div>
+                <div style="display: flex; align-items: center; gap: 10px">
                     {% include "site-logo-fragment.html" %}
+
+                    {% if request.user.is_impersonate %}
+                        <span class="ui label">{{ _('Impersonate') }}</span>
+                    {% endif %}
                 </div>
             </a>
 
-            <div class="ui menu container fluid inverted {% if request.user.is_impersonate %} blue compact{% endif %}"
+            <div class="ui menu container fluid inverted {% if request.user.is_impersonate %} red compact{% endif %}"
                  style="border: none; border-radius: 0" id="hide-on-mobile">
                 <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
 

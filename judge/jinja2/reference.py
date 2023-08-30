@@ -163,7 +163,7 @@ def link_user(user):
 
     return mark_safe(f'<div class="{profile.css_class}" style="display: inline-flex; align-items: center">'
                      f'<a href="{escape(reverse("user_page", args=[user.username]))}"'
-                     f' style="display: inline-block;">'
+                     f' style="display: inline-flex; align-items: center; gap: 5px">'
                      f'<img class="ui avatar image" '
                      f'style="border-radius: 200px !important; width: 24px; height: 24px"'
                      f'src="{gravatar(profile.user, 64)}" />'
