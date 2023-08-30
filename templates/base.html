@@ -467,6 +467,24 @@
             height: auto;
             margin-bottom: 10px;
         }
+
+        /** Fix semantic message icon **/
+        .ui.message.icon .icon {
+            font-size: 1rem !important;
+        }
+
+        {%  if not misc_config.turn_off_header_animation %}
+            #page-header::before {
+                content: '';
+                width: 100px;
+                height: 200px;
+                background: #ffffff20;
+                position: absolute;
+                top: 0;
+                transform: skew(-20deg);
+                animation: zit_label 10s infinite;
+            }
+        {% endif %}
     </style>
 </head>
 <body>
@@ -480,33 +498,6 @@
         </clipPath>
     </defs>
 </svg>
-
-
-{% if request.in_contest %}
-    {% set current_contest = request.participation.contest %}
-    <div id="contest-info" class="ui card" style="z-index: 100; position: fixed">
-        <div class="content">
-            <a href="{{ url('contest_view', current_contest.key) }}" class="header">
-                {{ current_contest.name }} -
-                {% if request.participation.spectate %}
-                    {{ _('spectating') }}
-                {% elif request.participation.end_time %}
-                    <div id="contest-time-remaining" data-secs="{{ request.participation.time_remaining|seconds }}">
-                        {{ request.participation.time_remaining|timedelta("localized") }}
-                    </div>
-                {% else %}
-                    {{ _('virtual') }}
-                {% endif %}
-            </a>
-
-        </div>
-        {% if current_contest.can_see_own_scoreboard(request.user) %}
-            <a href="{{ url('contest_ranking', current_contest.key) }}" class="ui button bottom attached green">
-                {{ _('Go to Rankings') }}
-            </a>
-        {% endif %}
-    </div>
-{% endif %}
 
 <div class="ui sidebar bottom vertical menu" id="mobile-nav">
     <a class="item" href="{{ url('home') }}">{{ _('Home') }}</a>
@@ -618,7 +609,8 @@
 </div>
 
 <div id="page-container" class="ui pusher">
-    <nav class="ui menu main fixed borderless top inverted {% if request.user.is_impersonate %} red compact {% endif %}">
+    <nav class="ui menu main fixed borderless top inverted {% if request.user.is_impersonate %} red compact {% endif %}"
+         id="page-header">
         <div class="ui container">
 
             <a href="{{ url('home') }}" class="header item">
@@ -878,14 +870,61 @@
         </div>
     </footer>
 
-    <script>
-        $('select.dropdown').dropdown();
-        $('.ui.accordion').accordion();
+    {% if request.in_contest %}
+        <style>
+            .contest-board {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                background: #000;
+                left: 0;
+                z-index: 100;
+            }
 
-        $('#show-on-mobile').click(() => {
-            $('#mobile-nav').sidebar('toggle');
-        })
-    </script>
+            .contest-board .container {
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+        </style>
+        {% set current_contest = request.participation.contest %}
+        <div style="height: 10px"></div>
+        <div class="contest-board">
+            <div class="ui container">
+                <a href="{{ url('contest_view', current_contest.key) }}"
+                   style="flex: 1; display: flex; align-items: center; color: #fff; font-size: 20px">
+                    <i class="icon fire red"></i>
+                    {{ current_contest.name }} <i class="icon angle right"></i>
+                    {% if request.participation.spectate %}
+                        {{ _('spectating') }}
+                    {% elif request.participation.end_time %}
+                        <div id="contest-time-remaining" data-secs="{{ request.participation.time_remaining|seconds }}"
+                        ">
+                        {{ request.participation.time_remaining|timedelta("localized") }}
+                        </div>
+                    {% else %}
+                        {{ _('virtual') }}
+                    {% endif %}
+            </a>
+
+            {% if current_contest.can_see_own_scoreboard(request.user) %}
+                <a href="{{ url('contest_ranking', current_contest.key) }}" class="ui button green">
+                    {{ _('Go to Rankings') }}
+                </a>
+            {% endif %}
+        </div>
+        </div>
+    {% endif %}
+
+<script>
+    $('select.dropdown').dropdown();
+    $('.ui.accordion').accordion();
+
+    $('#show-on-mobile').click(() => {
+        $('#mobile-nav').sidebar('toggle');
+    })
+</script>
 </div>
 </body>
 </html>

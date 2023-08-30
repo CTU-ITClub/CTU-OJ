@@ -1,7 +1,7 @@
 {% spaceless %}
-    <table {% if table_id %}id="{{ table_id }}"{% endif %} class="ui table celled striped">
+    <table {% if table_id %}id="{{ table_id }}"{% endif %} class="ui table celled striped aligned centered">
         <thead>
-        <tr>
+        <tr class="center aligned">
             <th class="header rank" style="width: 5%;">{{ rank_header or _("Rank") }}</th>
             {% block after_rank_head %}{% endblock %}
             <th class="header username">{{ _('Username') }}</th>
@@ -20,15 +20,15 @@
         <tbody>
         {% for rank, user in users %}
             <tr id="user-{{ user.user.username }}" {% block row_extra scoped %}{% endblock %}>
-                <td>
+                <td class="center aligned">
                     {{ rank }}
                 </td>
                 {% block after_rank scoped %}{% endblock %}
                 <td class="user-name">
                     <div style="display: flex; align-items: center; justify-content: space-between">
-                        <div style="float:left">
+                        <div style="float:left; margin-top: 5px;">
                             {% block user_name_display scoped %} {{ link_user(user) }} {% endblock %}
-                            <div class="personal-info" style="margin-left: 27px;">
+                            <div class="personal-info">
                                 {% block personal_info_display scoped %}
                                     <strong>{{ user.user.first_name }}</strong>
                                 {% endblock %}
@@ -55,7 +55,7 @@
                     </div>
                     {% block before_point scoped %}{% endblock %}
                     {% block point scoped %}
-                        <td title="{{ user.performance_points|floatformat(2) }}" class="user-points">
+                        <td title="{{ user.performance_points|floatformat(2) }}" class="user-points center aligned">
                             {{ user.performance_points|floatformat(2) }}
                         </td>
                     {% endblock %}

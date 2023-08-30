@@ -478,29 +478,34 @@
 
 {% block body %}
     {% if is_frozen %}
-        <div class="alert-warning">
-            <p style="padding: 10px; text-align: center">
-                <a class="close" id="frozen_alert">x</a>
+        <div class="ui message warning">
+            <a class="icon close" id="frozen_alert">
+                <i class="icon close"></i>
+            </a>
+            <div class="content">
                 {%- trans frozen_minutes=contest.frozen_last_minutes -%}
                     The scoreboard was frozen with {{ frozen_minutes }} minutes remaining - submissions in the last
                     {{ frozen_minutes }} minutes of the contest are still shown as pending.
                 {%- endtrans -%}
-            </p></div>
+            </div>
+        </div>
     {% endif %}
     {% if not contest.ended and cache_timeout %}
-        <div class="alert-warning alert-dismissable">
-            <p style="padding: 10px; text-align: center">
-                <a class="close" id="cache_alert">x</a>
+        <div class="ui message warning">
+            <a class="icon close" id="cache_alert">
+                <i class="icon close"></i>
+            </a>
+            <div class="content">
                 {%- trans -%}
                     The scoreboard is cached for {{ cache_timeout }} seconds, your submission might take some time
                     before it appears here.
                 {%- endtrans -%}
-            </p>
+            </div>
         </div>
     {% endif %}
     {{ super() }}
     {% if is_ICPC_format %}
-        <table id="cell_legend" class="ui table striped celled" style="width: 10em; margin-left: 0">
+        <table id="cell_legend" class="ui table celled" style="width: 10em; margin-left: 0">
             <thead>
             <tr>
                 <th scope="col">{{ _('Cell colours') }}</th>

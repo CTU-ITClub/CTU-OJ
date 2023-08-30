@@ -71,12 +71,14 @@
         </div>
         <hr class="ui divider"/>
 
-        <i class="icon pencil"></i>
-        {% with authors=post.authors.all() %}
-            {%- if authors -%}
-                {{ link_users(authors) }}
-            {%- endif -%}
-        {% endwith %}
+        <div style="display:flex; align-items: center">
+            <i class="icon pencil"></i>
+            {% with authors=post.authors.all() %}
+                {%- if authors -%}
+                    {{ link_users(authors) }}
+                {%- endif -%}
+            {% endwith %}
+        </div>
 
         <hr class="ui divider"/>
 
