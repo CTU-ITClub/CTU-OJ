@@ -2,7 +2,7 @@ from operator import attrgetter
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, ValidationError
-from django.db.models import Count, F, OuterRef, Prefetch, Q, Subquery
+from django.db.models import F, OuterRef, Prefetch, Q, Subquery
 from django.http import Http404, JsonResponse
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -485,6 +485,7 @@ class APIUserList(APIListView):
         return {
             'id': profile.id,
             'username': profile.username,
+            'display_name': profile.display_name,
             'points': profile.points,
             'performance_points': profile.performance_points,
             'problem_count': profile.problem_count,
@@ -539,6 +540,7 @@ class APIUserDetail(APIDetailView):
         return {
             'id': profile.id,
             'username': profile.user.username,
+            'display_name': profile.display_name,
             'points': profile.points,
             'performance_points': profile.performance_points,
             'problem_count': profile.problem_count,
@@ -668,9 +670,6 @@ class APIOrganizationList(APIListView):
     basic_filters = (
         ('is_open', 'is_open'),
     )
-
-    def get_unfiltered_queryset(self):
-        return Organization.objects.annotate(member_count=Count('member')).order_by('id')
 
     def get_object_data(self, organization):
         return {

@@ -35,22 +35,17 @@
 
             var $table = $('#case-table');
             $table.on('add-row', function (e, $tr) {
+                $tr.find('select').select2()
                 $tr.find('input').filter('[id$=file]').each(function () {
                     var $select, val = $(this).replaceWith($select = $('<select>').attr({
                         id: $(this).attr('id'),
                         name: $(this).attr('name'),
                         style: 'width: 100%'
                     })).val();
+
                     var option = new Option(val, val, true, true);
 
-                    if ($select.attr('id').endsWith('input_file')) {
-                        for (const option of valid_files_options) {
-                            const opt = new Option(option.text, option.id, true, true);
-
-                            $select.append(opt)
-                        }
-                    }
-                    $select.addClass('ui search dropdown').append(option).change().on('change', function () {
+                    $select.addClass('ui search dropdown').select2(select2_settings).append(option).change().on('change', function () {
                         var val = $select.val();
                         if (val) {
                             if ($select.attr('id').endsWith('input_file'))
@@ -60,7 +55,6 @@
                         }
                     });
                 });
-                $tr.find('select').dropdown()
             });
 
             var order = 0;
@@ -696,7 +690,7 @@
         {% if cases_formset._non_form_errors %}
             {{ cases_formset._non_form_errors }}
         {% endif %}
-        <table id="case-table" class="ui table striped">
+        <table id="case-table" class="ui table celled">
             <thead>
             <tr>
                 <th>
