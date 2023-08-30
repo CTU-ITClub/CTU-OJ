@@ -145,7 +145,7 @@
                     <div class="ui header block attached top">
                         <i class="icon trophy"></i>
                         <div class="content">
-                            {{ _('Ongoing contests') }}
+                            {{ _('Upcoming contests') }}
                         </div>
                     </div>
 
@@ -157,7 +157,7 @@
                                         <a href="{{ url('contest_view', contest.key) }}">{{ contest.name }}</a>
                                     </div>
                                     <div class="time">
-                                        {{ _('Ends in %(countdown)s.', countdown=as_countdown(contest.time_before_start)) }}
+                                        {{ _('Starting in %(countdown)s.', countdown=as_countdown(contest.time_before_start)) }}
                                     </div>
                                 </div>
                             </div>

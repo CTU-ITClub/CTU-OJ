@@ -107,7 +107,6 @@
                     actions: 'search',
                     url: '{{ url('contest_user_search_select2_ajax', contest.key) }}',
                     onResponse(res) {
-                        console.log(res)
                         res.results = res.results.map(e => {
                             return {
                                 title: e.text,
