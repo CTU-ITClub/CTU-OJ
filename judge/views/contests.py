@@ -285,11 +285,10 @@ class ContestDetail(ContestMixin, TitleMixin, CommentedDetailView):
         context['contest_problems'] = Problem.objects.filter(contests__contest=self.object) \
             .order_by('contests__order').defer('description') \
             .annotate(has_public_editorial=Case(
-            When(solution__is_public=True, solution__publish_on__lte=timezone.now(), then=True),
-            default=False,
-            output_field=BooleanField(),
-        )) \
-            .add_i18n_name(self.request.LANGUAGE_CODE)
+                When(solution__is_public=True, solution__publish_on__lte=timezone.now(), then=True),
+                default=False,
+                output_field=BooleanField(),
+            )).add_i18n_name(self.request.LANGUAGE_CODE)
 
         # convert to problem points in contest instead of actual points
         points_list = list(self.object.contest_problems.values_list('points').order_by('order'))
