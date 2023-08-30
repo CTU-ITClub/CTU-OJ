@@ -36,8 +36,8 @@
     {% compress css %}
         <link rel="stylesheet" href="{{ static('semantic.min.css') }}">
         <link rel="stylesheet" href="{{ static('github-markdown.css') }}">
-        <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/styles/github.min.css">
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+        <link rel="stylesheet" href="{{ static('github.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ static('toastify.min.css') }}">
 
         {# TODO: once dark mode support is better, enable for all users by deleting the else branch #}
         {% if perms.judge.test_site %}
@@ -64,11 +64,11 @@
         <script src="{{ JQUERY_JS }}"></script>
     {% endif %}
 
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
     {% compress js %}
-        <script src="https://unpkg.com/@highlightjs/cdn-assets@11.8.0/highlight.min.js"></script>
-        <script>hljs.highlightAll();</script>
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
         <script>{{ inlinei18n(LANGUAGE_CODE)|safe }}</script>
         {% if INLINE_JQUERY %}
             <script src="{{ static('libs/jquery-3.4.1.min.js') }}"></script>
