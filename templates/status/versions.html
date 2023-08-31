@@ -8,23 +8,24 @@
 {% endblock %}
 
 {% block body %}
-    <table class="ui table definition celled fixed">
-        <thead>
-        <tr>
-            <th></th>
-            {% for judge in judges %}
-                <th>{{ judge }}</th>
-            {% endfor %}
-        </tr>
-        </thead>
-        <tbody>
-
-        {% for language in languages %}
+    <div class="scroll-x">
+        <table class="ui table unstackable definition celled fixed">
+            <thead>
             <tr>
-                <td>{{ language.name }}</td>
+                <th></th>
                 {% for judge in judges %}
-                    {% set versions = matrix[judge][language.id] %}
-                    <td class="version version-
+                    <th>{{ judge }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for language in languages %}
+                <tr>
+                    <td>{{ language.name }}</td>
+                    {% for judge in judges %}
+                        {% set versions = matrix[judge][language.id] %}
+                        <td class="version version-
                         {%- if not versions -%}
                             blank
                         {%- elif versions.is_latest -%}
@@ -32,16 +33,17 @@
                         {%- else -%}
                             outdated
                         {%- endif %} {% if versions %} positive {% else %} negative {% endif %}">
-                        {%- for version in versions -%}
-                            {{ version.name }}{% if version.version %}&nbsp;{{ version.version }}{% endif %}
-                            {% if not loop.last %}<br>{% endif %}
-                        {%- else -%}
-                            &mdash;
-                        {%- endfor -%}
-                    </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                            {%- for version in versions -%}
+                                {{ version.name }}{% if version.version %}&nbsp;{{ version.version }}{% endif %}
+                                {% if not loop.last %}<br>{% endif %}
+                            {%- else -%}
+                                &mdash;
+                            {%- endfor -%}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
