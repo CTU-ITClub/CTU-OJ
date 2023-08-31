@@ -50,10 +50,10 @@
                         {% if content_title %}{{ content_title }}{% else %}{{ title }}{% endif %}
                     {% endblock %}
                 </div>
-                <div class="sub header" style="display:flex; align-items: center; gap: 10px">
+                <div class="sub header" style="display:flex; align-items: center; gap: 10px; flex-wrap: wrap">
                     {% with authors=post.authors.all() %}
                         {%- if authors -%}
-                            <span>{{ link_users(authors) }}</span>
+                            {{ link_users(authors) }}
                         {%- endif -%}
                     {% endwith %}
                     <span>
