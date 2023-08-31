@@ -24,7 +24,9 @@
 <td class="sub-main">
     <div class="ui header sub-info{% if submission.status == 'G' %} sub-info-grading{% endif %}">
         {% if show_problem %}
-            <a class="content" href="{{ url('problem_detail', submission.problem.code) }}">{{ problem_name }}</a>
+            <a class="content" href="{{ url('problem_detail', submission.problem.code) }}" style="margin-bottom: 10px;">
+                {{ problem_name }}
+            </a>
         {% endif %}
         <div class="sub header" style="display: flex; align-items: center">
             {{ link_user(submission.user) }}
