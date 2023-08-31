@@ -24,14 +24,18 @@
             }
         };
 
+        theme = localStorage.getItem('theme') || 'vs-dark';
+
         require(["vs/editor/editor.main"], function () {
             window.$_editor = monaco.editor.create(document.querySelector('.monaco-editor-container'), {
                 language: mapLanguage('{{ default_lang.ace }}'),
                 value: $('#id_source').val(),
-                theme: 'vs-dark',
+                theme,
                 automaticLayout: true,
                 fontFamily: "'Monaco', monospace",
                 fontLigatures: true,
+                cursorSmoothCaretAnimation: true,
+                cursorBlinking: 'phase'
             });
 
             window.$_editor.onDidChangeModelContent(() => {
@@ -41,6 +45,15 @@
             if (!$('#id_source').val()) {
                 window.$update_language_template();
             }
+
+            $(() => {
+                $('#code-theme').find(`option[value="${theme}"]`).prop('selected', true);
+                $('#code-theme').change(() => {
+                    theme = $('#code-theme').val()
+                    localStorage.setItem('theme', theme)
+                    monaco.editor.setTheme(theme)
+                })
+            })
         });
     </script>
     {{ form.media.js }}
@@ -243,8 +256,6 @@
 
                     $toggleFullscreenButton.find('i').toggleClass('compress expand')
                 })
-
-                $toggleFullscreenButton.click()
             })
 
         </script>
@@ -268,7 +279,8 @@
             }
 
             #problem_submit.fullscreen #right {
-                padding-top: 20px;
+                padding-top: 30px;
+                padding-right: 30px;
             }
         </style>
     {% endcompress %}
@@ -279,7 +291,7 @@
 {% endblock %}
 
 {% block body %}
-    <form id="problem_submit" action="" method="post" class="form-area ui form"
+    <form id="problem_submit" action="" method="post" class="form-area ui form fullscreen"
           enctype="multipart/form-data">
         <div class="ui grid stackable">
             <div class="column eleven wide">
@@ -310,6 +322,44 @@
 
             <div id="right" class="column five wide">
                 <div>
+                    {% if content_title %}
+                        <h2 class="ui header">
+                            <i class="icon code"></i>
+                            <div class="content">
+                                {{ content_title }}
+                            </div>
+                        </h2>
+                        <hr class="ui divider"/>
+                    {% endif %}
+
+                    <div class="ui buttons basic">
+                        <button class="ui button" type="button"
+                                onclick="confirm('{{ _('Do you want reset code?') }}') && window.$update_language_template()">
+                            <i class="icon undo"></i>
+                            {{ _('Reset') }}
+                        </button>
+
+                        <button id="toggle-fullscreen" class="ui button icon" type="button">
+                            <i class="icon compress"></i>
+                        </button>
+                    </div>
+
+                    <hr class="ui divider"/>
+
+                    <div class="field">
+                        <label>{{ _('Theme') }}</label>
+                        <select class="ui dropdown" id="code-theme">
+                            <option value="vs-dark">
+                                {{ _('Dark') }}
+                            </option>
+                            <option value="vs-light">
+                                {{ _('Light') }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <hr class="ui divider"/>
+
                     {% if not no_judges %}
                         {% if default_lang not in form.fields.language.queryset %}
                             <div class="ui message warning icon">
@@ -332,6 +382,16 @@
 
                         {% if request.in_contest and submission_limit %}
                             {% if submissions_left > 0 %}
+                                <button type="submit" class="ui button black"
+                                        {% if request.in_contest and submission_limit and not submissions_left %}disabled{% endif %}
+                                        style="width: 100%; position:relative;">
+                                    <i class="icon play"></i>
+                                    {{ _('Submit!') }}
+                                    <div class="ui label red floating mini">
+                                        {{ submissions_left }}
+                                    </div>
+                                </button>
+
                                 <div class="ui message info icon">
                                     <i class="icon info"></i>
 
@@ -347,6 +407,46 @@
                                         {%- endtrans %}
                                     </div>
                                 </div>
+
+                                <div id="language">
+                                    {{ form.language.errors }}
+                                    <div id="language-select" class="field">
+                                        <label>{{ _('Language') }}</label>
+                                        <select id="id_language" name="language" class="ui search dropdown">
+                                            {% for lang in form.fields.language.queryset %}
+                                                <option value="{{ lang.id }}" data-id="{{ lang.id }}"
+                                                        data-name="{{ lang.name }}"
+                                                        data-info="{{ lang.info }}" data-ace="{{ lang.ace }}"
+                                                        data-fileonly="{{ lang.file_only }}"
+                                                        data-ext="{{ lang.extension }}"
+                                                        data-file-size="{{ lang.file_size_limit }}"
+                                                        data-judge-info="{{ runtime_versions(lang.runtime_versions()) }}"
+                                                        {% if lang.id == default_lang.id %}selected{% endif %}>{{ lang.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {% if form.judge %}
+                                    <div class="field">
+                                        <label>{{ _('Judge') }}</label>
+                                        {{ form.judge }}
+                                    </div>
+                                    <hr class="ui divider"/>
+                                {% endif %}
+
+                                <div>
+                                    <label for="file_select" class="ui placeholder segment primary">
+                                        <div class="ui icon header">
+                                            <i class="icon file code"></i>
+                                            {{ _('Paste your source code here or load it from a file:') }}
+                                        </div>
+
+                                        <label for="file_select"
+                                               class="ui button primary">{{ _('Select file') }}</label>
+                                    </label>
+                                    <input id="file_select" type="file" onchange="handleFileSelect()" hidden>
+                                </div>
                             {% else %}
                                 <div class="ui message error icon">
                                     <i class="icon warning"></i>
@@ -360,79 +460,65 @@
                                     </div>
                                 </div>
                             {% endif %}
-                        {% endif %}
-                    {% endif %}
-                    <div class="ui buttons basic">
-                        <button class="ui button" type="button"
-                                onclick="confirm('{{ _('Do you want reset code?') }}') && window.$update_language_template()">
-                            <i class="icon undo"></i>
-                            {{ _('Reset') }}
-                        </button>
+                        {% else %}
+                            <button type="submit" class="ui button green"
+                                    {% if request.in_contest and submission_limit and not submissions_left %}disabled{% endif %}
+                                    style="width: 100%">
+                                <i class="icon play"></i>
+                                {{ _('Submit!') }}
+                            </button>
 
-                        <button id="toggle-fullscreen" class="ui button icon" type="button">
-                            <i class="icon expand"></i>
-                        </button>
-                    </div>
-                    <hr class="ui divider"/>
-                    {% if no_judges %}
+                            <hr class="ui divider"/>
+
+                            <div id="language">
+                                {{ form.language.errors }}
+                                <div id="language-select" class="field">
+                                    <label>{{ _('Language') }}</label>
+                                    <select id="id_language" name="language" class="ui search dropdown">
+                                        {% for lang in form.fields.language.queryset %}
+                                            <option value="{{ lang.id }}" data-id="{{ lang.id }}"
+                                                    data-name="{{ lang.name }}"
+                                                    data-info="{{ lang.info }}" data-ace="{{ lang.ace }}"
+                                                    data-fileonly="{{ lang.file_only }}"
+                                                    data-ext="{{ lang.extension }}"
+                                                    data-file-size="{{ lang.file_size_limit }}"
+                                                    data-judge-info="{{ runtime_versions(lang.runtime_versions()) }}"
+                                                    {% if lang.id == default_lang.id %}selected{% endif %}>{{ lang.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {% if form.judge %}
+                                <div class="field">
+                                    <label>{{ _('Judge') }}</label>
+                                    {{ form.judge }}
+                                </div>
+                                <hr class="ui divider"/>
+                            {% endif %}
+
+                            <div>
+                                <label for="file_select" class="ui placeholder segment primary">
+                                    <div class="ui icon header">
+                                        <i class="icon file code"></i>
+                                        {{ _('Paste your source code here or load it from a file:') }}
+                                    </div>
+
+                                    <label for="file_select" class="ui button primary">{{ _('Select file') }}</label>
+                                </label>
+                                <input id="file_select" type="file" onchange="handleFileSelect()" hidden>
+                            </div>
+
+                        {% endif %}
+
+                    {% else %}
                         <div class="ui message yellow icon">
                             <i class="icon warning"></i>
                             <div class="content">
                                 {{ _('No judge is available for this problem.') }}
                             </div>
                         </div>
-                        <hr class="ui divider"/>
-                    {% else %}
-                        <button type="submit" class="ui button green"
-                                {% if request.in_contest and submission_limit and not submissions_left %}disabled{% endif %}
-                                style="width: 100%">
-                            <i class="icon play"></i>
-                            {{ _('Submit!') }}
-                        </button>
-
-                        <hr class="ui divider"/>
-                        {% if form.judge %}
-                            <div class="field">
-                                <label>{{ _('Judge') }}</label>
-                                {{ form.judge }}
-                            </div>
-                            <hr class="ui divider"/>
-                        {% endif %}
                     {% endif %}
-
-                    {% if not no_judges %}
-                        <div id="language">
-                            {{ form.language.errors }}
-                            <div id="language-select" class="field">
-                                <label>{{ _('Language') }}</label>
-                                <select id="id_language" name="language" class="ui search dropdown">
-                                    {% for lang in form.fields.language.queryset %}
-                                        <option value="{{ lang.id }}" data-id="{{ lang.id }}"
-                                                data-name="{{ lang.name }}"
-                                                data-info="{{ lang.info }}" data-ace="{{ lang.ace }}"
-                                                data-fileonly="{{ lang.file_only }}"
-                                                data-ext="{{ lang.extension }}"
-                                                data-file-size="{{ lang.file_size_limit }}"
-                                                data-judge-info="{{ runtime_versions(lang.runtime_versions()) }}"
-                                                {% if lang.id == default_lang.id %}selected{% endif %}>{{ lang.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <hr class="ui divider"/>
-                    {% endif %}
-
-                    <div>
-                        <label for="file_select" class="ui placeholder segment primary">
-                            <div class="ui icon header">
-                                <i class="icon file code"></i>
-                                {{ _('Paste your source code here or load it from a file:') }}
-                            </div>
-
-                            <label for="file_select" class="ui button primary">{{ _('Select file') }}</label>
-                        </label>
-                        <input id="file_select" type="file" onchange="handleFileSelect()" hidden>
-                    </div>
 
                     {% csrf_token %}
                     {{ form.non_field_errors() }}
