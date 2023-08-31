@@ -484,7 +484,7 @@
     {% endcompress %}
     <style>
         {%  if not misc_config.turn_off_header_animation %}
-            #page-header::before {
+            #page-header::after {
                 content: '';
                 width: 100px;
                 height: 100%;
@@ -495,6 +495,35 @@
                 animation: zit_label 10s infinite;
             }
         {% endif %}
+
+        #enable_2_9 {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+        }
+
+        #enable_2_9 video {
+            width: 400px;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #enable_2_9::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 150px;
+            height: 100%;
+            background: #fff;
+            right: 0;
+            background: {% if request.user.is_impersonate %}
+                linear-gradient(90deg, #DB282800, #DB2828);
+            {% else %}
+                linear-gradient(90deg, #1B1C1D00, #1B1C1D);
+            {% endif %}
+        }
+
     </style>
 </head>
 <body>
@@ -621,6 +650,13 @@
 <div id="page-container" class="ui pusher">
     <nav class="ui menu main fixed borderless top inverted {% if request.user.is_impersonate %} red compact {% endif %}"
          id="page-header">
+        {% if misc_config.enable_2_9 %}
+            <div id="enable_2_9">
+                <video autoplay loop muted>
+                    <source src="{{ static('videos/vn-flag.mp4') }}">
+                </video>
+            </div>
+        {% endif %}
         <div class="ui container">
 
             <a href="{{ url('home') }}" class="header item">
