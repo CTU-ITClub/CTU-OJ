@@ -545,7 +545,7 @@
         {% if not node.is_leaf_node() %}
             <div class="ui item accordion">
                 <div class="title">
-                    {{ user_trans(node.label) }}
+                    {{ user_trans(_(node.label)) }}
                     <i class="dropdown icon"></i>
                 </div>
 
@@ -553,7 +553,7 @@
                     {% if children %}
                         <div class="content">
                             <a class="item" href="{{ node.path }}">
-                                {{ node.label }}
+                                {{ _(node.label) }}
                             </a>
                             {{ loop(children) }}
                         </div>
@@ -563,7 +563,7 @@
 
         {% else %}
             <a href="{{ node.path }}" class="item{% if node.key in nav_tab %} active{% endif %}">
-                {{ node.label }}
+                {{ _(node.label) }}
             </a>
         {% endif %}
     {% endfor %}
@@ -677,7 +677,7 @@
                     {% if not node.is_leaf_node() %}
                         <div class="ui item simple dropdown">
                             <a href="{{ node.path }}">
-                                {{ user_trans(node.label) }}
+                                {{ user_trans(_(node.label)) }}
                             </a>
 
                             <i class="dropdown icon"></i>
@@ -691,7 +691,7 @@
 
                     {% else %}
                         <a href="{{ node.path }}" class="item{% if node.key in nav_tab %} active{% endif %}">
-                            {{ node.label }}
+                            {{ _(node.label) }}
                         </a>
                     {% endif %}
                 {% endfor %}
