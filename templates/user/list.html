@@ -8,6 +8,8 @@
 {% endblock %}
 
 {% block users_table %}
-    {% include "user/top-rank.html" %}
+    {% if page_obj.number == 1 %}
+        {% include "user/top-rank.html" %}
+    {% endif %}
     {% include "user/users-table.html" %}
 {% endblock %}
