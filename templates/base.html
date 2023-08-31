@@ -257,213 +257,232 @@
     <script defer>
     </script>
 
+
+    {% compress css %}
+        <style>
+            @font-face {
+                font-family: 'Monaco';
+                src: url('{{ static('fonts/Monaco 400.ttf') }}');
+                font-weight: 400;
+            }
+
+            .markdown-body code {
+                font-family: 'Monaco', monospace;
+            }
+
+            html {
+                font-family: 'Roboto', sans-serif;
+            }
+
+            .ui {
+                font-family: 'Roboto', sans-serif !important;
+            }
+
+            pre.line {
+                margin: 0;
+                display: block;
+            }
+
+            .codehilite {
+                position: relative;
+            }
+
+            .copy-clipboard {
+                padding: 5px 10px;
+                width: fit-content;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-bottom: -45px;
+                margin-left: calc(100% - 70px);
+                position: relative;
+                background: #fff;
+            }
+
+            .codehilite .copy-clipboard {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                margin: 0;
+            }
+
+            .AB {
+                background-color: #cccccc50 !important;
+                color: black !important;
+            }
+
+            .AC {
+                background-color: #53f23f90 !important;
+                color: green !important;
+            }
+
+            ._AC {
+                background-color: #DFFF0090 !important;
+                color: green !important;
+            }
+
+            .WA {
+                background-color: #ef1b5320 !important;
+                color: #ef1b53 !important;
+            }
+
+            .TLE, .MLE {
+                background-color: #cccccc50 !important;
+                color: black !important;
+            }
+
+            .OLE, .IR, .RTE, .OTH {
+                background-color: #FAB62390 !important;
+                color: black !important;
+            }
+
+            .CE {
+                background-color: #cccccc50 !important;
+                color: black !important;
+            }
+
+            .IE {
+                background-color: #ef1b5320 !important;
+                color: #ef1b53 !important;
+            }
+
+            .QU, .G {
+                background: white !important;
+                color: black !important;
+            }
+
+            .case-AC {
+                color: green;
+                font-weight: bold;
+            }
+
+            .case-_AC {
+                color: #BBCC00;
+                font-weight: bold;
+            }
+
+            .case-WA {
+                color: red;
+                font-weight: bold;
+            }
+
+            .case-TLE, .case-SC {
+                color: grey;
+                font-weight: bold;
+            }
+
+            .case-MLE, .case-OLE, .case-RTE, .case-IR {
+                color: orange;
+                font-weight: bold;
+            }
+
+            .points.header, .points.header * {
+                color: #000 !important;
+                text-align: center;
+            }
+
+            /*** Responsive header ***/
+
+            @media screen and (max-width: 1127px) {
+                #hide-on-mobile {
+                    display: none;
+                }
+            }
+
+            @media screen and (min-width: 1128px) {
+                #show-on-mobile {
+                    display: none;
+                }
+            }
+
+
+            /*** ZIT Label ***/
+            .zit-label {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin: 20px 0;
+                padding: 10px;
+                background: linear-gradient(45deg, #46d3ff30, #5eff8c30);
+                border-radius: 50px;
+                width: fit-content;
+                overflow: hidden;
+                position: relative;
+            }
+
+            .zit-label::before {
+                content: '';
+                width: 40px;
+                height: 200px;
+                background: #ffffff10;
+                position: absolute;
+                top: 0;
+                transform: skew(-20deg);
+                animation: zit_label 4s infinite;
+            }
+
+            .zit-label::after {
+                content: '';
+                width: 10px;
+                height: 200px;
+                background: #ffffff10;
+                position: absolute;
+                top: 0;
+                transform: skew(-20deg);
+                animation: zit_label 5s infinite;
+            }
+
+            @keyframes zit_label {
+                0% {
+                    left: -100%;
+                }
+                100% {
+                    left: 100%;
+                }
+            }
+
+            .zit-label div {
+                padding-right: 10px;
+                color: #fff;
+            }
+
+            .zit-label span {
+                font-weight: 900;
+                color: transparent;
+                background: linear-gradient(45deg, #46d3ff, #5eff8c);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .dmoj-label img {
+                width: 200px;
+                height: auto;
+                margin-bottom: 10px;
+            }
+
+            /** Fix semantic message icon **/
+            .ui.message.icon .icon {
+                font-size: 1rem !important;
+            }
+
+            @media (max-width: 767px) {
+                .ui.grid.stackable {
+                    flex-direction: column-reverse;
+                }
+            }
+
+            .ui.selection.dropdown {
+                min-width: 12rem;
+            }
+
+            .scroll-x {
+                overflow-x: auto;
+            }
+        </style>
+
+    {% endcompress %}
     <style>
-        @font-face {
-            font-family: 'Monaco';
-            src: url('{{ static('fonts/Monaco 400.ttf') }}');
-            font-weight: 400;
-        }
-
-        .markdown-body code {
-            font-family: 'Monaco', monospace;
-        }
-
-        html {
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .ui {
-            font-family: 'Roboto', sans-serif !important;
-        }
-
-        pre.line {
-            margin: 0;
-            display: block;
-        }
-
-        .codehilite {
-            position: relative;
-        }
-
-        .copy-clipboard {
-            padding: 5px 10px;
-            width: fit-content;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: -45px;
-            margin-left: calc(100% - 70px);
-            position: relative;
-            background: #fff;
-        }
-
-        .codehilite .copy-clipboard {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            margin: 0;
-        }
-
-        .AB {
-            background-color: #cccccc50 !important;
-            color: black !important;
-        }
-
-        .AC {
-            background-color: #53f23f90 !important;
-            color: green !important;
-        }
-
-        ._AC {
-            background-color: #DFFF0090 !important;
-            color: green !important;
-        }
-
-        .WA {
-            background-color: #ef1b5320 !important;
-            color: #ef1b53 !important;
-        }
-
-        .TLE, .MLE {
-            background-color: #cccccc50 !important;
-            color: black !important;
-        }
-
-        .OLE, .IR, .RTE, .OTH {
-            background-color: #FAB62390 !important;
-            color: black !important;
-        }
-
-        .CE {
-            background-color: #cccccc50 !important;
-            color: black !important;
-        }
-
-        .IE {
-            background-color: #ef1b5320 !important;
-            color: #ef1b53 !important;
-        }
-
-        .QU, .G {
-            background: white !important;
-            color: black !important;
-        }
-
-        .case-AC {
-            color: green;
-            font-weight: bold;
-        }
-
-        .case-_AC {
-            color: #BBCC00;
-            font-weight: bold;
-        }
-
-        .case-WA {
-            color: red;
-            font-weight: bold;
-        }
-
-        .case-TLE, .case-SC {
-            color: grey;
-            font-weight: bold;
-        }
-
-        .case-MLE, .case-OLE, .case-RTE, .case-IR {
-            color: orange;
-            font-weight: bold;
-        }
-
-        .points.header, .points.header * {
-            color: #000 !important;
-            text-align: center;
-        }
-
-        /*** Responsive header ***/
-
-        @media screen and (max-width: 1127px) {
-            #hide-on-mobile {
-                display: none;
-            }
-        }
-
-        @media screen and (min-width: 1128px) {
-            #show-on-mobile {
-                display: none;
-            }
-        }
-
-
-        /*** ZIT Label ***/
-        .zit-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 20px 0;
-            padding: 10px;
-            background: linear-gradient(45deg, #46d3ff30, #5eff8c30);
-            border-radius: 50px;
-            width: fit-content;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .zit-label::before {
-            content: '';
-            width: 40px;
-            height: 200px;
-            background: #ffffff10;
-            position: absolute;
-            top: 0;
-            transform: skew(-20deg);
-            animation: zit_label 4s infinite;
-        }
-
-        .zit-label::after {
-            content: '';
-            width: 10px;
-            height: 200px;
-            background: #ffffff10;
-            position: absolute;
-            top: 0;
-            transform: skew(-20deg);
-            animation: zit_label 5s infinite;
-        }
-
-        @keyframes zit_label {
-            0% {
-                left: -100%;
-            }
-            100% {
-                left: 100%;
-            }
-        }
-
-        .zit-label div {
-            padding-right: 10px;
-            color: #fff;
-        }
-
-        .zit-label span {
-            font-weight: 900;
-            color: transparent;
-            background: linear-gradient(45deg, #46d3ff, #5eff8c);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .dmoj-label img {
-            width: 200px;
-            height: auto;
-            margin-bottom: 10px;
-        }
-
-        /** Fix semantic message icon **/
-        .ui.message.icon .icon {
-            font-size: 1rem !important;
-        }
-
         {%  if not misc_config.turn_off_header_animation %}
             #page-header::before {
                 content: '';
