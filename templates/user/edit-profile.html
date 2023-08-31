@@ -3,13 +3,35 @@
 {% block user_media %}
     {% include "timezone/media-css.html" %}
     {{ form.media.css }}
-    <style>
+    {% compress css %}
+        <style>
+            .selector-filter img {
+                display: none;
+            }
 
-        .selector-filter img {
-            display: none;
-        }
-    </style>
+            .sortedm2m-container {
+                width: 100%;
+            }
+
+            .sortedm2m-container p.selector-filter {
+                width: 100%;
+            }
+
+            .sortedm2m-container p.selector-filter input {
+                width: 100%;
+            }
+
+            ul.sortedm2m {
+                width: 100%;
+            }
+
+            ul.sortedm2m li {
+                width: 100%;
+            }
+        </style>
+    {% endcompress %}
 {% endblock %}
+
 
 {% block js_media %}
     {% include "timezone/media-js.html" %}
@@ -181,51 +203,50 @@
 
 {% block body %}
     <div class="ui container">
-        {% if form.errors %}
-            <div class="ui message warning">
-                <a href="#" class="icon close">
-                    <i class="icon close"></i>
-                </a>
-
-                <div class="content">
-                    {{ form.non_field_errors() }}
-                    {{ form.about.errors }}
-                </div>
-            </div>
-        {% endif %}
         <form id="edit-form" action="" method="post" class="form-area ui form">
-
             {% csrf_token %}
-            {% if form_user.first_name %}
-                <div class="field">
-                    <label>
-                        {{ _('Full name') }}:
-                    </label>
-
-                    {{ form_user.first_name }}
-                </div>
-
-                {% if form.display_badge %}
-                    <div class="field">
-                        <label>
-                            {{ _('Display badge') }}:
-                        </label>
-                        {{ form.display_badge }}
-                    </div>
-                {% endif %}
-                <hr class="ui divider">
-            {% endif %}
-
-            {% if form.about %}
-                <div class="field">
-                    <label>{{ _('Self-description:') }}</label>
-                    {{ form.about }}
-                </div>
-                <hr class="ui divider">
-            {% endif %}
-
             <div class="ui grid stackable">
                 <div class="column eight wide">
+                    {% if form.errors %}
+                        <div>
+                            <div class="ui message yellow">
+                                <a href="#" class="icon close">
+                                    <i class="icon close"></i>
+                                </a>
+
+                                <div class="content">
+                                    {{ form.non_field_errors() }}
+                                    {{ form.about.errors }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if form_user.first_name %}
+                        <div class="field">
+                            <label>
+                                {{ _('Full name') }}:
+                            </label>
+                            {{ form_user.first_name }}
+                        </div>
+
+                        {% if form.display_badge %}
+                            <div class="field">
+                                <label>
+                                    {{ _('Display badge') }}:
+                                </label>
+                                {{ form.display_badge }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if form.about %}
+                        <div class="field">
+                            <label>{{ _('Self-description:') }}</label>
+                            {{ form.about }}
+                        </div>
+                        <hr class="ui divider">
+                    {% endif %}
                     <div class="field">
                         <label class="inline-header grayed">{{ _('Time zone:') }}</label>
                         {{ form.timezone }}
