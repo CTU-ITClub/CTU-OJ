@@ -6,15 +6,13 @@
     {% set tab = '' %}
     {% include "contest/contest-tabs.html" %}
     {% if contest.is_organization_private %}
-        <span class="organization-tags">
+        <div style="display: flex; align-items: center; flex-wrap: wrap">
             {% for org in contest.organizations.all() %}
-                <span class="organization-tag">
-                    <a href="{{ org.get_absolute_url() }}">
-                        <i class="fa fa-lock"></i> {{ org.name }}
-                    </a>
-                </span>
+                <a href="{{ org.get_absolute_url() }}" class="ui label black">
+                    <i class="icon lock"></i> {{ org.name }}
+                </a>
             {% endfor %}
-        </span>
+        </div>
     {% endif %}
 {% endblock %}
 
