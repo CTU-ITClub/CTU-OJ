@@ -634,12 +634,12 @@
     {% else %}
         <div class="item">
 
-            <a class="ui button " href="{{ url('auth_login') }}">
+            <a class="ui button" style="width: 100%" href="{{ url('auth_login') }}">
                 {{ _('Login') }}
             </a>
 
             {% if misc_config.registration %}
-                <a class="item button primary" href="{{ url('registration_register') }}">
+                <a class="ui button primary" style="width: 100%; margin-top: 10px;" href="{{ url('registration_register') }}">
                     {{ _('Register') }}
                 </a>
             {% endif %}
