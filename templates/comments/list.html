@@ -1,3 +1,10 @@
+{% compress css %}
+    <style>
+        .comment .author .avatar {
+            display: none !important;
+        }
+    </style>
+{% endcompress %}
 {% if not request.official_contest_mode or request.user.is_superuser %}
     <div id="comments">
         <h2 class="ui header">
