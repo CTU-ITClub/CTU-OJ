@@ -4,6 +4,17 @@
          style="display: flex; gap: 10px">
     <div>
         <div class="ui icon buttons vertical" style="position: sticky; top: 80px;">
+            {% if not post.visible %}
+                <div class="ui button black">
+                    <i class="icon lock"></i>
+                </div>
+            {% endif %}
+            {%- if post.sticky %}
+                <div class="ui button orange">
+                    <i title="Sticky" class="icon star"></i>
+                </div>
+            {% endif -%}
+
             {% if logged_in %}
                 <a href="javascript:blog_upvote({{ post.id }})"
                    class="ui button {% if post.vote_score == 1 %} active{% endif %}">
@@ -33,18 +44,13 @@
     </div>
 
     <div class="content" style="flex: 1; overflow: hidden">
-        <div class="summary" style="background: #fff; z-index: 1;">
+        <div class="summary" style="background: #fff; z-index: 1;padding-top: 5px;">
             <h2 class="ui header" style="margin-bottom: 5px; position: sticky;">
-                {% if not post.visible %}
-                    <i class="icon lock"></i>
-                {% endif %}
-
                 <a href="{{ url('blog_post', post.id, post.slug) }}" class="content">
                     {{ post.title }}
                 </a>
             </h2>
             <div style="display: flex; align-items: center; gap: 5px">
-                {%- if post.sticky %}<i title="Sticky" class="icon star"></i>{% endif -%}
                 {% with authors=post.authors.all() %}
                     {%- if authors -%}
                         {{ link_users(authors) }}
@@ -84,14 +90,15 @@
         <div class="ui label">
             <i class="icon clock"></i>
             <span class="content">
-                        {{ relative_time(post.publish_on, abs=_('o{time}'), rel=_('{time}')) -}}
-                    </span>
+                {{ relative_time(post.publish_on, abs=_('o{time}'), rel=_('{time}')) -}}
+            </span>
         </div>
         <a href="{{ url('blog_post', post.id, post.slug) }}#comments" class="ui label">
             <i class="icon comment"></i>
             <span class="content">
-                            {{- post_comment_counts[post.id] or 0 -}}
-                    </span>
+                {{- post_comment_counts[post.id] or 0 -}}
+            </span>
         </a>
     </div>
 </section>
+<hr class="ui divider"/>
