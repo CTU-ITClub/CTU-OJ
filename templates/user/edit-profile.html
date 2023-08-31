@@ -281,159 +281,160 @@
                             </label>
                             {{ form.organizations }}
                         </div>
+                        <hr class="ui divider">
                     {% endif %}
-                </div>
-            </div>
 
-            <hr class="ui divider">
-
-            <div class="settings" style="padding-top:0.7em">
-                <div class="pane">
-                    <table>
-                        {% if form.newsletter %}
-                            <tr>
-                                <td>
-                                    <div class="field">
-                                        <div class="ui checkbox">
-                                            {{ form.newsletter }}
-                                            <label for="id_newsletter">
-                                                {{- _('Notify me about upcoming contests') -}}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endif %}
-                        <tr>
-                            <td>
-                                <div class="field">
-                                    <div class="ui checkbox">
-                                        {{ form.test_site }}
-                                        <label for="id_test_site">
-                                            {{- form.test_site.label -}}
-                                        </label>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="https://www.gravatar.com/" target="_blank" class="ui button green"
-                                   rel="noopener" style="width: 100%">
-                                    <i class="icon picture"></i>
-                                    {{ _('Change your avatar') }}
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="{{ url('password_change') }}" class="ui button" style="width: 100%">
-                                    <i class="icon key"></i>
-                                    {{ _('Change your password') }}
-                                </a>
-                            </td>
-                        </tr>
-                        {% if can_download_data %}
-                            <tr>
-                                <td>
-                                    <a href="{{ url('user_prepare_data') }}" class="ui button" style="width: 100%">
-                                        <i class="icon download"></i>
-                                        {{ _('Download your data') }}
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endif %}
-                        <tr>
-                            <td>
-                                <div id="api-token-td" class="inline-header grayed field">
-                                    <label>
-                                        {{ _('API token:') }}
-                                    </label>
-                                    {% if profile.api_token %}
-                                        <a id="generate-api-token-button" href="{{ url('generate_api_token') }}"
-                                           class="ui button mini">
-                                            <i class="icon refresh"></i>
-                                            {{ _('Regenerate') }}
-                                        </a>
-                                        <a id="remove-api-token-button" href="{{ url('remove_api_token') }}"
-                                           class="ui button red mini">
-                                            <i class="icon remove"></i>
-                                            {{ _('Remove') }}
-                                        </a>
-                                        <div class="api-token ui message" id="api-token">
-                                            {{ _('Hidden') }}
-                                        </div>
-                                    {% else %}
-                                        <a id="generate-api-token-button" href="{{ url('generate_api_token') }}"
-                                           class="ui button mini">
-                                            <i class="icon code"></i>{{ _('Generate') }}
-                                        </a>
-
-                                        <div class="api-token ui message" id="api-token"></div>
-                                    {% endif %}
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="pane">
-                    <div>
-                        {% if profile.is_totp_enabled %}
-                            <div class="field">
-                                <label>{{ _('Two-factor authentication is enabled:') }}</label>
-                                <div class="ui buttons basic">
-                                    {% if require_staff_2fa and request.user.is_staff and not profile.is_webauthn_enabled %}
-                                        <a id="disable-2fa-button" class="ui button">{{ _('Disable') }}</a>
-                                    {% else %}
-                                        <a href="{{ url('disable_2fa') }}" class="ui button">{{ _('Disable') }}</a>
-                                    {% endif %}
-                                    <a href="{{ url('refresh_2fa') }}" class="ui button">
-                                        {{ _('Refresh') }}
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label>
-                                    {{ _('Scratch codes:') }}
-                                </label>
-
-                                {% if profile.scratch_codes %}
-                                    <a id="generate-scratch-codes-button" href="{{ url('generate_scratch_codes') }}"
-                                       class="ui button">
-                                        <i class="icon refresh"></i>
-                                        {{ _('Regenerate') }}
-                                    </a>
-                                    <div id="hidden-word" class="ui message">{{ _('Hidden') }}</div>
-                                {% else %}
-                                    <a id="generate-scratch-codes-button" href="{{ url('generate_scratch_codes') }}"
-                                       class="ui button inline-button">{{ _('Generate') }}</a>
+                    <div class="settings" style="padding-top:0.7em">
+                        <div class="pane">
+                            <table>
+                                {% if form.newsletter %}
+                                    <tr>
+                                        <td>
+                                            <div class="field">
+                                                <div class="ui checkbox">
+                                                    {{ form.newsletter }}
+                                                    <label for="id_newsletter">
+                                                        {{- _('Notify me about upcoming contests') -}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 {% endif %}
-                                <div style="display: none" id="scratch-codes-regen" class="markdown-body">
-                                    <p id="scratch-codes-text">
-                                        {{ _('Below is a list of one-time use scratch codes.') }}
-                                        {{ _('These codes can only be used once and are for emergency use.') }}
-                                        {{ _('You can use these codes to login to your account or disable two-factor authentication.') }}
-                                        {{ _('If you ever need more scratch codes, you can regenerate them here.') }}
-                                        {{ _('Please write these down and keep them in a secure location.') }}<br><br>
-                                        {{ _('You will not be able to view your scratch codes after you leave this page!') }}
-                                    </p>
-                                    <pre><code id="scratch-codes"></code></pre>
-                                </div>
+                                <tr>
+                                    <td>
+                                        <div class="field">
+                                            <div class="ui checkbox">
+                                                {{ form.test_site }}
+                                                <label for="id_test_site">
+                                                    {{- form.test_site.label -}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="https://www.gravatar.com/" target="_blank" class="ui button green"
+                                           rel="noopener" style="width: 100%">
+                                            <i class="icon picture"></i>
+                                            {{ _('Change your avatar') }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{{ url('password_change') }}" class="ui button" style="width: 100%">
+                                            <i class="icon key"></i>
+                                            {{ _('Change your password') }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% if can_download_data %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ url('user_prepare_data') }}" class="ui button"
+                                               style="width: 100%">
+                                                <i class="icon download"></i>
+                                                {{ _('Download your data') }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                <tr>
+                                    <td>
+                                        <div id="api-token-td" class="inline-header grayed field">
+                                            <label>
+                                                {{ _('API token:') }}
+                                            </label>
+                                            {% if profile.api_token %}
+                                                <a id="generate-api-token-button" href="{{ url('generate_api_token') }}"
+                                                   class="ui button mini">
+                                                    <i class="icon refresh"></i>
+                                                    {{ _('Regenerate') }}
+                                                </a>
+                                                <a id="remove-api-token-button" href="{{ url('remove_api_token') }}"
+                                                   class="ui button red mini">
+                                                    <i class="icon remove"></i>
+                                                    {{ _('Remove') }}
+                                                </a>
+                                                <div class="api-token ui message" id="api-token">
+                                                    {{ _('Hidden') }}
+                                                </div>
+                                            {% else %}
+                                                <a id="generate-api-token-button" href="{{ url('generate_api_token') }}"
+                                                   class="ui button mini">
+                                                    <i class="icon code"></i>{{ _('Generate') }}
+                                                </a>
+
+                                                <div class="api-token ui message" id="api-token"></div>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="pane">
+                            <div>
+                                {% if profile.is_totp_enabled %}
+                                    <div class="field">
+                                        <label>{{ _('Two-factor authentication is enabled:') }}</label>
+                                        <div class="ui buttons basic">
+                                            {% if require_staff_2fa and request.user.is_staff and not profile.is_webauthn_enabled %}
+                                                <a id="disable-2fa-button" class="ui button">{{ _('Disable') }}</a>
+                                            {% else %}
+                                                <a href="{{ url('disable_2fa') }}"
+                                                   class="ui button">{{ _('Disable') }}</a>
+                                            {% endif %}
+                                            <a href="{{ url('refresh_2fa') }}" class="ui button">
+                                                {{ _('Refresh') }}
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <label>
+                                            {{ _('Scratch codes:') }}
+                                        </label>
+
+                                        {% if profile.scratch_codes %}
+                                            <a id="generate-scratch-codes-button"
+                                               href="{{ url('generate_scratch_codes') }}"
+                                               class="ui button">
+                                                <i class="icon refresh"></i>
+                                                {{ _('Regenerate') }}
+                                            </a>
+                                            <div id="hidden-word" class="ui message">{{ _('Hidden') }}</div>
+                                        {% else %}
+                                            <a id="generate-scratch-codes-button"
+                                               href="{{ url('generate_scratch_codes') }}"
+                                               class="ui button inline-button">{{ _('Generate') }}</a>
+                                        {% endif %}
+                                        <div style="display: none" id="scratch-codes-regen" class="markdown-body">
+                                            <p id="scratch-codes-text">
+                                                {{ _('Below is a list of one-time use scratch codes.') }}
+                                                {{ _('These codes can only be used once and are for emergency use.') }}
+                                                {{ _('You can use these codes to login to your account or disable two-factor authentication.') }}
+                                                {{ _('If you ever need more scratch codes, you can regenerate them here.') }}
+                                                {{ _('Please write these down and keep them in a secure location.') }}<br><br>
+                                                {{ _('You will not be able to view your scratch codes after you leave this page!') }}
+                                            </p>
+                                            <pre><code id="scratch-codes"></code></pre>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="field">
+                                        <label>
+                                            {{ _('Two-factor Authentication is disabled:') }}
+                                        </label>
+                                        <a href="{{ url('enable_2fa') }}" class="ui button primary mini">
+                                            <i class="icon key"></i>
+                                            {{ _('Enable') }}
+                                        </a>
+                                    </div>
+                                {% endif %}
                             </div>
-                        {% else %}
-                            <div class="field">
-                                <label>
-                                    {{ _('Two-factor Authentication is disabled:') }}
-                                </label>
-                                <a href="{{ url('enable_2fa') }}" class="ui button primary mini">
-                                    <i class="icon key"></i>
-                                    {{ _('Enable') }}
-                                </a>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <span class="grayed">
+                            <span class="grayed">
                     {% if HAS_WEBAUTHN %}
                         <div style="padding-bottom:0.4em" class="block-header grayed">
                             {{- _('Security keys:') -}}
@@ -465,6 +466,9 @@
                         </table>
                     {% endif %}
                     </span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

@@ -26,6 +26,9 @@
         {% if show_problem %}
             <a class="content" href="{{ url('problem_detail', submission.problem.code) }}" style="margin-bottom: 10px;">
                 {{ problem_name }}
+                {% if submission.is_locked %}
+                    <i class="icon lock"></i>
+                {% endif %}
             </a>
         {% endif %}
         <div class="sub header" style="display: flex; align-items: center">
@@ -52,47 +55,47 @@
 
     {% if can_view %}
         <div class="sub-prop">
-            <div class="ui buttons mini icon basic compact">
-                <a class="button" href="{{ url('submission_status', submission.id) }}">
+            <div class="ui buttons mini basic compact">
+                <a class="ui button" href="{{ url('submission_status', submission.id) }}">
                     <i class="icon eye"></i>
                     {{ _('view') }}
                 </a> ·
                 {% if not submission.language.file_only %}
-                    <a class="button" href="{{ url('submission_source', submission.id) }}">
+                    <a class="ui button" href="{{ url('submission_source', submission.id) }}">
                         <i class="icon code"></i>
                         {{ _('source') }}
                     </a>
                 {% else %}
-                    <a class="button" href="{{ url('submission_source_download', submission.id) }}">
+                    <a class="ui button" href="{{ url('submission_source_download', submission.id) }}">
                         <i class="icon download"></i>
                         {{ _('download') }}
                     </a>
                 {% endif %}
                 {% if perms.judge.rejudge_submission and can_edit %} ·
                     {% if not submission.is_locked %}
-                        <a href="#" class="button"
+                        <a href="#" class="ui button"
                            onclick="rejudge_submission({{ submission.id }}, event);return false">
                             <i class="icon refresh"></i>
                             {{ _('rejudge') }}
                         </a>
                     {% else %}
-                        <i class="icon refresh"></i>
-                        <span class="ui label grey"
-                              title="{{ _('This submission has been locked, and cannot be rejudged.') }}">
-                        {{ _('locked') }}
-                    </span>
+                        <div class="ui button disabled"
+                             title="{{ _('This submission has been locked, and cannot be rejudged.') }}">
+                            <i class="icon lock"></i>
+                            {{ _('locked') }}
+                        </div>
                     {% endif %}
                 {% endif %}
                 {% if can_edit %}
                     {% if not submission.language.file_only %} ·
-                        <a class="button"
+                        <a class="ui button"
                            href="{{ url('problem_submission_diff', submission.problem.code) }}?username={{ submission.user.user.username }}&highlight={{ submission.id }}">
                             <i class="icon copy outline"></i>
                             {{ _('diff') }}
                         </a>
                     {% endif %}
                     {% if request.user.is_superuser %} ·
-                        <a class="button" href="{{ url('admin:judge_submission_change', submission.id) }}">
+                        <a class="ui button" href="{{ url('admin:judge_submission_change', submission.id) }}">
                             <i class="icon cog"></i>
                             {{ _('admin') }}
                         </a>
@@ -104,19 +107,27 @@
 </td>
 
 
-<td class="sub-usage">
+<td class="sub-usage" style="text-align: center;">
     {% if submission.status in ('QU', 'P', 'G', 'CE', 'IE', 'AB') or not can_view_testcase_status %}
         <div class="time">---</div>
         <div class="memory">---</div>
     {% else %}
         {% if "TLE" != submission.result %}
-            <div title="{{ submission.time or 0 }}s" class="time">
-                {{ (submission.time or 0)|floatformat(2) }}s
+            <div style="margin-bottom: 5px;">
+                <div title="{{ submission.time or 0 }}s" class="ui label icon">
+                    <i class="icon clock"></i>
+                    {{ (submission.time or 0)|floatformat(2) }}s
+                </div>
             </div>
         {% else %}
             <div class="time">---</div>
         {% endif %}
         {# No one actually likes IEC prefixes, Jinja2. #}
-        <div class="memory">{{ (submission.memory_bytes|filesizeformat(True)).replace('i', '') }}</div>
+        <div>
+            <div class="ui label">
+                <i class="icon database"></i>
+                {{ (submission.memory_bytes|filesizeformat(True)).replace('i', '') }}
+            </div>
+        </div>
     {% endif %}
 </td>

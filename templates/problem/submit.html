@@ -45,6 +45,9 @@
             if (!$('#id_source').val()) {
                 window.$update_language_template();
             }
+            $('textarea#id_source').change(() => {
+                window.$_editor.setValue($('textarea#id_source').val())
+            })
 
             $(() => {
                 $('#code-theme').find(`option[value="${theme}"]`).prop('selected', true);
@@ -82,8 +85,7 @@
 
                     function update_submit_area(code) {
                         window.previous_template = code;
-                        source.val(code);
-                        window.$_editor.setValue(code)
+                        source.val(code).change();
                     }
 
 
@@ -138,7 +140,11 @@
                 $('#id_language').change(function () {
                     var lang = $("#id_language").find("option:selected").attr('data-ace');
                     window.$_editor.getModel().setLanguage(mapLanguage(lang));
-                    update_language_template();
+
+                    if ($(this).attr('data-no-change') == 1) {
+                        $(this).attr('data-no-change', 0);
+                        return;
+                    }
                 });
 
                 $(window).resize(function () {
@@ -182,10 +188,6 @@
                     }
                 }
 
-                $("#id_language").change(function () {
-                    on_language_change();
-                });
-
                 on_language_change();
 
                 function fileDragHover(e) {
@@ -215,18 +217,18 @@
                 if (file && window.FileReader) {
                     var reader = new FileReader();
                     reader.onload = function () {
-                        window.$_editor.setValue(reader.result);
-
                         if (file.name.search('.') != -1) {
                             var ext = file.name.split('.').pop();
                             var languages = $('#id_language')[0].options;
                             for (var i = languages.length - 1; i >= 0; i--) {
                                 if (languages[i].getAttribute('data-fileonly') === 'False' && languages[i].getAttribute('data-ext') === ext) {
-                                    $('#id_language').val(languages[i].value).change();
+                                    $('#id_language').val(languages[i].value).change().attr('data-no-change', 1);
                                     break;
                                 }
                             }
                         }
+
+                        window.$_editor.setValue(reader.result);
                     };
                     reader.readAsText(file);
                 }
@@ -498,14 +500,14 @@
                             {% endif %}
 
                             <div>
-                                <label for="file_select" class="ui placeholder segment primary">
+                                <div class="ui placeholder segment primary" id="file_drag">
                                     <div class="ui icon header">
                                         <i class="icon file code"></i>
                                         {{ _('Paste your source code here or load it from a file:') }}
                                     </div>
 
                                     <label for="file_select" class="ui button primary">{{ _('Select file') }}</label>
-                                </label>
+                                </div>
                                 <input id="file_select" type="file" onchange="handleFileSelect()" hidden>
                             </div>
 
