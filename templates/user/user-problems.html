@@ -40,7 +40,7 @@
                 {{ _('Points breakdown') }}
             </div>
         </div>
-        <table id="submissions-table" class="ui table striped celled segment attached bottom">
+        <table id="submissions-table" class="ui table unstackable striped celled segment attached bottom">
             {% include "user/pp-table-body.html" %}
         </table>
         {% if pp_has_more %}
@@ -59,7 +59,7 @@
                 {{ _('Authored problems') }} ({{ authored|length }})
             </div>
             <div class="content">
-                <table class="ui table striped">
+                <table class="ui table unstackable striped">
                     <thead>
                     <tr>
                         <th>{{ _('Problem') }}</th>
@@ -110,7 +110,7 @@
                 {%- endwith -%}
             </div>
             <div class="content">
-                <table style="display: none" class="ui table striped toggled">
+                <table style="display: none" class="ui table unstackable striped toggled">
                     <thead>
                     <tr>
                         <th>{{ _('Problem') }}</th>

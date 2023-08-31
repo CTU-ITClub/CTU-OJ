@@ -252,7 +252,7 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="column eight wide">
+                <div class="column eight wide scroll-x">
                     {% if form.organizations %}
                         <div class="field">
                             <label>
@@ -324,20 +324,30 @@
                         {% endif %}
                         <tr>
                             <td>
-                            <span id="api-token-td" class="inline-header grayed">
-                                {{ _('API token:') }}
-                                {% if profile.api_token %}
-                                    <a id="generate-api-token-button" href="{{ url('generate_api_token') }}"
-                                       class="button inline-button">{{ _('Regenerate') }}</a>
-                                    <a id="remove-api-token-button" href="{{ url('remove_api_token') }}"
-                                       class="button inline-button ml-5">{{ _('Remove') }}</a>
-                                    <div class="api-token" id="api-token">{{ _('Hidden') }}</div>
-                                {% else %}
-                                    <a id="generate-api-token-button" href="{{ url('generate_api_token') }}"
-                                       class="button inline-button">{{ _('Generate') }}</a>
-                                    <div class="api-token" id="api-token"></div>
-                                {% endif %}
-                            </span>
+                                <div id="api-token-td" class="inline-header grayed field">
+                                    <label>
+                                        {{ _('API token:') }}
+                                    </label>
+                                    {% if profile.api_token %}
+                                        <a id="generate-api-token-button" href="{{ url('generate_api_token') }}"
+                                           class="ui button mini">
+                                            <i class="icon refresh"></i>
+                                            {{ _('Regenerate') }}
+                                        </a>
+                                        <a id="remove-api-token-button" href="{{ url('remove_api_token') }}"
+                                           class="ui button red mini">
+                                            <i class="icon remove"></i>
+                                            {{ _('Remove') }}
+                                        </a>
+                                        <div class="api-token ui message" id="api-token">
+                                            {{ _('Hidden') }}
+                                        </div>
+                                    {% else %}
+                                        <a id="generate-api-token-button" href="{{ url('generate_api_token') }}"
+                                           class="button inline-button">{{ _('Generate') }}</a>
+                                        <div class="api-token" id="api-token"></div>
+                                    {% endif %}
+                                </div>
                             </td>
                         </tr>
                     </table>

@@ -15,7 +15,7 @@
     {% block before_comments %}{% endblock %}
 
     <div class="ui grid stackable">
-        <form action="{{ url('user_comment', user.username) }}" method="post" class="column four wide">
+        <form action="{{ url('user_comment', user.username) }}" method="post" class="column five wide">
             {% csrf_token %}
             <button type="submit" class="ui button red" style="width: 100%; position: sticky; top: 80px">
                 <i class="icon trash"></i>
@@ -23,7 +23,7 @@
             </button>
         </form>
 
-        <div class="ui comments container column twelve wide">
+        <div class="ui comments container column eleven wide">
             {% set logged_in = request.user.is_authenticated %}
             {% for comment in comments %}
                 <div id="comment-{{ comment.id }}" data-revision="{{ comment.revisions - 1 }}"
