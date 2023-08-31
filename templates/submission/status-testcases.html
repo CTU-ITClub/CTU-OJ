@@ -83,7 +83,7 @@
                     <div class="batch-cases">
                 {% endif %}
             {% if can_view_testcase_status %}
-                <table class="submissions-status-table ui table">
+                <table class="submissions-status-table ui table unstackable">
                     {% for case in batch.cases %}
                         {% set current_test_case_count = test_case_counter() %}
                         {% set print_case_output = can_view_test and case.output %}

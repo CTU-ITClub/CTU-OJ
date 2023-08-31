@@ -67,7 +67,7 @@
 {% block body %}
     <hr class="ui divider"/>
     <div class="ui grid stackable">
-        <div class="column four wide">
+        <div class="column five wide">
             <div class="ui segment" style="position: sticky; top: 80px">
                 <div class="ui list relaxed divided">
                     {% if not submission.language.file_only or request.user.is_superuser %}
@@ -141,7 +141,7 @@
             </div>
         </div>
 
-        <div class="column twelve wide">
+        <div class="column eleven wide">
             <div class="ui segment">
                 <div id="test-cases">{% include "submission/status-testcases.html" %}</div>
 

@@ -304,9 +304,6 @@
 {% endblock %}
 
 {% block body %}
-    {% if page_obj.has_other_pages() %}
-        <div class="top-pagination-bar">{% include "list-pages.html" %}</div>
-    {% endif %}
 
     <style>
         .ws-closed {
@@ -315,7 +312,7 @@
     </style>
 
     <div id="common-content" class="ui grid stackable">
-        <div id="content-left" class="submission column twelve wide">
+        <div id="content-left" class="submission column eleven wide">
             <div class="ws-closed">
                 <div class="ui message warning">
                     <i class="icon wifi error"></i>
@@ -326,21 +323,31 @@
                 </div>
             </div>
 
-            <table id="submissions-table" class="ui table striped definition celled">
-                <tbody>
-                {% set profile_id = request.profile.id if request.user.is_authenticated else 0 %}
-                {% for submission in submissions %}
-                    <tr class="submission-row" id="{{ submission.id }}">
-                        {% with problem_name=show_problem and (submission.problem.i18n_name or submission.problem.name) %}
-                            {% include "submission/row.html" %}
-                        {% endwith %}
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% if page_obj.has_other_pages() %}
+                <div class="top-pagination-bar">{% include "list-pages.html" %}</div>
+            {% endif %}
+
+            <div class="scroll-x">
+                <table id="submissions-table" class="ui table unstackable striped definition celled">
+                    <tbody>
+                    {% set profile_id = request.profile.id if request.user.is_authenticated else 0 %}
+                    {% for submission in submissions %}
+                        <tr class="submission-row" id="{{ submission.id }}">
+                            {% with problem_name=show_problem and (submission.problem.i18n_name or submission.problem.name) %}
+                                {% include "submission/row.html" %}
+                            {% endwith %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if page_obj.has_other_pages() %}
+                <div class="bottom-pagination-bar">{% include "list-pages.html" %}</div>
+            {% endif %}
         </div>
 
-        <div id="content-right" class="submission column four wide ui">
+        <div id="content-right" class="submission column five wide ui">
             <div style="position: sticky; top: 80px">
                 <div class="sidebox">
                     <h3 class="ui header block attached top">
@@ -417,11 +424,9 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
-    {% if page_obj.has_other_pages() %}
-        <div class="bottom-pagination-bar">{% include "list-pages.html" %}</div>
-    {% endif %}
 {% endblock %}
 
 {% block bodyend %}
