@@ -117,7 +117,7 @@
             {% if contest_problem_formset.non_form_errors() %}
                 {{ contest_problem_formset.non_form_errors() }}
             {% endif %}
-            <table class="ui table striped">
+            <table class="ui table unstackable striped">
                 <thead>
                 <tr>
                     <th class="problem-column" style="width: 20em;"> {{ _('Problems') }} </th>

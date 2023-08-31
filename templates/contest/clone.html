@@ -9,14 +9,20 @@
     <form id="contest-clone-panel" action="" method="post" class="ui form">
         {% csrf_token %}
         {% if form.errors %}
-            <div id="form-errors">
-                {{ form.key.errors }}
+            <div id="form-errors" class="ui message red">
+                <div class="content">
+                    {{ form.key.errors }}
+                </div>
             </div>
         {% endif %}
 
-        <div><label class="inline-header grayed">{{ _('Enter a new key for the cloned contest:') }}</label></div>
-        <div id="contest-key-container"><span class="fullwidth">{{ form.key }}</span></div>
-        <hr>
+        <div class="field">
+            <label class="inline-header grayed">
+                {{ _('Enter a new key for the cloned contest:') }}
+            </label>
+            {{ form.key }}
+        </div>
+        <hr class="ui divider">
         <button class="ui button green" type="submit">{{ _('Clone!') }}</button>
     </form>
 {% endblock %}

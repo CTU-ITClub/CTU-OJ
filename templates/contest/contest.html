@@ -41,7 +41,212 @@
 {% block body %}
     <div style="height: 10px"></div>
     <div class="ui grid stackable">
-        <div id="banner" class="column five wide ui segment">
+        <div class="column eleven wide">
+            {% set in_contest = contest.is_in_contest(request.user) %}
+            {% if in_contest or contest.ended or request.user.is_superuser or is_editor or is_tester %}
+                <div class="contest-problems">
+                    <h2 class="ui header block attached top" style="display:flex;">
+                        <i class="icon question circle outline"></i>
+                        <div class="content" style="flex: 1">
+                            {{ _('Problems') }}
+                        </div>
+                        {% if can_edit and can_download_data %}
+                            <a class="ui button green" href="{{ url('contest_prepare_data', contest.key) }}">
+                                <i class="icon download"></i>
+                                {{ _('Download data') }}
+                            </a>
+                        {% endif %}
+                    </h2>
+
+                    <table class="ui table unstackable celled fixed attached bottom">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            {% if request.user.is_authenticated %}
+                                <th><i class="fa fa-check"></i></th>
+                            {% endif %}
+                            <th>{{ _('Problem') }}</th>
+                            {% if not is_ICPC_format %}
+                                <th>{{ _('Points') }}</th>
+                            {% endif %}
+                            {% if metadata.has_public_editorials %}
+                                <th>{{ _('Editorials') }}</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for problem in contest_problems %}
+                            <tr>
+                                <td style="width: 1em;">{{ loop.index }}</td>
+                                {% if request.user.is_authenticated %}
+                                    {% if problem.id in completed_problem_ids %}
+                                        <td style="width: 1em;">
+                                            <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
+                                                {% if problem.is_public %}
+                                                    <i class="icon check circle green"></i>
+                                                {% else %}
+                                                    <i class="icon lock green"></i>
+                                                {% endif %}
+                                            </a>
+                                        </td>
+                                    {% elif problem.id in attempted_problem_ids %}
+                                        <td style="width: 1em;">
+                                            <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
+                                                {% if problem.is_public %}
+                                                    <i class="icon check circle yellow"></i>
+                                                {% else %}
+                                                    <i class="icon lock circle yellow"></i>
+                                                {% endif %}
+                                            </a>
+                                        </td>
+                                    {% else %}
+                                        <td style="width: 1em;">
+                                            {% if problem.is_public %}
+                                                <i class="icon minus circle grey"></i>
+                                            {% else %}
+                                                <i class="icon lock grey"></i>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+                                {% endif %}
+                                <td style="text-align: left; padding-left: 2em;">
+                                    {% if in_contest or problem.is_public or request.user.is_superuser or is_editor or is_tester %}
+                                        <a href="{{ url('problem_detail', problem.code) }}">{{ problem.i18n_name or problem.name }}</a>
+                                    {% else %}
+                                        {{ problem.i18n_name or problem.name }}
+                                    {% endif %}
+                                </td>
+                                {% if not is_ICPC_format %}
+                                    <td>{{ problem.points|floatformat(-2) }}</td>
+                                {% endif %}
+                                {% if metadata.has_public_editorials %}
+                                    <td>
+                                        {% if problem.is_public and problem.has_public_editorial %}
+                                            <a href="{{ url('problem_editorial', problem.code) }}">{{ _('Editorial') }}</a>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                    <a class="ui button success" href="{{ url('contest_all_problems', contest.key) }}"
+                       style="margin-top: 10px;">
+                        <i class="icon list"></i>
+                        {{ _('All problems') }}
+                    </a>
+
+                </div>
+
+                <hr class="ui divider"/>
+
+                {% if has_announcements or can_edit %}
+                    <div class="contest-clartifications">
+                        <h2 class="ui header block attached top">
+                            <i class="icon bell outline"></i>
+                            <div class="content">
+                                {{ _('Announcements') }}
+                            </div>
+                        </h2>
+                        <table id="contest-clartifications" class="ui table unstackable celled fixed attached bottom">
+                            <thead>
+                            <tr>
+                                <th>{{ _('When') }}</th>
+                                <th>{{ _('Title') }}</th>
+                                <th>{{ _('Description') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for announcement in announcements %}
+                                <tr>
+                                    <td style="width: 15%;">{{ announcement.date|date(_("F j, Y, G:i")) }}</td>
+                                    <td style="width: 20%; text-align: left; padding-left: 2em;">
+                                        {{ announcement.title }}
+                                    </td>
+                                    <td style="text-align: left; padding-left: 2em;">
+                                        <div class="markdown-body">
+                                            {{ announcement.description|markdown('announcement', MATH_ENGINE)|reference }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                        {% if can_edit %}
+                            <a class="ui button"
+                               href="{{ url('contest_announce', contest.key) }}" style="margin-top: 10px;">
+                                <i class="icon paper plane"></i>
+                                {{ _('Add an announcement') }}
+                            </a>
+                        {% endif %}
+                    </div>
+                    <hr class="ui divider"/>
+                {% endif %}
+
+
+                {% if has_clarifications %}
+                    <div class="contest-clartifications">
+                        <h2 class="ui header block attached top">
+                            <i class="icon file outline"></i>
+                            {{ _('Clarifications') }}
+                        </h2>
+                        <table id="contest-clartifications" class="ui table unstackable striped celled attached bottom">
+                            <thead>
+                            <tr>
+                                <th>{{ _('When') }}</th>
+                                <th>{{ _('Problem') }}</th>
+                                <th>{{ _('Description') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for clarification in clarifications %}
+                                <tr>
+                                    <td style="width: 15%;">{{ clarification.date|date(_("F j, Y, G:i")) }}</td>
+                                    <td style="width: 20%; text-align: left; padding-left: 2em;">
+                                        <a href="{{ url('problem_detail', clarification.problem.code) }}"
+                                           class="problem">
+                                            {{ clarification.problem.name }}
+                                        </a>
+                                    </td>
+                                    <td style="text-align: left; padding-left: 2em;">
+                                        <div class="markdown-body">
+                                            {{ clarification.description|markdown('problem', MATH_ENGINE)|reference }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                <hr class="ui divider"/>
+            {% endif %}
+
+            <div class="content-description markdown-body">
+                {% cache 3600 'contest_html' contest.id MATH_ENGINE %}
+                    {{ contest.description|markdown('contest', MATH_ENGINE)|reference|str|safe }}
+                {% endcache %}
+            </div>
+
+            <hr class="ui divider">
+
+            <div style="display: flex; gap: 5px; justify-content: end">
+                {{ post_to_facebook(request, contest, '<button class="ui button icon blue circular"><i class="icon facebook"></i></button>') }}
+                {{ post_to_twitter(request, SITE_NAME + ':', contest, '<button class="ui button icon black circular"><i class="fa fa-x-twitter"></i></button>') }}
+            </div>
+
+
+            {% if not comment_lock %}
+                {% include "comments/list.html" %}
+            {% endif %}
+
+            <div style="clear: both;"></div>
+        </div>
+
+        <div id="banner" class="column five wide">
             <div style="position: sticky; top: 80px">
                 <h2 class="ui header">
                     <div class="content" style="text-align: center; width: 100%;">
@@ -230,211 +435,6 @@
                     </div>
                 {% endif %}
             </div>
-        </div>
-
-        <div class="column eleven wide">
-            {% set in_contest = contest.is_in_contest(request.user) %}
-            {% if in_contest or contest.ended or request.user.is_superuser or is_editor or is_tester %}
-                <div class="contest-problems">
-                    <h2 class="ui header block attached top" style="display:flex;">
-                        <i class="icon question circle outline"></i>
-                        <div class="content" style="flex: 1">
-                            {{ _('Problems') }}
-                        </div>
-                        {% if can_edit and can_download_data %}
-                            <a class="ui button green" href="{{ url('contest_prepare_data', contest.key) }}">
-                                <i class="icon download"></i>
-                                {{ _('Download data') }}
-                            </a>
-                        {% endif %}
-                    </h2>
-
-                    <table class="ui table celled fixed attached bottom">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            {% if request.user.is_authenticated %}
-                                <th><i class="fa fa-check"></i></th>
-                            {% endif %}
-                            <th>{{ _('Problem') }}</th>
-                            {% if not is_ICPC_format %}
-                                <th>{{ _('Points') }}</th>
-                            {% endif %}
-                            {% if metadata.has_public_editorials %}
-                                <th>{{ _('Editorials') }}</th>
-                            {% endif %}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for problem in contest_problems %}
-                            <tr>
-                                <td style="width: 1em;">{{ loop.index }}</td>
-                                {% if request.user.is_authenticated %}
-                                    {% if problem.id in completed_problem_ids %}
-                                        <td style="width: 1em;">
-                                            <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
-                                                {% if problem.is_public %}
-                                                    <i class="icon check circle green"></i>
-                                                {% else %}
-                                                    <i class="icon lock green"></i>
-                                                {% endif %}
-                                            </a>
-                                        </td>
-                                    {% elif problem.id in attempted_problem_ids %}
-                                        <td style="width: 1em;">
-                                            <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
-                                                {% if problem.is_public %}
-                                                    <i class="icon check circle yellow"></i>
-                                                {% else %}
-                                                    <i class="icon lock circle yellow"></i>
-                                                {% endif %}
-                                            </a>
-                                        </td>
-                                    {% else %}
-                                        <td style="width: 1em;">
-                                            {% if problem.is_public %}
-                                                <i class="icon minus circle grey"></i>
-                                            {% else %}
-                                                <i class="icon lock grey"></i>
-                                            {% endif %}
-                                        </td>
-                                    {% endif %}
-                                {% endif %}
-                                <td style="text-align: left; padding-left: 2em;">
-                                    {% if in_contest or problem.is_public or request.user.is_superuser or is_editor or is_tester %}
-                                        <a href="{{ url('problem_detail', problem.code) }}">{{ problem.i18n_name or problem.name }}</a>
-                                    {% else %}
-                                        {{ problem.i18n_name or problem.name }}
-                                    {% endif %}
-                                </td>
-                                {% if not is_ICPC_format %}
-                                    <td>{{ problem.points|floatformat(-2) }}</td>
-                                {% endif %}
-                                {% if metadata.has_public_editorials %}
-                                    <td>
-                                        {% if problem.is_public and problem.has_public_editorial %}
-                                            <a href="{{ url('problem_editorial', problem.code) }}">{{ _('Editorial') }}</a>
-                                        {% endif %}
-                                    </td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-
-                        </tbody>
-                    </table>
-
-                    <a class="ui button success" href="{{ url('contest_all_problems', contest.key) }}"
-                       style="margin-top: 10px;">
-                        <i class="icon list"></i>
-                        {{ _('All problems') }}
-                    </a>
-
-                </div>
-
-                <hr class="ui divider"/>
-
-                {% if has_announcements or can_edit %}
-                    <div class="contest-clartifications">
-                        <h2 class="ui header block attached top">
-                            <i class="icon bell outline"></i>
-                            <div class="content">
-                                {{ _('Announcements') }}
-                            </div>
-                        </h2>
-                        <table id="contest-clartifications" class="ui table celled fixed attached bottom">
-                            <thead>
-                            <tr>
-                                <th>{{ _('When') }}</th>
-                                <th>{{ _('Title') }}</th>
-                                <th>{{ _('Description') }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for announcement in announcements %}
-                                <tr>
-                                    <td style="width: 15%;">{{ announcement.date|date(_("F j, Y, G:i")) }}</td>
-                                    <td style="width: 20%; text-align: left; padding-left: 2em;">
-                                        {{ announcement.title }}
-                                    </td>
-                                    <td style="text-align: left; padding-left: 2em;">
-                                        <div class="markdown-body">
-                                            {{ announcement.description|markdown('announcement', MATH_ENGINE)|reference }}
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-
-                            </tbody>
-                        </table>
-                        {% if can_edit %}
-                            <a class="ui button"
-                               href="{{ url('contest_announce', contest.key) }}" style="margin-top: 10px;">
-                                <i class="icon paper plane"></i>
-                                {{ _('Add an announcement') }}
-                            </a>
-                        {% endif %}
-                    </div>
-                    <hr class="ui divider"/>
-                {% endif %}
-
-
-                {% if has_clarifications %}
-                    <div class="contest-clartifications">
-                        <h2 class="ui header block attached top">
-                            <i class="icon file outline"></i>
-                            {{ _('Clarifications') }}
-                        </h2>
-                        <table id="contest-clartifications" class="ui table striped celled attached bottom">
-                            <thead>
-                            <tr>
-                                <th>{{ _('When') }}</th>
-                                <th>{{ _('Problem') }}</th>
-                                <th>{{ _('Description') }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for clarification in clarifications %}
-                                <tr>
-                                    <td style="width: 15%;">{{ clarification.date|date(_("F j, Y, G:i")) }}</td>
-                                    <td style="width: 20%; text-align: left; padding-left: 2em;">
-                                        <a href="{{ url('problem_detail', clarification.problem.code) }}"
-                                           class="problem">
-                                            {{ clarification.problem.name }}
-                                        </a>
-                                    </td>
-                                    <td style="text-align: left; padding-left: 2em;">
-                                        <div class="markdown-body">
-                                            {{ clarification.description|markdown('problem', MATH_ENGINE)|reference }}
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% endif %}
-                <hr class="ui divider"/>
-            {% endif %}
-
-            <div class="content-description markdown-body">
-                {% cache 3600 'contest_html' contest.id MATH_ENGINE %}
-                    {{ contest.description|markdown('contest', MATH_ENGINE)|reference|str|safe }}
-                {% endcache %}
-            </div>
-
-            <hr class="ui divider">
-
-            <div style="display: flex; gap: 5px; justify-content: end">
-                {{ post_to_facebook(request, contest, '<button class="ui button icon blue circular"><i class="icon facebook"></i></button>') }}
-                {{ post_to_twitter(request, SITE_NAME + ':', contest, '<button class="ui button icon black circular"><i class="fa fa-x-twitter"></i></button>') }}
-            </div>
-
-
-            {% if not comment_lock %}
-                {% include "comments/list.html" %}
-            {% endif %}
-
-            <div style="clear: both;"></div>
         </div>
     </div>
 {% endblock %}
