@@ -60,13 +60,13 @@
                         dataType: 'json',
                         success: function (data) {
                             $('#api-token').text(data.data.token);
-                            $('#generate-api-token-button').text("{{ _('Regenerate') }}");
+                            $('#generate-api-token-button').html("<i class='icon refresh'></i>{{ _('Regenerate') }}");
 
                             // Add remove button on-the-fly
                             if ($('#remove-api-token-button').length == 0) {
                                 $('#generate-api-token-button').after($('<a id="remove-api-token-button" \
                                     href="{{ url('remove_api_token') }}" \
-                                    class="button inline-button ml-5">{{ _('Remove') }}</a>'));
+                                    class="button inline-button ui button mini red"><i class="icon remove"></i>{{ _('Remove') }}</a>'));
                             }
                         },
                     });
@@ -83,7 +83,7 @@
                         dataType: 'json',
                         success: function (data) {
                             $('#api-token').text('');
-                            $('#generate-api-token-button').text("{{ _('Generate') }}");
+                            $('#generate-api-token-button').html("<i class='icon code'></i>{{ _('Generate') }}");
                             $('#remove-api-token-button').remove();
                         },
                     });
@@ -146,7 +146,7 @@
                 if (confirm("{{ _('Are you sure you want to generate or regenerate a new set of scratch codes?') }}\n"
                     + "{{ _('This will invalidate any previous scratch codes you have.') }}\n\n"
                     + "{{ _('You will not be able to view your scratch codes after you leave this page!') }}")) {
-                    $('#scratch-codes').text("{{ _('Generating...') }}");
+                    $('#scratch-codes').html("<i class='ui loader active inline mini'></i>{{ _('Generating...') }}");
 
                     $('pre code').each(function () {
                         var copyButton;
@@ -182,7 +182,7 @@
                         success: function (data) {
                             $('#scratch-codes').text(data.data.codes.join('\n'));
                             $('#scratch-codes-copy-button').attr('data-clipboard-text', data.data.codes.join('\n'));
-                            $('#generate-scratch-codes-button').text("{{ _('Regenerate') }}");
+                            $('#generate-scratch-codes-button').html("<i class='icon refresh'></i>{{ _('Regenerate') }}");
                             $('#hidden-word').hide();
                             $('#scratch-codes-regen').show();
                         },
@@ -256,16 +256,16 @@
                         {{ form.language }}
                     </div>
                     {% if perms.judge.test_site %}
-                        <div class="field">
+                        <!-- <div class="field">
                             <label class="inline-header grayed">{{ _('Site theme:') }}</label>
                             {{ form.site_theme }}
-                        </div>
+                        </div> -->
                     {% endif %}
-                    <div class="field">
+                    <!-- <div class="field">
 
                         <label class="inline-header grayed">{{ _('Editor theme:') }}</label>
                         {{ form.ace_theme }}
-                    </div>
+                    </div> -->
                     {% if has_math_config %}
                         <div class="field">
                             <label class="inline-header grayed">{{ _('Math engine:') }}</label>
@@ -365,8 +365,11 @@
                                         </div>
                                     {% else %}
                                         <a id="generate-api-token-button" href="{{ url('generate_api_token') }}"
-                                           class="button inline-button">{{ _('Generate') }}</a>
-                                        <div class="api-token" id="api-token"></div>
+                                           class="ui button mini">
+                                            <i class="icon code"></i>{{ _('Generate') }}
+                                        </a>
+
+                                        <div class="api-token ui message" id="api-token"></div>
                                     {% endif %}
                                 </div>
                             </td>
@@ -401,10 +404,10 @@
                                         <i class="icon refresh"></i>
                                         {{ _('Regenerate') }}
                                     </a>
-                                    <div id="hidden-word">{{ _('Hidden') }}</div>
+                                    <div id="hidden-word" class="ui message">{{ _('Hidden') }}</div>
                                 {% else %}
                                     <a id="generate-scratch-codes-button" href="{{ url('generate_scratch_codes') }}"
-                                       class="button inline-button">{{ _('Generate') }}</a>
+                                       class="ui button inline-button">{{ _('Generate') }}</a>
                                 {% endif %}
                                 <div style="display: none" id="scratch-codes-regen" class="markdown-body">
                                     <p id="scratch-codes-text">
@@ -441,8 +444,9 @@
                                     <tr>
                                         <td>{{ credential.name }}</td>
                                         <td>
-                                            <button class="webauthn-delete inline-button"
+                                            <button class="webauthn-delete inline-button ui button mini red"
                                                     data-delete-url="{{ url('webauthn_delete', credential.id) }}">
+                                                <i class="icon remove"></i>
                                                 {{ _('Delete') }}
                                             </button>
                                         </td>
