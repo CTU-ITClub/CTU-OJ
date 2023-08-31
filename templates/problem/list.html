@@ -119,118 +119,120 @@
 
     <div id="common-content" class="ui grid stackable">
         {% block before_table %}{% endblock %}
-        <div id="content-left" class="twelve wide column">
-            <table class="ui table striped celled">
-                <thead>
-                <tr>
-                    {% if request.user.is_authenticated %}
-                        <th>
-                            <a href="{{ sort_links.solved }}">
-                                <i class="icon check"></i>{{ sort_order.solved }}
-                            </a>
-                        </th>
-                    {% endif %}
-                    <th class="problem-code">
-                        <a href="{{ sort_links.code }}">{{ _('ID') }}{{ sort_order.code }}</a>
-                    </th>
-                    <th class="problem-name">
-                        <a href="{{ sort_links.name }}">{{ _('Problem') }}{{ sort_order.name }}</a>
-                    </th>
-                    <th class="category">
-                        <a href="{{ sort_links.group }}">{{ _('Category') }}{{ sort_order.group }}</a>
-                    </th>
-                    {% if show_types %}
-                        <th class="types">
-                            <a href="{{ sort_links.type }}">{{ _('Types') }}{{ sort_order.type }}</a>
-                        </th>
-                    {% endif %}
-                    <th class="points">
-                        <a href="{{ sort_links.points }}">{{ _('Points') }}{{ sort_order.points }}</a>
-                    </th>
-                    <th class="ac-rate">
-                        <a href="{{ sort_links.ac_rate }}">{{ _('%% AC') }}{{ sort_order.ac_rate }}</a>
-                    </th>
-                    <th class="users">
-                        <a href="{{ sort_links.user_count }}">{{ _('# AC') }}{{ sort_order.user_count }}</a>
-                    </th>
-                    <th class="editorial" title="{{ _('Editorial') }}">
-                        <a href="{{ sort_links.editorial }}">
-                            <i class="icon book"></i>{{ sort_order.editorial }}
-                        </a>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for problem in problems %}
+        <div id="content-left" class="eleven wide column">
+            <div class="scroll-x">
+                <table class="ui table unstackable striped celled">
+                    <thead>
                     <tr>
                         {% if request.user.is_authenticated %}
-                            {% if problem.id in completed_problem_ids %}
-                                <td class="solved" solved="1">
-                                    <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
-                                        {% if problem.is_public %}
-                                            <i class="icon check circle green outline"></i>
-                                        {% else %}
-                                            <i class="icon lock green"></i>
-                                        {% endif %}
-                                    </a>
-                                </td>
-                            {% elif problem.id in attempted_problems %}
-                                <td class="solved" solved="0">
-                                    <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
-                                        {% if problem.is_public %}
-                                            <i class="icon frown outline orange"></i>
-                                        {% else %}
-                                            <i class="icon lock orange"></i>
-                                        {% endif %}
-                                    </a>
-                                </td>
-                            {% else %}
-                                <td class="solved" solved="-1">
-                                    {% if problem.is_public %}
-                                        <i class="unsolved-problem-color fa"></i>
-                                    {% else %}
-                                        <i class="icon lock black"></i>
-                                    {% endif %}
-                                </td>
-                            {% endif %}
-                        {% endif %}
-                        <td class="problem-code">
-                            <a href="{{ url('problem_detail', problem.code) }}">{{ problem.code }}</a>
-                        </td>
-                        <td class="problem-name">
-                            <a href="{{ url('problem_detail', problem.code) }}">{{ problem.i18n_name or problem.name }}</a>
-                        </td>
-                        <td class="category">{{ problem.group.full_name }}</td>
-                        {% if show_types %}
-                            <td class="types">
-                                {% for type in problem.types_list %}
-                                    <span class="type-tag">{{ type }}</span>{% if not loop.last %}, {% endif %}
-                                {% endfor %}
-                            </td>
-                        {% endif %}
-                        <td class="p">{{ problem.points|floatformat(2) }}</td>
-                        <td class="ac-rate">{{ problem.ac_rate|floatformat(1) }}%</td>
-                        <td class="users">
-                            <a href="{{ url('ranked_submissions', problem.code) }}">
-                                {{ problem.user_count }}
-                            </a>
-                        </td>
-                        <td>
-                            {% if problem.has_public_editorial %}
-                                <a href="{{ url('problem_editorial', problem.code) }}">
-                                    <i class="has-editorial-color fa fa-check-circle"></i>
+                            <th>
+                                <a href="{{ sort_links.solved }}">
+                                    <i class="icon check"></i>{{ sort_order.solved }}
                                 </a>
-                            {% else %}
-                                <i class="no-editorial-color fa fa-minus-circle"></i>
-                            {% endif %}
-                        </td>
+                            </th>
+                        {% endif %}
+                        <th class="problem-code">
+                            <a href="{{ sort_links.code }}">{{ _('ID') }}{{ sort_order.code }}</a>
+                        </th>
+                        <th class="problem-name">
+                            <a href="{{ sort_links.name }}">{{ _('Problem') }}{{ sort_order.name }}</a>
+                        </th>
+                        <th class="category">
+                            <a href="{{ sort_links.group }}">{{ _('Category') }}{{ sort_order.group }}</a>
+                        </th>
+                        {% if show_types %}
+                            <th class="types">
+                                <a href="{{ sort_links.type }}">{{ _('Types') }}{{ sort_order.type }}</a>
+                            </th>
+                        {% endif %}
+                        <th class="points">
+                            <a href="{{ sort_links.points }}">{{ _('Points') }}{{ sort_order.points }}</a>
+                        </th>
+                        <th class="ac-rate">
+                            <a href="{{ sort_links.ac_rate }}">{{ _('%% AC') }}{{ sort_order.ac_rate }}</a>
+                        </th>
+                        <th class="users">
+                            <a href="{{ sort_links.user_count }}">{{ _('# AC') }}{{ sort_order.user_count }}</a>
+                        </th>
+                        <th class="editorial" title="{{ _('Editorial') }}">
+                            <a href="{{ sort_links.editorial }}">
+                                <i class="icon book"></i>{{ sort_order.editorial }}
+                            </a>
+                        </th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for problem in problems %}
+                        <tr>
+                            {% if request.user.is_authenticated %}
+                                {% if problem.id in completed_problem_ids %}
+                                    <td class="solved" solved="1">
+                                        <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
+                                            {% if problem.is_public %}
+                                                <i class="icon check circle green outline"></i>
+                                            {% else %}
+                                                <i class="icon lock green"></i>
+                                            {% endif %}
+                                        </a>
+                                    </td>
+                                {% elif problem.id in attempted_problems %}
+                                    <td class="solved" solved="0">
+                                        <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
+                                            {% if problem.is_public %}
+                                                <i class="icon frown outline orange"></i>
+                                            {% else %}
+                                                <i class="icon lock orange"></i>
+                                            {% endif %}
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td class="solved" solved="-1">
+                                        {% if problem.is_public %}
+                                            <i class="unsolved-problem-color fa"></i>
+                                        {% else %}
+                                            <i class="icon lock black"></i>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            {% endif %}
+                            <td class="problem-code">
+                                <a href="{{ url('problem_detail', problem.code) }}">{{ problem.code }}</a>
+                            </td>
+                            <td class="problem-name">
+                                <a href="{{ url('problem_detail', problem.code) }}">{{ problem.i18n_name or problem.name }}</a>
+                            </td>
+                            <td class="category">{{ problem.group.full_name }}</td>
+                            {% if show_types %}
+                                <td class="types">
+                                    {% for type in problem.types_list %}
+                                        <span class="type-tag">{{ type }}</span>{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                </td>
+                            {% endif %}
+                            <td class="p">{{ problem.points|floatformat(2) }}</td>
+                            <td class="ac-rate">{{ problem.ac_rate|floatformat(1) }}%</td>
+                            <td class="users">
+                                <a href="{{ url('ranked_submissions', problem.code) }}">
+                                    {{ problem.user_count }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if problem.has_public_editorial %}
+                                    <a href="{{ url('problem_editorial', problem.code) }}">
+                                        <i class="has-editorial-color fa fa-check-circle"></i>
+                                    </a>
+                                {% else %}
+                                    <i class="no-editorial-color fa fa-minus-circle"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <div id="content-right" class="four wide column">
+        <div id="content-right" class="column five wide">
             <div class="info-float card" style="position: sticky; top: 80px">
                 {% include "problem/search-form.html" %}
                 {% if hot_problems %}
