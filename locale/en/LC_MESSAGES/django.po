@@ -5731,11 +5731,11 @@ msgstr ""
 
 #: templates/problem/list.html:192
 #, python-format
-msgid "%% AC"
+msgid "%%AC"
 msgstr ""
 
 #: templates/problem/list.html:195
-msgid "# AC"
+msgid "#AC"
 msgstr ""
 
 #: templates/problem/manage_submission.html:57

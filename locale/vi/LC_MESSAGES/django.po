@@ -5988,11 +5988,11 @@ msgstr "Dạng"
 
 #: templates/problem/list.html:185
 #, python-format
-msgid "%% AC"
+msgid "%%AC"
 msgstr ""
 
 #: templates/problem/list.html:188
-msgid "# AC"
+msgid "#AC"
 msgstr ""
 
 #: templates/problem/manage_submission.html:57

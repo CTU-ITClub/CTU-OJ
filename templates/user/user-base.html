@@ -10,7 +10,7 @@
 
 {% block body %}
     <div class="ui grid stackable" style="margin-top: 10px;">
-        <div class="user-sidebar column four wide">
+        <div class="user-sidebar column five wide">
             <div class="ui segment" style="position: sticky; top: 80px">
                 <img src="{{ gravatar(user, 135) }}" class="user-gravatar ui item image circular">
 
@@ -82,6 +82,6 @@
             </div>
         </div>
 
-        <div class="column twelve wide">{% block user_content %}{% endblock %}</div>
+        <div class="column eleven wide">{% block user_content %}{% endblock %}</div>
     </div>
 {% endblock %}

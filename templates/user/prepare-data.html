@@ -31,7 +31,7 @@
 {% block body %}
     <div class="ui container">
         {% if in_progress_url %}
-            <div class="ui message warning icon">
+            <div class="ui message yellow icon">
                 <div class="ui loader active inline" style="margin-right: 10px;"></div>
                 <div class="content">
                     {{ _('We are currently preparing your data.') }}
@@ -41,7 +41,7 @@
                 {{ _('Track progress') }}
             </a>
         {% elif can_prepare_data %}
-            <div class="ui message warning">
+            <div class="ui message yellow">
                 <div class="content">
                     {% set duration=ratelimit|timedelta %}
                     {{ _('You may only prepare a new data download once every %(duration)s.', duration=duration) }}

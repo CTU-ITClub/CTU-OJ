@@ -477,7 +477,7 @@
 
 {% block body %}
     {% if is_frozen %}
-        <div class="ui message warning">
+        <div class="ui message yellow">
             <a class="icon close" id="frozen_alert">
                 <i class="icon close"></i>
             </a>
@@ -490,7 +490,7 @@
         </div>
     {% endif %}
     {% if not contest.ended and cache_timeout %}
-        <div class="ui message warning">
+        <div class="ui message yellow">
             <a class="icon close" id="cache_alert">
                 <i class="icon close"></i>
             </a>
@@ -504,7 +504,7 @@
     {% endif %}
     {{ super() }}
     {% if is_ICPC_format %}
-        <table id="cell_legend" class="ui table celled" style="width: 10em; margin-left: 0">
+        <table id="cell_legend" class="ui table unstackable celled" style="width: 10em; margin-left: 0">
             <thead>
             <tr>
                 <th scope="col">{{ _('Cell colours') }}</th>

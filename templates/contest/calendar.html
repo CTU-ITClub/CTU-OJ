@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-    <table class="ui table bordered striped fixed celled">
+    <table class="ui table unstackable bordered striped fixed celled">
         <tr>
             <th>{{ _('Sunday') }}</th>
             <th>{{ _('Monday') }}</th>
@@ -19,7 +19,7 @@
         </tr>
         {% for week in calendar %}
             <tr>{% for day in week %}
-                <td class="{% if day.is_today %}today{% endif %}{% if day.is_pad %} noday{% endif %}">
+                <td class="{% if day.is_today %}positive{% endif %}{% if day.is_pad %} negative{% endif %}">
                     <span class="num">{{ day.date.day }}</span>
                     <div class="ui list relaxed divided">
                         {% for contest in day.starts %}

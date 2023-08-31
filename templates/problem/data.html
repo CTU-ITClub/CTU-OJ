@@ -239,8 +239,8 @@
                 }
             }
 
-            $td = $checker.parent();
-            var $sample = $("<a/>", {
+            $td = $checker.parent().parent();
+            var $sample = $("<a>", {
                 text: "{{_('Instruction')}}",
                 style: "margin-left:3em;",
                 target: "_blank",
@@ -248,7 +248,7 @@
             }).appendTo($td);
 
             var $file_test = $('#id_problem-data-zipfile');
-            $("<br>").appendTo($file_test.parent());
+            $("<hr class='ui divider'>").appendTo($file_test.parent());
             $("<input/>", {
                 type: "submit",
                 value: "{{ _('Please press this button if you have just updated the zip data') }}",
@@ -486,10 +486,11 @@
             var oldIndex;
             $table.sortable({
                 containerSelector: 'table',
-                itemPath: '> tbody:first',
+                itemPath: '> tbody',
                 itemSelector: 'tr',
                 handle: 'i.icon.bars',
                 placeholder: '<tr class="placeholder">',
+                helper: 'clone',
                 onDragStart: function ($item, container, _super) {
                     oldIndex = $item.index();
                     _super($item, container);
@@ -566,8 +567,9 @@
 
         .dragged {
             position: absolute;
-            opacity: 0.5;
             z-index: 2000;
+            background: #ffffff;
+            border: 1px solid red;
         }
 
         tr.placeholder {
@@ -577,6 +579,7 @@
             margin: 0;
             padding: 0;
             border: none;
+            height: 2px;
         }
 
         tr.placeholder:before {
@@ -669,28 +672,30 @@
         <table class="table">
             {{ data_form.as_table() }}
         </table>
-        <div class="ui message success icon" id="fill-test-case-noti" style="display: none;">
-            <a class="icon close">
-                <i class="icon close"></i>
-            </a>
+        <div id="fill-test-case-noti" style="display: none;">
+            <div class="ui message green icon">
+                <a class="icon close">
+                    <i class="icon close"></i>
+                </a>
 
-            <i class="icon check circle"></i>
+                <i class="icon check circle"></i>
 
-            <div class="content">
-                <div class="header">
-                    {{ _('Test cases have been filled automatically!') }}
+                <div class="content">
+                    <div class="header">
+                        {{ _('Test cases have been filled automatically!') }}
+                    </div>
+                    <p>
+                        {{ (_('Test cases have been filled automatically and **not saved yet**!'))|markdown('default', strip_paragraphs=True) }}
+                        <br>
+                        {{ _('Please modify the table below if needed and press the `Apply` button to save!') }}
+                    </p>
                 </div>
-                <p>
-                    {{ (_('Test cases have been filled automatically and **not saved yet**!'))|markdown('default', strip_paragraphs=True) }}
-                    <br>
-                    {{ _('Please modify the table below if needed and press the `Apply` button to save!') }}
-                </p>
             </div>
         </div>
         {% if cases_formset._non_form_errors %}
             {{ cases_formset._non_form_errors }}
         {% endif %}
-        <table id="case-table" class="ui table celled">
+        <table id="case-table" class="ui table unstackable celled" style="position: relative">
             <thead>
             <tr>
                 <th>
@@ -747,8 +752,8 @@
                     <td>{{ form.points.errors }}{{ form.points }}</td>
                     <td>{{ form.is_pretest.errors }}{{ form.is_pretest }}</td>
                     <!-- <td class="generator-args">{{ form.generator_args.errors }}{{ form.generator_args }}
-                        <a href="javascript:void(0)" class="edit-generator-args">
-                            <i class="fa fa-pencil"></i>
+                         <a href="javascript:void(0)" class="edit-generator-args">
+                            <i class="icon pencil"></i>
                             {{ _('Edit generator args') }}
                         </a>
                     </td> -->
@@ -760,8 +765,10 @@
             </tbody>
         </table>
         <input type="submit" value="{{ _('Apply!') }}" class="ui button" id="submit-button">
-        <a id="add-case-row" href="#" style="display: None;"><i class="fa fa-plus"></i> {{ _('Add new case') }}</a>
+        <a id="add-case-row" href="#" style="display: None;"><i class="icon plus"></i> {{ _('Add new case') }}</a>
     </form>
-    <div style="display: none" class="generator-args-editor"><textarea></textarea><a class="button">{{ _('Save') }}</a>
+    <div style="display: none" class="generator-args-editor">
+        <textarea></textarea>
+        <a class="button">{{ _('Save') }}</a>
     </div>
 {% endblock %}

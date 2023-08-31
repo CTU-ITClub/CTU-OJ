@@ -132,7 +132,7 @@
                                 </label>
                             </div>
                         </div>
-                        <table id="by-range-filter" class="ui table striped">
+                        <table id="by-range-filter" class="ui table unstackable striped">
                             <tr>
                                 <th><label for="by-range-start">{{ _('Starting ID:') }}</label></th>
                                 <td><input id="by-range-start" name="start" type="number" disabled></td>
@@ -173,7 +173,7 @@
                 {{ _('Rescore Everything') }}
             </h3>
             <div class="ui segment attached bottom">
-                <div class="ui message warning" id="rescore-warning">
+                <div class="ui message yellow" id="rescore-warning">
                     <div class="content">
                         {% trans trimmed count=submission_count %}
                             This will rescore {{ count }} submission.
