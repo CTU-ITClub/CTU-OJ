@@ -788,7 +788,13 @@
 
     <main id="content" class="ui container" style="min-height: calc(100vh - 410px)">
         {% if misc_config.top_notification %}
-            {{ render_django(misc_config.top_notification) }}
+            <div>
+                <div class="ui grid stackable">
+                    <div class="column sixteen wide">
+                        {{ render_django(misc_config.top_notification) }}
+                    </div>
+                </div>
+            </div>
         {% endif %}
         {% block title_row %}
             <h2 class="ui header">
