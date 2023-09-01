@@ -11,7 +11,7 @@
     text-decoration: line-through !important;
 }
 
-.banned a::before {
+.banned span::before {
     content: "🚫";
 }
 
@@ -20,7 +20,7 @@
     font-weight: bold !important;
 }
 
-.staff a::before {
+.staff span::before {
     content: "🔥";
 }
 
@@ -29,11 +29,11 @@
     font-weight: bold !important;
 }
 
-.daor a::before {
+.daor span::before {
     content: "🌸";
 }
 
-.teacher a::before {
+.teacher span::before {
     content: "🧑‍🏫";
 }
 

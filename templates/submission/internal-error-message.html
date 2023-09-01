@@ -16,6 +16,6 @@
     {% if submission.problem.is_editable_by(request.user) %}
         <hr style="float:left;width:30%"><br>
         <h4>{{ _('Error information') }}</h4>
-        <pre><code>{{ submission.error|highlight('pytb') }}</code></pre>
+        <pre class="scroll-x"><code>{{ submission.error|highlight('pytb') }}</code></pre>
     {% endif %}
 {% endif %}

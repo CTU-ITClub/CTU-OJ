@@ -479,6 +479,34 @@
             .scroll-x {
                 overflow-x: auto;
             }
+
+            #enable_2_9 {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+            }
+
+            #enable_2_9 video {
+                width: 400px;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            #enable_2_9::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                width: 150px;
+                height: 100%;
+                background: #fff;
+                right: 0;
+                background: {% if request.user.is_impersonate %}
+                    linear-gradient(90deg, #DB282800, #DB2828);
+                {% else %}
+                    linear-gradient(90deg, #1B1C1D00, #1B1C1D);
+                {% endif %}
+            }
         </style>
 
     {% endcompress %}
@@ -495,35 +523,6 @@
                 animation: zit_label 10s infinite;
             }
         {% endif %}
-
-        #enable_2_9 {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-        }
-
-        #enable_2_9 video {
-            width: 400px;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        #enable_2_9::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            width: 150px;
-            height: 100%;
-            background: #fff;
-            right: 0;
-            background: {% if request.user.is_impersonate %}
-                linear-gradient(90deg, #DB282800, #DB2828);
-            {% else %}
-                linear-gradient(90deg, #1B1C1D00, #1B1C1D);
-            {% endif %}
-        }
-
     </style>
 </head>
 <body>
@@ -634,12 +633,13 @@
     {% else %}
         <div class="item">
 
-            <a class="ui button " href="{{ url('auth_login') }}">
+            <a class="ui button" style="width: 100%" href="{{ url('auth_login') }}">
                 {{ _('Login') }}
             </a>
 
             {% if misc_config.registration %}
-                <a class="item button primary" href="{{ url('registration_register') }}">
+                <a class="ui button primary" style="width: 100%; margin-top: 10px;"
+                   href="{{ url('registration_register') }}">
                     {{ _('Register') }}
                 </a>
             {% endif %}

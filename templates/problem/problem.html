@@ -297,135 +297,137 @@
 
         </div>
 
-        <div class="ui list relaxed divided segment">
-            {% if not contest_problem or not contest_problem.contest.hide_problem_authors %}
-                {% cache 86400 'problem_authors' problem.id LANGUAGE_CODE %}
-                    {% with authors=problem.authors.all() %}
-                        {% if authors %}
-                            <div class="item">
-                                <i class="icon pencil"></i>
-                                <div class="content">
-                                    <div class="header">
-                                        {% trans trimmed count=authors|length %}
-                                            Author:
-                                            {% pluralize count %}
-                                            Authors:
-                                        {% endtrans %}
+        <div class="ui segment">
+            <div class="ui list relaxed divided">
+                {% if not contest_problem or not contest_problem.contest.hide_problem_authors %}
+                    {% cache 86400 'problem_authors' problem.id LANGUAGE_CODE %}
+                        {% with authors=problem.authors.all() %}
+                            {% if authors %}
+                                <div class="item">
+                                    <i class="icon pencil"></i>
+                                    <div class="content">
+                                        <div class="header">
+                                            {% trans trimmed count=authors|length %}
+                                                Author:
+                                                {% pluralize count %}
+                                                Authors:
+                                            {% endtrans %}
+                                        </div>
+                                        <div class="pi-value ui label"
+                                             style="margin-top: 5px;">{{ link_users(authors) }}</div>
                                     </div>
-                                    <div class="pi-value ui label"
-                                         style="margin-top: 5px;">{{ link_users(authors) }}</div>
                                 </div>
-                            </div>
-                        {% endif %}
-                        {% if problem.suggester %}
-                            <div class="item">
-                                <i class="icon pencil"></i>
-                                <div class="content">
-                                    <div class="header">
-                                        {{ _("Suggester:") }}
+                            {% endif %}
+                            {% if problem.suggester %}
+                                <div class="item">
+                                    <i class="icon pencil"></i>
+                                    <div class="content">
+                                        <div class="header">
+                                            {{ _("Suggester:") }}
+                                        </div>
+
+                                        <p>{{ link_user(problem.suggester) }}</p>
                                     </div>
-
-                                    <p>{{ link_user(problem.suggester) }}</p>
                                 </div>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
-                {% endcache %}
-            {% endif %}
+                            {% endif %}
+                        {% endwith %}
+                    {% endcache %}
+                {% endif %}
 
-            {% if problem.source %}
-                <div class="item">
-                    <i class="icon pencil"></i>
-                    <div class="content">
-                        {{ _('Problem source:') }}
-                        <strong>{{ problem.source|truncatechars_html(30) }}</strong>
+                {% if problem.source %}
+                    <div class="item">
+                        <i class="icon pencil"></i>
+                        <div class="content">
+                            {{ _('Problem source:') }}
+                            <strong>{{ problem.source|truncatechars_html(30) }}</strong>
+                        </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
 
 
-            {% if not contest_problem or not contest_problem.contest.hide_problem_tags %}
-                <div id="problem-types item">
-                    {% with types=problem.types_list %}
+                {% if not contest_problem or not contest_problem.contest.hide_problem_tags %}
+                    <div id="problem-types item">
+                        {% with types=problem.types_list %}
+                            <div class="ui accordion">
+                                <div class="title">
+                                    <i class="icon dropdown"></i>
+                                    {% trans trimmed count=problem.types_list|length %}
+                                        Problem type
+                                        {% pluralize count %}
+                                        Problem types
+                                    {% endtrans %}
+                                </div>
+                                <div class="content">
+                                    {% for type in problem.types_list %}
+                                        <div class="ui label" style="margin: 5px">
+                                            {{ type }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endwith %}
+                    </div>
+                {% endif %}
+                {% if show_languages %}
+                    <div id="allowed-langs" class="item">
                         <div class="ui accordion">
                             <div class="title">
                                 <i class="icon dropdown"></i>
-                                {% trans trimmed count=problem.types_list|length %}
-                                    Problem type
-                                    {% pluralize count %}
-                                    Problem types
-                                {% endtrans %}
+                                <span class="content">{{ _('Allowed languages') }}</span>
                             </div>
                             <div class="content">
-                                {% for type in problem.types_list %}
-                                    <div class="ui label" style="margin: 5px">
-                                        {{ type }}
-                                    </div>
-                                {% endfor %}
+                                {% with usable=problem.usable_common_names, langs=problem.languages_list() %}
+                                    {% for lang in langs %}
+                                        {%- if lang in usable -%}
+                                            <div class="ui label green" style="margin: 5px">
+                                                {{ lang }}
+                                            </div>
+                                        {%- else -%}
+                                            <div class="ui label" style="margin: 5px"
+                                                 title="{{ _('No %(lang)s judge online', lang=lang) }}">
+                                                <s>
+                                                    {{ lang }}
+                                                </s>
+                                            </div>
+                                        {%- endif -%}
+                                    {% endfor %}
+                                {% endwith %}
                             </div>
                         </div>
-                    {% endwith %}
-                </div>
-            {% endif %}
-            {% if show_languages %}
-                <div id="allowed-langs" class="item">
-                    <div class="ui accordion">
-                        <div class="title">
-                            <i class="icon dropdown"></i>
-                            <span class="content">{{ _('Allowed languages') }}</span>
-                        </div>
-                        <div class="content">
-                            {% with usable=problem.usable_common_names, langs=problem.languages_list() %}
-                                {% for lang in langs %}
-                                    {%- if lang in usable -%}
-                                        <div class="ui label green" style="margin: 5px">
-                                            {{ lang }}
-                                        </div>
-                                    {%- else -%}
-                                        <div class="ui label" style="margin: 5px"
-                                             title="{{ _('No %(lang)s judge online', lang=lang) }}">
-                                            <s>
-                                                {{ lang }}
-                                            </s>
-                                        </div>
-                                    {%- endif -%}
-                                {% endfor %}
-                            {% endwith %}
-                        </div>
                     </div>
-                </div>
-            {% endif %}
-            {% if problem.is_editable_by(request.user) %}
-                <div id="available-judges" class="item">
-                    <i class="icon database"></i>
-                    <div class="content ui">
-                        <div class="header">
-                            {% trans trimmed count=available_judges|length %}
-                                Judge:
-                                {% pluralize count %}
-                                Judges:
-                            {% endtrans %}
-                        </div>
+                {% endif %}
+                {% if problem.is_editable_by(request.user) %}
+                    <div id="available-judges" class="item">
+                        <i class="icon database"></i>
+                        <div class="content ui">
+                            <div class="header">
+                                {% trans trimmed count=available_judges|length %}
+                                    Judge:
+                                    {% pluralize count %}
+                                    Judges:
+                                {% endtrans %}
+                            </div>
 
-                        <div class="content">
-                            {% if available_judges %}
-                                {% if perms.judge.change_judge %}
-                                    {% for judge in available_judges %}
-                                        <a class="ui label green" style="margin: 5px"
-                                           href="{{ url('admin:judge_judge_change', judge.id) }}">{{ judge.name }}</a>
-                                    {% endfor %}
-                                {% else %}f
-                                    {% for judge in available_judges %}
-                                        <div class="ui label" style="margin: 5px">{{ judge.name }}</div>
-                                    {% endfor %}
+                            <div class="content">
+                                {% if available_judges %}
+                                    {% if perms.judge.change_judge %}
+                                        {% for judge in available_judges %}
+                                            <a class="ui label green" style="margin: 5px"
+                                               href="{{ url('admin:judge_judge_change', judge.id) }}">{{ judge.name }}</a>
+                                        {% endfor %}
+                                    {% else %}f
+                                        {% for judge in available_judges %}
+                                            <div class="ui label" style="margin: 5px">{{ judge.name }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% else %}
+                                    <i>{{ _('none available') }}</i>
                                 {% endif %}
-                            {% else %}
-                                <i>{{ _('none available') }}</i>
-                            {% endif %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}
