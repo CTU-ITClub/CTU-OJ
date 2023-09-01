@@ -171,6 +171,7 @@
                 </a>
             {% endif %}
             {% if can_edit_problem %}
+                <hr class="ui divider" />
                 <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">
                     <i class="icon bug"></i>
                     {{ _('Manage tickets') }}
