@@ -256,16 +256,15 @@
                         {{ form.language }}
                     </div>
                     {% if perms.judge.test_site %}
-                        <!-- <div class="field">
+                        <div class="field" hidden="hidden">
                             <label class="inline-header grayed">{{ _('Site theme:') }}</label>
                             {{ form.site_theme }}
-                        </div> -->
+                        </div>
                     {% endif %}
-                    <!-- <div class="field">
-
+                    <div class="field" hidden="hidden">
                         <label class="inline-header grayed">{{ _('Editor theme:') }}</label>
                         {{ form.ace_theme }}
-                    </div> -->
+                    </div>
                     {% if has_math_config %}
                         <div class="field">
                             <label class="inline-header grayed">{{ _('Math engine:') }}</label>
