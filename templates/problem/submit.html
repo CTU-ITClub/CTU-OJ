@@ -50,7 +50,7 @@
             })
 
             $(() => {
-                $('#code-theme').find(`option[value="${theme}"]`).prop('selected', true);
+                $('#code-theme').val(theme).change()
                 $('#code-theme').change(() => {
                     theme = $('#code-theme').val()
                     localStorage.setItem('theme', theme)
