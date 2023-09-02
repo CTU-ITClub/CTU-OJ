@@ -171,6 +171,7 @@
                 </a>
             {% endif %}
             {% if can_edit_problem %}
+                <hr class="ui divider" />
                 <a class="item" href="{{ url('problem_ticket_list', problem.code) }}">
                     <i class="icon bug"></i>
                     {{ _('Manage tickets') }}
@@ -313,8 +314,7 @@
                                                 Authors:
                                             {% endtrans %}
                                         </div>
-                                        <div class="pi-value ui label"
-                                             style="margin-top: 5px;">{{ link_users(authors) }}</div>
+                                        <div class="pi-value" style="margin-top: 5px;">{{ link_users(authors) }}</div>
                                     </div>
                                 </div>
                             {% endif %}

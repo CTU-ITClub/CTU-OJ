@@ -165,6 +165,10 @@
                     </div>
                 {% endif %}
 
+                {% if misc_config.right_banner%}
+                    {{ misc_config.right_banner|safe }}
+                {% endif %}
+
                 {% if top_pp_users %}
                     {% include "blog/top-pp.html" %}
                 {% endif %}

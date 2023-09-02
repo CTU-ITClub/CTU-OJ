@@ -114,7 +114,7 @@
                         {{ _('Your data is ready!') }}
                     </div>
                 </div>
-                {{ _('You will need to wait %(xcountdown)s to prepare a new data download.', countdown=as_countdown(time_until_can_prepare)) }}
+                {{ _('You will need to wait %(countdown)s to prepare a new data download.', countdown=as_countdown(time_until_can_prepare)) }}
             </div>
             <a class="ui button green" href="{{ url('user_download_data') }}">
                 <i class="icon download"></i>
