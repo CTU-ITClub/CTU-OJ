@@ -952,13 +952,13 @@
         <div class="contest-board">
             <div class="ui container">
                 <a href="{{ url('contest_view', current_contest.key) }}"
-                   style="flex: 1; display: flex; align-items: center; color: #fff; font-size: 20px">
+                   style="flex: 1; display: flex; align-items: center; color: #fff; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">
                     <i class="icon fire red"></i>
                     {{ current_contest.name }} <i class="icon angle right"></i>
                     {% if request.participation.spectate %}
                         {{ _('spectating') }}
                     {% elif request.participation.end_time %}
-                        <div id="contest-time-remaining" data-secs="{{ request.participation.time_remaining|seconds }}">
+                        <div id="contest-time-remaining" data-secs="{{ request.participation.time_remaining|seconds }}" style="text-overflow: ellipsis; overflow: hidden;">
                             {{ request.participation.time_remaining|timedelta("localized") }}
                         </div>
                     {% else %}
@@ -967,7 +967,7 @@
                 </a>
 
                 {% if current_contest.can_see_own_scoreboard(request.user) %}
-                    <a href="{{ url('contest_ranking', current_contest.key) }}" class="ui button green">
+                    <a href="{{ url('contest_ranking', current_contest.key) }}" class="ui button green tiny">
                         {{ _('Go to Rankings') }}
                     </a>
                 {% endif %}
