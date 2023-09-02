@@ -1,19 +1,5 @@
 @charset "UTF-8";
 @import "vars";
-@-ms-viewport {
-    min-width: 480px;
-    max-width: device-width;
-}
-
-@-o-viewport {
-    min-width: 480px;
-    max-width: device-width;
-}
-
-@viewport {
-    min-width: 480px;
-    max-width: device-width;
-}
 
 a {
     color: $color_link75;
