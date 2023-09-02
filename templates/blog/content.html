@@ -19,7 +19,7 @@
         <div class="ui vertical icon buttons">
             {% if logged_in %}
                 <a href="javascript:blog_upvote({{ post.id }})"
-                   class="ui button{% if post.vote_score == 1 %} active{% endif %}">
+                   class="ui button{% if post.vote_score == 1 %} blue{% endif %}">
                     <i class="icon thumbs up"></i>
                 </a>
             {% else %}
@@ -32,7 +32,7 @@
             <div id="post-score" class="ui button disabled">{{ post.score }}</div>
             {% if logged_in %}
                 <a href="javascript:blog_downvote({{ post.id }})"
-                   class="ui button {% if post.vote_score == -1 %} active{% endif %}">
+                   class="ui button {% if post.vote_score == -1 %} red{% endif %}">
                     <i class="icon thumbs down"></i>
                 </a>
             {% else %}

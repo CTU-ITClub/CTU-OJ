@@ -17,7 +17,7 @@
 
             {% if logged_in %}
                 <a href="javascript:blog_upvote({{ post.id }})"
-                   class="ui button {% if post.vote_score == 1 %} active{% endif %}">
+                   class="ui button {% if post.vote_score == 1 %} blue{% endif %}">
                     <i class="icon thumbs up"></i>
                 </a>
             {% else %}
@@ -30,7 +30,7 @@
             <div id="post-score" class="ui button disabled">{{ post.score }}</div>
             {% if logged_in %}
                 <a href="javascript:blog_downvote({{ post.id }})"
-                   class="ui button {% if post.vote_score == -1 %} active{% endif %}">
+                   class="ui button {% if post.vote_score == -1 %} red{% endif %}">
                     <i class="icon thumbs down"></i>
                 </a>
             {% else %}
@@ -58,7 +58,8 @@
                 {% endwith %}
             </div>
 
-            <div class="date">
+            <div class="date" style="margin-left: 0; margin-top: 5px">
+                <i class="icon clock"></i>
                 {% with abs=_('posted on {time}'), rel=_('posted {time}') %}
                     {{ relative_time(post.publish_on, abs=abs, rel=rel) }}
                 {% endwith %}
