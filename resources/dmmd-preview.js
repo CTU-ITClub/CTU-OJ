@@ -1,5 +1,3 @@
-import CkEditor from 'https://cdn.skypack.dev/@gautam-patadiya/ckeditor-custom-build';
-
 $(function () {
     window.register_dmmd_preview = function ($preview) {
         var $form = $preview.parents('form').first();
@@ -10,80 +8,96 @@ $(function () {
 
         $textarea[0].required = false;
 
-        // Submit the form if Ctrl+Enter is pressed in pagedown textarea.
         $textarea.keydown(function (ev) {
-            // Ctrl+Enter pressed (metaKey used to support command key on mac).
             if ((ev.metaKey || ev.ctrlKey) && ev.which == 13) {
                 $form.submit();
             }
         });
 
-        CkEditor.create($form.find('.ck-editor')[0]).then(editor => {
-            let lastText;
-            let timeout;
+        const editor = new SimpleMDE({ 
+            element: $textarea[0],
+            toolbar: [
+                'bold',
+                'italic',
+                'strikethrough',
+                '|',
+                {
+                    name: 'mention',
+                    action: function (editor) {
+                        var cm = editor.codemirror;
+                        var doc = cm.getDoc();
+                        var cursor = doc.getCursor();
+                        var line = doc.getLine(cursor.line);
+                        var pos = {
+                            line: cursor.line,
+                            ch: line.length - 1
+                        };
+                        doc.replaceRange('[user:username]', pos);
+                        cm.focus();
+                    },
+                    className: 'fa fa-user',
+                    title: 'User reference',
+                },
+                {
+                    name: 'latex embed',
+                    action: function (editor) {
+                        var cm = editor.codemirror;
+                        var doc = cm.getDoc();
+                        var cursor = doc.getCursor();
+                        var line = doc.getLine(cursor.line);
+                        var pos = {
+                            line: cursor.line,
+                            ch: line.length - 1
+                        };
+                        doc.replaceRange('~x^2~', pos);
+                        cm.focus();
+                    },
+                    className: 'fa fa-superscript',
+                    title: 'Latex embed (Ctrl-M)',
+                },
+                {
+                    name: 'latex display embed',
+                    action: function (editor) {
+                        var cm = editor.codemirror;
+                        var doc = cm.getDoc();
+                        var cursor = doc.getCursor();
+                        var line = doc.getLine(cursor.line);
+                        var pos = {
+                            line: cursor.line,
+                            ch: line.length - 1
+                        };
+                        doc.replaceRange('$$\npredict(X,W,b)=sigmod(matmul(X,W)+b)\n$$', pos);
+                        cm.focus();
+                    },
+                    className: 'fa fa-florin-sign',
+                    title: 'Latex display embed (Ctrl-Space)',
+                },
+                '|',
+                'heading-1',
+                'heading-2',
+                'heading-3',
+                '|',
+                'code',
+                'quote',
+                'unordered-list',
+                'ordered-list',
+                '|',
+                'link',
+                'image',
+                'table',
+                'horizontal-rule',
+                '|',
+                'guide',
+            ],
+            insertTexts: {
+                image: '![alt text](image.png)',
+                link: '[link text](https://example.com)',
 
+            }
+         });
 
-            editor.model.document.on('change:data', async () => {
-                $content.val(editor.getData())
-                $textarea.val(editor.getData())
-
-                timeout = setTimeout(async () => {
-                    if (timeout) {
-                        clearTimeout(timeout)
-                        timeout = null
-                    }
-
-                    const text = editor.getData()
-
-                    if (text === lastText) {
-                        return
-                    }
-
-                    lastText = text;
-
-                    $preview.addClass('dmmd-preview-stale');
-
-
-                    $.post(preview_url, {
-                        content: text,
-                        csrfmiddlewaretoken: $.cookie('csrftoken'),
-                    }, res => {
-                        $content.html(res)
-                        $preview.addClass('dmmd-preview-has-content').removeClass('dmmd-preview-stale');
-
-                        var $jax = $content.find('.require-mathjax-support');
-                        if ($jax.length) {
-                            if (!('MathJax' in window)) {
-                                $.ajax({
-                                    type: 'GET',
-                                    url: $jax.attr('data-config'),
-                                    dataType: 'script',
-                                    cache: true,
-                                    success: function () {
-                                        $.ajax({
-                                            type: 'GET',
-                                            url: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-chtml.min.js',
-                                            dataType: 'script',
-                                            cache: true,
-                                            success: function () {
-                                                MathJax.typesetPromise([$content[0]]).then(function () {
-                                                    $content.find('.tex-image').hide();
-                                                    $content.find('.tex-text').show();
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            } else {
-                                MathJax.typesetPromise([$content[0]]).then(function () {
-                                    $content.find('.tex-image').hide();
-                                    $content.find('.tex-text').show();
-                                });
-                            }
-                        }
-                    })
-                }, 500)
-            })
+        editor.codemirror.on('change', () => {
+            $textarea.val(editor.value()).change();
         })
 
         $update.click(function () {
@@ -127,18 +141,19 @@ $(function () {
                             });
                         }
                     }
-                });
+                }).click();
             } else {
                 $content.empty();
                 $preview.removeClass('dmmd-preview-has-content').removeClass('dmmd-preview-stale');
             }
-        }).click();
+        });
 
         var timeout = $preview.attr('data-timeout');
         var last_event = null;
         var last_text = $textarea.val();
+
         if (timeout) {
-            $textarea.on('keyup paste', function () {
+            $textarea.change(function () {
                 var text = $textarea.val();
                 if (last_text == text) return;
                 last_text = text;

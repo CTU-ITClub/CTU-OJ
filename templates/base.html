@@ -114,6 +114,15 @@
             });
         </script>
     {% endcompress %}
+
+    {% compress css %}
+        <link rel="stylesheet" href="{{ static('simplemde/dist/simplemde.min.css') }}">
+    {% endcompress %}
+
+    {% compress js %}
+        <script src="{{ static('simplemde/dist/simplemde.min.js') }}"></script>
+    {% endcompress %}
+
     <script src="{{ static('dmmd-preview.js') }}" type="module"></script>
     {% block js_media %}{% endblock %}
     {% if EVENT_LAST_MSG %}
