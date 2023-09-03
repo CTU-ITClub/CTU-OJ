@@ -12,6 +12,6 @@
         {{ make_tab('user_submissions_tab', 'user', None, _("%(user)s's", user=tab_username)) }}
     {% endif %}
     {% if perms.judge.change_submission %}
-        {{ make_tab('admin', 'edit', url('admin:judge_submission_changelist'), _('Admin')) }}
+        {{ make_tab('admin', 'cog', url('admin:judge_submission_changelist'), _('Admin')) }}
     {% endif %}
 {% endblock %}

@@ -12,6 +12,6 @@
         {{ make_tab('suggest', 'list', url('problem_suggest_list'), _('Suggest')) }}
     {% endif %}
     {% if request.user.is_superuser %}
-        {{ make_tab('admin', 'edit', url('admin:judge_problem_changelist'), _('Admin')) }}
+        {{ make_tab('admin', 'cog', url('admin:judge_problem_changelist'), _('Admin')) }}
     {% endif %}
 {% endblock %}

@@ -29,7 +29,7 @@
                 {% endif %}
                 {% if request.user.is_superuser %}
                     <a class="item" href="{{ url('admin:judge_tagproblem_change', problem.id) }}">
-                        <i class="icon pencil"></i>
+                        <i class="icon cog"></i>
                         <div class="content">
                             {{ _('Admin') }}
                         </div>

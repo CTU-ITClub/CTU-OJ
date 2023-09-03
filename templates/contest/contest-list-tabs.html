@@ -38,6 +38,6 @@
     {{ make_tab('list', 'list', url('contest_list'), _('List')) }}
     {{ make_tab('calendar', 'calendar', url('contest_calendar', now.year, now.month), _('Calendar')) }}
     {% if request.user.is_staff and (perms.judge.edit_all_contest or perms.judge.edit_own_contest) %}
-        {{ make_tab('admin', 'edit', url('admin:judge_contest_changelist'), _('Admin')) }}
+        {{ make_tab('admin', 'cog', url('admin:judge_contest_changelist'), _('Admin')) }}
     {% endif %}
 {% endblock %}
