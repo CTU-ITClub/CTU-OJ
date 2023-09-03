@@ -1,10 +1,6 @@
 {% set can_view, can_edit = submission_layout(submission, profile_id, request.user, completed_problem_ids, editable_problem_ids, tester_problem_ids) %}
 <td class="sub-result {{ submission.result_class }}" style="min-width: 80px; position: relative">
-    <div class="ui left attached label mini black">
-        {{ submission.language.short_display_name }}
-        ({{ submission.case_points|floatformat(-3) }} / {{ submission.case_total|floatformat(0) }})
-    </div>
-    <div class="state" style="display: flex; justify-content: center; margin-top: 22px">
+    <div class="state" style="display: flex; justify-content: center;">
         {#        <span title="{{ submission.long_status }}" class="status ui mini label basic">#}
         {#        </span>#}
         {#        <span class="language ui label mini basic">{{ submission.language.short_display_name }}</span>#}
@@ -27,11 +23,11 @@
 <td class="sub-main">
     <div class="ui header sub-info{% if submission.status == 'G' %} sub-info-grading{% endif %}">
         {% if show_problem %}
-            <a class="content" href="{{ url('problem_detail', submission.problem.code) }}" style="margin-bottom: 10px;">
-                {{ problem_name }}
+            <a class="content" href="{{ url('problem_detail', submission.problem.code) }}" style="margin-bottom: 5px;">
                 {% if submission.is_locked %}
                     <i class="icon lock"></i>
                 {% endif %}
+                {{ problem_name }}
             </a>
         {% endif %}
         <div class="sub header" style="display: flex; align-items: center; gap: 5px">
@@ -46,6 +42,15 @@
         </div>
     </div>
 
+    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+        <span class="language ui label circular orange">{{ submission.language.short_display_name }}</span>
+        {% if submission.is_graded %}
+            <span class="ui label circular black" style="text-align: center;">
+                {{ submission.case_points|floatformat(-3) }} / {{ submission.case_total|floatformat(0) }}
+            </span>
+        {% endif %}
+    </div>
+
     {% if submission.status == 'G' and can_view_testcase_status %}
         <div class="sub-testcase ui label" style="margin-bottom: 5px;">
             {%- if submission.current_testcase > 0 -%}
@@ -55,6 +60,7 @@
             {%- endif -%}
         </div>
     {% endif %}
+
 
     {% if can_view %}
         <div class="sub-prop" style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap">
