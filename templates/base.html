@@ -299,11 +299,19 @@
                 background: #fff;
             }
 
-            .codehilite .copy-clipboard {
+            .copy-clipboard {
                 position: absolute;
                 right: 10px;
                 top: 10px;
                 margin: 0;
+                z-index: 1 !important;
+            }
+            
+            .copy-clipboard span {
+                display: flex;
+                align-items: center;
+                gap: 2px;
+                line-height: 1;
             }
 
             .AB {
@@ -514,8 +522,8 @@
                 {% endif %}
             }
         </style>
-
     {% endcompress %}
+    
     <style>
         {%  if not misc_config.turn_off_header_animation %}
             #page-header::after {

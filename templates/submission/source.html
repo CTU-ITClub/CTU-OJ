@@ -18,10 +18,6 @@
             background: rgba(255, 212, 0, 0.48);
         }
 
-        .copy-clipboard {
-            margin-top: 0 !important;
-            z-index: 1;
-        }
     </style>
 {% endblock %}
 
@@ -38,7 +34,7 @@
                             'class': 'btn-clipboard',
                             'data-clipboard-text': $(this).text(),
                             'title': 'Click to copy'
-                        }).text('Copy')));
+                        }).html('<i class="icon copy"></i> {{ _('Copy') }}')));
 
                     $(copyButton.get(0)).mouseleave(function () {
                         $(this).attr('class', 'btn-clipboard');

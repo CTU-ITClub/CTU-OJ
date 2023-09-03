@@ -156,7 +156,7 @@
                                 'id': 'scratch-codes-copy-button',
                                 'data-clipboard-text': '',
                                 'title': '{{ _('Click to copy') }}'
-                            }).text('{{ _('Copy') }}')));
+                            }).html('<i class="icon copy"></i> {{ _('Copy') }}')));
 
                         $(copyButton.get(0)).mouseleave(function () {
                             $(this).attr('class', 'btn-clipboard');
