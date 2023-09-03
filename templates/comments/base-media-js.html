@@ -13,7 +13,8 @@
                 $reply_form.find('form.comment-submit-form input#id_parent').val(parent);
                 $reply_form.find('div#id_body-wmd-wrapper').prop('id', new_id + '-wmd-wrapper');
                 $reply_form.find('div#id_body_wmd_button_bar').empty().prop('id', new_id + '_wmd_button_bar');
-                $reply_form.find('.ck').empty();
+                $reply_form.find('[class^="editor-"]').remove()
+                $reply_form.find('[class^="CodeMirror"]').remove();
                 $reply_form.find('textarea.wmd-input').val('').prop('id', new_id);
                 $reply_form.find('div#id_body-preview').attr('data-textarea-id', new_id).prop('id', new_id + '-preview');
                 $reply_form.appendTo($comment_reply);

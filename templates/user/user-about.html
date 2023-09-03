@@ -179,19 +179,34 @@
             </h4>
             <div class="ui segment bottom attached">
                 <div id="rating-chart">
+                    <div class="chartjs-size-monitor">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class=""></div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class="">
+                            </div>
+                        </div>
+                    </div>
+                    
                     <canvas></canvas>
                 </div>
+
                 <div id="rating-tooltip">
-                    <div class="contest"></div>
-                    <div class="date"></div>
-                    <div class="rate-group">
-                        <span class="rate-box"><span></span></span>
-                        <span class="rating"></span>, #<span class="rank"></span>
+                    <div class="contest ui header block attached top"></div>
+                    <div class="ui segment attached bottom">
+                        <div class="date"></div>
+                        <div class="rate-group">
+                            <span class="rate-box"><span></span></span>
+                            <span class="rating"></span>, #<span class="rank"></span>
+                        </div>
                     </div>
                 </div>
             </div>
         {% endif %}
     </div>
+
+   
 {% endblock %}
 
 {% block bodyend %}
@@ -336,7 +351,7 @@
                                 $tooltip.addClass(element.y < $tooltip.height() ? 'below' : 'above');
 
                                 var position = $canvas.offset();
-                                var container = $('#page-container').offset();
+                                var container = $('#rating-chart').offset();
                                 $tooltip.css({
                                     left: position.left - container.left + element.x + $tooltip.width() / 2,
                                     top: position.top - container.top + element.y - $tooltip.height() - 13,

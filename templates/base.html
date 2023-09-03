@@ -114,6 +114,15 @@
             });
         </script>
     {% endcompress %}
+
+    {% compress css %}
+        <link rel="stylesheet" href="{{ static('simplemde/dist/simplemde.min.css') }}">
+    {% endcompress %}
+
+    {% compress js %}
+        <script src="{{ static('simplemde/dist/simplemde.min.js') }}"></script>
+    {% endcompress %}
+
     <script src="{{ static('dmmd-preview.js') }}" type="module"></script>
     {% block js_media %}{% endblock %}
     {% if EVENT_LAST_MSG %}
@@ -299,11 +308,19 @@
                 background: #fff;
             }
 
-            .codehilite .copy-clipboard {
+            .copy-clipboard {
                 position: absolute;
                 right: 10px;
                 top: 10px;
                 margin: 0;
+                z-index: 1 !important;
+            }
+            
+            .copy-clipboard span {
+                display: flex;
+                align-items: center;
+                gap: 2px;
+                line-height: 1;
             }
 
             .AB {
@@ -513,9 +530,39 @@
                     linear-gradient(90deg, #1B1C1D00, #1B1C1D);
                 {% endif %}
             }
-        </style>
 
+            .spoiler {
+                background: #f6f8fa;
+                color: #f6f8fa !important;
+                user-select: none;
+                padding: 20px !important;
+                cursor: pointer;
+                border-radius: 6px;
+                position: relative;
+            }
+
+            .spoiler::after {
+                content: '{{ _('Reveal spoiler!') }}';
+                color: #666 !important;
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .spoiler.is-visible {
+                background: #f6f8fa;
+                color: #000 !important;
+                cursor: unset;
+                user-select: text;
+            }
+
+            .spoiler.is-visible::after {
+                content: '';
+            }
+        </style>
     {% endcompress %}
+
     <style>
         {%  if not misc_config.turn_off_header_animation %}
             #page-header::after {
