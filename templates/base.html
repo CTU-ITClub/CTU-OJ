@@ -521,9 +521,39 @@
                     linear-gradient(90deg, #1B1C1D00, #1B1C1D);
                 {% endif %}
             }
+
+            .spoiler {
+                background: #f6f8fa;
+                color: #f6f8fa !important;
+                user-select: none;
+                padding: 20px !important;
+                cursor: pointer;
+                border-radius: 6px;
+                position: relative;
+            }
+
+            .spoiler::after {
+                content: '{{ _('Reveal spoiler!') }}';
+                color: #666 !important;
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .spoiler.is-visible {
+                background: #f6f8fa;
+                color: #000 !important;
+                cursor: unset;
+                user-select: text;
+            }
+
+            .spoiler.is-visible::after {
+                content: '';
+            }
         </style>
     {% endcompress %}
-    
+
     <style>
         {%  if not misc_config.turn_off_header_animation %}
             #page-header::after {
