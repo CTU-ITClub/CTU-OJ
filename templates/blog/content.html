@@ -15,7 +15,7 @@
 {% block title_row %}
     <div id="post-{{ post.id }}"
          class="ui container header"
-         style="display: flex; gap: 0.5em; position:sticky; top: 50px; z-index: 1; background: #fff; padding: 10px 0; align-items: start">
+         style="display: flex; gap: 0.5em; position:sticky; top: 50px; z-index: 50; background: #fff; padding: 10px 0; align-items: start">
         <div class="ui vertical icon buttons">
             {% if logged_in %}
                 <a href="javascript:blog_upvote({{ post.id }})"
