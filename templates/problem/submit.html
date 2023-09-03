@@ -35,11 +35,16 @@
                 fontFamily: "'Monaco', monospace",
                 fontLigatures: true,
                 cursorSmoothCaretAnimation: true,
-                cursorBlinking: 'phase'
+                cursorBlinking: 'phase',
+                cursorStyle: 'line',
             });
 
             window.$_editor.onDidChangeModelContent(() => {
                 $('#id_source').val(window.$_editor.getValue())
+            });
+
+            window.$_editor.onDidLayoutChange(() => {
+                $('#code-loader').hide()
             })
 
             if (!$('#id_source').val()) {
@@ -72,7 +77,7 @@
                 }
 
                 function format(state) {
-                    if (!state.id) return state.text; // optgroup
+                    if (!state.id) return state.text;
                     return state.text;
                 }
 
@@ -304,7 +309,12 @@
                         {{ form.source.errors }}
                         {{ form.source }}
 
-                        <div class="monaco-editor-container" id="monaco-editor-container" style="height: 70vh"></div>
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100vh;" id="code-loader">
+                            <i class="ui loader active inline"></i>
+                        </div>
+
+                        <div class="monaco-editor-container" id="monaco-editor-container" style="height: 70vh">
+                        </div>
                     </div>
                     <div id="file-submit" class="hidden">
                         <div class="ui message error icon">
