@@ -66,63 +66,76 @@
 {% endblock %}
 
 {% block body %}
-    <table id="case-table" class="ui table unstackable form">
-        <thead>
-        <tr>
-            <th class="sub-check">{{ _('1st') }}</th>
-            <th class="sub-check">{{ _('2nd') }}</th>
-            <th class="sub-id">{{ _('ID') }}</th>
-            <th class="sub-username">{{ _('Username') }}</th>
-            <th class="sub-result">{{ _('Result') }}</th>
-            <th class="sub-language">{{ _('Language') }}</th>
-            <th class="sub-date">{{ _('Date') }}</th>
-            {% for case in range(num_cases) %}
-                <th class="sub-case">{{ loop.index }}</th>
-            {% endfor %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for sub in submissions %}
-            <tr sub-id={{ sub.id }}>
-                <td>
-                    <input class="sub-check ui checkbox" type="checkbox">
-                </td>
-                <td>
-                    <input class="sub-check ui checkbox" type="checkbox">
-                </td>
-                <td><a href="{{ url('submission_source', sub.id) }}">{{ sub.id }}</a></td>
-                <td>{{ link_user(sub.user) }}</td>
-                <td>
-                    <span class="ui label case-{{ sub.result }}">{{ sub.result }}</span>
-                </td>
-                <td>{{ sub.language.name }}</td>
-                <td><span class="time">{{ relative_time(sub.date) }}</span></td>
-                {% for case in sub.test_cases.all() %}
-                    <td data-partial-output="{{ case.output }}">
-                        {% if case.status == 'SC' %}
-                            <span class="case-SC">---</span>
-                        {% else %}
-                            <a href="javascript:void(0);" class="ui label sub-case-status case-{{ case.status }}">
-                                {% if case.status == 'AC' %}
-                                    {{ case.time|floatformat(2) }}
-                                {% else %}
-                                    {{ case.status }}
-                                {% endif %}
-                            </a>
-                        {% endif %}
-                    </td>
+    <div class="scroll-x">
+        <table id="case-table" class="ui table unstackable form">
+            <thead>
+            <tr>
+                <th class="sub-check">{{ _('1st') }}</th>
+                <th class="sub-check">{{ _('2nd') }}</th>
+                <th class="sub-id">{{ _('ID') }}</th>
+                <th class="sub-username">{{ _('Username') }}</th>
+                <th class="sub-result">{{ _('Result') }}</th>
+                <th class="sub-language">{{ _('Language') }}</th>
+                <th class="sub-date">{{ _('Date') }}</th>
+                {% for case in range(num_cases) %}
+                    <th class="sub-case">{{ loop.index }}</th>
                 {% endfor %}
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for sub in submissions %}
+                <tr sub-id={{ sub.id }}>
+                    <td>
+                        <input class="sub-check" type="checkbox">
+                    </td>
+                    <td>
+                        <input class="sub-check" type="checkbox">
+                    </td>
+                    <td><a href="{{ url('submission_source', sub.id) }}">{{ sub.id }}</a></td>
+                    <td>{{ link_user(sub.user) }}</td>
+                    <td>
+                        <span class="ui label case-{{ sub.result }}
+                                {% if sub.result == 'AC' %} green {% endif %}
+                                {% if sub.result == 'WA' %} red {% endif %}
+                                {% if sub.result == 'RTE' %} yellow {% endif %}">
+                            {{ sub.result }}
+                        </span>
+                    </td>
+                    <td>{{ sub.language.name }}</td>
+                    <td><span class="time">{{ relative_time(sub.date) }}</span></td>
+                    {% for case in sub.test_cases.all() %}
+                        <td data-partial-output="{{ case.output }}">
+                            {% if case.status == 'SC' %}
+                                <span class="case-SC">
+                                    <i class="icon help"></i>
+                                </span>
+                            {% else %}
+                                <a href="javascript:void(0);" class="ui label sub-case-status case-{{ case.status }} 
+                                        {% if case.status == 'AC' %} green {% endif %}
+                                        {% if case.status == 'WA' %} red {% endif %}
+                                        {% if case.status == 'RTE' %} yellow {% endif %}
+                                        ">
+                                    {% if case.status == 'AC' %}
+                                        {{ case.time|floatformat(2) }}
+                                    {% else %}
+                                        {{ case.status }}
+                                    {% endif %}
+                                </a>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div style="display: none" class="partial-output-window">
         <pre><code></code></pre>
     </div>
 {% endblock %}
 
 {% block bodyend %}
-    <div>
+    <div style="margin-top: 10px">
         <a id="diff" class="ui button primary" href="#">
             {{ _('Diff source code') }}
         </a>
