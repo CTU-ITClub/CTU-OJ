@@ -2,6 +2,8 @@
 
 {% block js_media %}
     <script type="text/javascript" src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
+
+    {% compress js %}
     <script>
         const languageMap = {
             'c_cpp': 'cpp',
@@ -64,6 +66,8 @@
             })
         });
     </script>
+    {% endcompress %}
+
     {{ form.media.js }}
     {% compress js %}
         <script type="text/javascript">
