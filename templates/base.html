@@ -292,35 +292,28 @@
                 display: block;
             }
 
-            .codehilite {
+            .copy-clipboard {
                 position: relative;
             }
 
-            .copy-clipboard {
-                padding: 5px 10px;
-                width: fit-content;
+            .copy-clipboard .btn-clipboard {
+                position: absolute;
+                top: 20px;
+                right: 20px;
                 border: 1px solid #ddd;
-                border-radius: 5px;
+                padding: 5px 10px;
+                border-radius: 10px;
                 cursor: pointer;
-                margin-bottom: -45px;
-                margin-left: calc(100% - 70px);
-                position: relative;
+                font-size: 12px;
                 background: #fff;
             }
 
-            .copy-clipboard {
-                position: absolute;
-                right: 10px;
-                top: 10px;
-                margin: 0;
-                z-index: 1 !important;
+            .copy-clipboard .btn-clipboard:hover {
+                background: #eee;
             }
-            
-            .copy-clipboard span {
-                display: flex;
-                align-items: center;
-                gap: 2px;
-                line-height: 1;
+
+            .copy-clipboard .btn-clipboard:active {
+                background: #ddd;
             }
 
             .AB {
