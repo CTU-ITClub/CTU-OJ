@@ -43,8 +43,11 @@
     </div>
 
     <div style="display: flex; align-items: center; margin-bottom: 10px;">
-        <span class="language ui label circular orange">{{ submission.language.short_display_name }}</span>
-        {% if submission.is_graded %}
+        <span class="language ui label circular orange">
+            <i class="icon code"></i>
+            {{ submission.language.short_display_name }}
+        </span>
+        {% if submission.is_graded and misc_config.show_submissions_score %}
             <span class="ui label circular black" style="text-align: center;">
                 {{ submission.case_points|floatformat(-3) }} / {{ submission.case_total|floatformat(0) }}
             </span>
