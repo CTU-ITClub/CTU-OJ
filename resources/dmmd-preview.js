@@ -89,11 +89,6 @@ $(function () {
                 '|',
                 'guide',
             ],
-            insertTexts: {
-                image: '![alt text](image.png)',
-                link: '[link text](https://example.com)',
-
-            }
          });
 
         editor.codemirror.on('change', () => {
