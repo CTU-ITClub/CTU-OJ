@@ -120,10 +120,10 @@
     {% endcompress %}
 
     {% compress js %}
-        <script src="{{ static('simplemde/dist/simplemde.min.js') }}"></script>
+        <script src="{{ static('simplemde/dist/simplemde.min.js') }}"></script>    
+        <script src="{{ static('dmmd-preview.js') }}" type="module"></script>
     {% endcompress %}
 
-    <script src="{{ static('dmmd-preview.js') }}" type="module"></script>
     {% block js_media %}{% endblock %}
     {% if EVENT_LAST_MSG %}
         <script>

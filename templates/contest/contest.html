@@ -93,7 +93,7 @@
                                         <td style="width: 1em;">
                                             <a href="{{ url('user_submissions', problem.code, request.user.username) }}">
                                                 {% if problem.is_public %}
-                                                    <i class="icon check circle yellow"></i>
+                                                    <i class="icon frown outline yellow"></i>
                                                 {% else %}
                                                     <i class="icon lock circle yellow"></i>
                                                 {% endif %}
@@ -102,7 +102,6 @@
                                     {% else %}
                                         <td style="width: 1em;">
                                             {% if problem.is_public %}
-                                                <i class="icon minus circle grey"></i>
                                             {% else %}
                                                 <i class="icon lock grey"></i>
                                             {% endif %}
