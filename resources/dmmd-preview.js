@@ -66,7 +66,7 @@ $(function () {
                             line: cursor.line,
                             ch: line.length - 1
                         };
-                        doc.replaceRange('$$\npredict(X,W,b)=sigmod(matmul(X,W)+b)\n$$', pos);
+                        doc.replaceRange('$$\npredict(X,W,b)=sigmoid(matmul(X,W)+b)\n$$', pos);
                         cm.focus();
                     },
                     className: 'fa fa-florin-sign',
