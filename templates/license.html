@@ -6,12 +6,16 @@
 {% endblock %}
 
 {% block info_float %}
-    {% if perms.judge.change_license %}
-        <div>
-            <a href="{{ url('admin:judge_license_change', license.id) }}">{{ _('Edit') }}</a>
-        </div>
-    {% endif %}
-    <div>
-        <a href="{{ license.link }}">{{ _('Visit source') }}</a>
+    <div class="ui list relaxed divided link">
+        {% if perms.judge.change_license %}
+            <a class="item" href="{{ url('admin:judge_license_change', license.id) }}">
+                <i class="icon pencil"></i>
+                {{ _('Edit') }}
+            </a>
+        {% endif %}
+        <a class="item" href="{{ license.link }}">
+            <i class="icon code"></i>
+            {{ _('Visit source') }}
+        </a>
     </div>
 {% endblock %}
