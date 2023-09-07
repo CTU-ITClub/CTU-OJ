@@ -50,6 +50,13 @@
             };
 
             $('votes-link').find('a[data-featherlight]').featherlight();
+
+            $('#blog-content').viewer({
+                loop: false,
+                keyboard: false,
+                navbar: false,
+                toolbar: false,
+            })
         });
     </script>
 {% endcompress %}

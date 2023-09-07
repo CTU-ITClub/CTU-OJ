@@ -50,6 +50,13 @@
                     });
                 };
                 window.add_code_copy_buttons($(document));
+
+                $('#markdown-content').viewer({
+                    loop: false,
+                    keyboard: false,
+                    navbar: false,
+                    toolbar: false,
+                });
             });
         </script>
     {% endcompress %}
@@ -60,7 +67,7 @@
     <div id="common-content" class="ui grid stackable">
         <div id="content-left" class="column eleven wide">
             <div>
-                <div class="markdown-body">
+                <div class="markdown-body" id="markdown-content">
                     {% block description %}{% endblock %}
                 </div>
                 {% block description_end %}

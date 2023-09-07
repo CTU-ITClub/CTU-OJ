@@ -38,6 +38,7 @@
         <link rel="stylesheet" href="{{ static('github-markdown.css') }}">
         <link rel="stylesheet" href="{{ static('github.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ static('toastify.min.css') }}">
+        <link rel="stylesheet" href="{{ static('viewer.css') }}">
 
         {# TODO: once dark mode support is better, enable for all users by deleting the else branch #}
         {% if perms.judge.test_site %}
@@ -73,6 +74,10 @@
         {% if INLINE_JQUERY %}
             <script src="{{ static('libs/jquery-3.4.1.min.js') }}"></script>
         {% endif %}
+        {% compress js %}
+            <script src="{{ static('viewer.js') }}"></script>
+            <script src="{{ static('jquery-viewer.js') }}"></script>
+        {% endcompress %}
         <script src="{{ static('libs/jquery-cookie.js') }}"></script>
 
         <script src="{{ static('semantic/semantic.js') }}"></script>

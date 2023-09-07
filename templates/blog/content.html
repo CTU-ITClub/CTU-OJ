@@ -14,8 +14,8 @@
 
 {% block title_row %}
     <div id="post-{{ post.id }}"
-         class="ui container header"
-         style="display: flex; gap: 0.5em; position:sticky; top: 50px; z-index: 50; background: #fff; padding: 10px 0; align-items: start">
+         class="ui header"
+         style="display: flex; gap: 0.5em; position:sticky; top: 50px; z-index: 50; background: #fff; padding: 10px 0; align-items: start; padding-bottom: 0">
         <div class="ui vertical icon buttons">
             {% if logged_in %}
                 <a href="javascript:blog_upvote({{ post.id }})"
@@ -89,14 +89,13 @@
                     {{ post_to_twitter(request, SITE_NAME + ':', post, '<div class="ui button black" style="width: 100%"><i class="fa-brands fa-x-twitter"></i>Twitter</div>') }}
                 </div>
             </div>
-
-            <hr class="ui divider"/>
+            <hr class="ui divider" style="margin-bottom: 0;">
         </div>
     </div>
 {% endblock %}
 
 {% block body %}
-    <div class="ui container">
+    <div class="ui container" id="blog-content">
         <div class="markdown-body">
             {% cache 86400 'post_content' post.id MATH_ENGINE %}
                 {{ post.content|markdown('blog', MATH_ENGINE)|reference|str|safe }}
