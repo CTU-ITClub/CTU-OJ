@@ -1,6 +1,12 @@
+<style>
+    .author img {
+        display: none !important;
+    }
+</style>
+
 <section id="message-{{ message.id }}" class="ticket-message comment">
     <a href="{{ url('user_page', message.user.user.username) }}" class="avatar">
-        <img alt="{{ user.user.username }}" src="{{ gravatar(message.user, 80) }}">
+        <img alt="{{ message.user.username }}" src="{{ gravatar(message.user, 80) }}">
     </a>
     <div class="content">
         <div class="author">
