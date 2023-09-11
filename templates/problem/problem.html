@@ -231,7 +231,7 @@
                     class="content">{{ _('Time limit:') }} <strong>{{ problem.time_limit }}s</strong></span>
             </div>
 
-            <div class="problem-lang-limits">
+            <div class="problem-lang-limits" style="padding: 5px 0">
                 {% for name, limit in problem.language_time_limit %}
                     <div class="lang-limit ui label">
                         <span class="lang-name">{{ name }}</span>
@@ -241,12 +241,13 @@
             </div>
 
             <div class="item">
-                <i class="icon server"></i><span class="content">{{ _('Memory limit:') }}
-            <strong>{{ problem.memory_limit|kbsimpleformat }}</strong>
-        </span>
+                <i class="icon server"></i>
+                <span class="content">{{ _('Memory limit:') }}
+                    <strong>{{ problem.memory_limit|kbsimpleformat }}</strong>
+                </span>
             </div>
 
-            <div class="problem-lang-limits">
+            <div class="problem-lang-limits" style="padding: 5px 0">
                 {% for name, limit in problem.language_memory_limit %}
                     <div class="lang-limit ui label">
                         <span class="lang-name">{{ name }}</span>
